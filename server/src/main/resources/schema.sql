@@ -13,18 +13,18 @@ create table if not exists locations(
     unique (lat, lon)
 );
 
-create table if not exists category(
+create table if not exists categories(
     id int generated always as identity primary key ,
     name varchar(100)
 );
 
 create table if not exists events (
     id bigint generated always as identity primary key ,
-    title varchar(250),
-    annotation varchar(250),
-    description varchar(1000),
+    title varchar(120),
+    annotation text,
+    description text,
     initiator bigint references users,
-    category int references category,
+    category int references categories,
     eventDate timestamp,
     location bigint references locations,
     paid boolean,
@@ -43,6 +43,7 @@ create table if not exists participation_requests (
 
 create table if not exists selections (
     id bigint generated always as identity primary key ,
+    pinned boolean,
     name varchar(100)
 );
 
