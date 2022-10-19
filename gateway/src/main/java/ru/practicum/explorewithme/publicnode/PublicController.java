@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.clients.PublicClient;
+import ru.practicum.explorewithme.exceptions.IncorrectDateException;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -30,8 +33,20 @@ public class PublicController {
 
         EventSort sortType = EventSort.from(sort).orElseThrow(()-> new UnknownEnumElementException("Неизвестный тип сортировки"));
 
-        return client.getEvents(new QueryParameters(text, categories, paid, rangeStart, rangeEnd, available, sortType,
-                from, size));
+        dateValidation(rangeStart, rangeEnd);
+
+        Map<String, Object> parameters = Map.of(
+                "text", text,
+                "categories", categories,
+                "paid", paid,
+                "rangeStart", rangeStart,
+                "rangeEnd", rangeEnd,
+                "available", available,
+                "sort", sort,
+                "from", from,
+                "size", size
+        );
+        return client.getEvents(parameters);
     }
 
     @GetMapping("/events/{eventId}")
@@ -43,7 +58,11 @@ public class PublicController {
     public ResponseEntity<Object> getCompilations(@RequestParam(name = "pinned", required = false) boolean pinned,
                                                   @RequestParam(name = "from", defaultValue = "0") int from,
                                                   @RequestParam(name = "size", defaultValue = "10") int size) {
-        return client.getCompilations(pinned, from, size);
+        Map<String, Object> param = Map.of(
+                "pinned", pinned,
+                "from", from,
+                "size", size);
+        return client.getCompilations(param);
     }
 
     @GetMapping("/compilation/{compilationId}")
@@ -60,5 +79,13 @@ public class PublicController {
     public ResponseEntity<Object> getCategories(@RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return client.getCategories(from, size);
+    }
+
+    private static void dateValidation(String start, String end) {
+        LocalDateTime rangeStart = LocalDateTime.parse(start);
+        LocalDateTime rangeEnd = LocalDateTime.parse(end);
+        if (rangeStart.isBefore(rangeEnd)) {
+            throw new IncorrectDateException("Введенные даны некорректны");
+        }
     }
 }
