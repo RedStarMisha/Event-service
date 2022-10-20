@@ -9,12 +9,12 @@ create table if not exists locations(
     id bigint generated always as identity primary key ,
     lat double precision,
     lon double precision,
-    description varchar(200),
+    description text,
     unique (lat, lon)
 );
 
 create table if not exists categories(
-    id int generated always as identity primary key ,
+    id bigint generated always as identity primary key ,
     name varchar(100)
 );
 
@@ -44,7 +44,7 @@ create table if not exists participation_requests (
 create table if not exists selections (
     id bigint generated always as identity primary key ,
     pinned boolean,
-    name varchar(100)
+    name text
 );
 
 create table if not exists events_selections (

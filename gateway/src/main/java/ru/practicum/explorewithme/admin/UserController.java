@@ -3,16 +3,17 @@ package ru.practicum.explorewithme.admin;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.admin.UserClient;
-import ru.practicum.explorewithme.clients.model.NewUserRequest;
+import ru.practicum.explorewithme.models.user.NewUserRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-@RestController
+@Controller
 @RequestMapping("/admin")
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @Validated

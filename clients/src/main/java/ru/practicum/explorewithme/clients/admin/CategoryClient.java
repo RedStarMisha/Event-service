@@ -3,8 +3,8 @@ package ru.practicum.explorewithme.clients.admin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
-import ru.practicum.explorewithme.clients.model.CategoryDto;
-import ru.practicum.explorewithme.clients.model.NewCategoryDto;
+import ru.practicum.explorewithme.models.category.CategoryDto;
+import ru.practicum.explorewithme.models.category.NewCategoryDto;
 
 public class CategoryClient extends BaseClient {
 

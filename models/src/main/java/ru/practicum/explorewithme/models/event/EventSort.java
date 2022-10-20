@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.publicnode;
+package ru.practicum.explorewithme.models.event;
 
 import java.util.Arrays;
 import java.util.Optional;

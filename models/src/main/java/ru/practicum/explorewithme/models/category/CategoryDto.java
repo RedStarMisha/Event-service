@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.clients.model;
+package ru.practicum.explorewithme.models.category;
 
 import lombok.Value;
 

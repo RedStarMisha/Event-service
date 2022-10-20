@@ -3,7 +3,7 @@ package ru.practicum.explorewithme.clients.admin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
-import ru.practicum.explorewithme.clients.model.NewUserRequest;
+import ru.practicum.explorewithme.models.user.NewUserRequest;
 
 import java.util.Map;
 

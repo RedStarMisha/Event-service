@@ -2,8 +2,9 @@ package ru.practicum.explorewithme.clients;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.explorewithme.clients.model.NewEventDto;
-import ru.practicum.explorewithme.clients.model.UpdateEventRequest;
+import ru.practicum.explorewithme.models.event.NewEventDto;
+import ru.practicum.explorewithme.models.event.UpdateEventRequest;
+
 
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class PrivateClient extends BaseClient{
         return patch("/" + userId + EVENTS + "/" + eventId);
     }
 
-    public ResponseEntity<Object> getEventRequests(String userId, String eventId) {
+    public ResponseEntity<Object> getEventRequests(long userId, long eventId) {
         return get("/" + userId + EVENTS + "/" + eventId + REQUESTS);
     }
 
