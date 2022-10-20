@@ -17,21 +17,43 @@ public class BaseClient {
         this.rest = rest;
     }
 
-    public <T>ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
-        return makeReqAndGetResp(path, HttpMethod.POST, parameters, body);
+    protected <T>ResponseEntity<Object> post(String path, T body) {
+        return post(path, null, body);
+    }
+    protected ResponseEntity<Object> post(String path, Map<String, Object> parameters) {
+        return post(path, parameters, null);
+    }
+    protected <T>ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
+        UriComponents uri = UriComponentsBuilder.newInstance().path(path).build();
+        return makeReqAndGetResp(uri.expand(parameters).getPath(), HttpMethod.POST, parameters, body);
     }
 
-    public <T> ResponseEntity<Object> get(String url, Map<String, Object> parameters) {
-        UriComponents uri = UriComponentsBuilder.newInstance().path(url).build();
-        return get(uri.expand(parameters).getPath(), parameters, null);
+    protected ResponseEntity<Object> get(String url) {
+        return get(url, null);
     }
 
-    public <T> ResponseEntity<Object> get(String url, long userId) {
-        return get(url + "/" + userId, null, null);
+    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
+        UriComponents uri = UriComponentsBuilder.newInstance().path(path).build();
+        return makeReqAndGetResp(uri.expand(parameters).getPath(), HttpMethod.GET, parameters, null);
     }
 
-    public <T> ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters, T body) {
-        return makeReqAndGetResp(path, HttpMethod.GET, parameters, body);
+    protected <T> ResponseEntity<Object> patch(String path, T body) {
+        return patch(path, null, body);
+    }
+    protected <T> ResponseEntity<Object> patch(String path) {
+        return patch(path, null, null);
+    }
+
+    protected <T> ResponseEntity<Object> patch(String path, @Nullable Map<String, Object> parameters, @Nullable T body) {
+        return makeReqAndGetResp(path, HttpMethod.PATCH, parameters, body);
+    }
+
+    protected <T> ResponseEntity<Object> delete(String path) {
+        return delete(path, null);
+    }
+
+    protected <T> ResponseEntity<Object> delete(String path, @Nullable Map<String, Object> parameters) {
+        return makeReqAndGetResp(path, HttpMethod.DELETE, parameters, null);
     }
 
     private <T>ResponseEntity<Object> makeReqAndGetResp(String path, HttpMethod method,

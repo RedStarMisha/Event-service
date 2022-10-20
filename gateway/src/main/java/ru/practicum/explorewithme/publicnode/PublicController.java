@@ -12,7 +12,10 @@ import ru.practicum.explorewithme.exceptions.IncorrectDateException;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+
+import static ru.practicum.explorewithme.validation.ValidUtil.dateValidation;
 
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -58,11 +61,7 @@ public class PublicController {
     public ResponseEntity<Object> getCompilations(@RequestParam(name = "pinned", required = false) boolean pinned,
                                                   @RequestParam(name = "from", defaultValue = "0") int from,
                                                   @RequestParam(name = "size", defaultValue = "10") int size) {
-        Map<String, Object> param = Map.of(
-                "pinned", pinned,
-                "from", from,
-                "size", size);
-        return client.getCompilations(param);
+        return client.getCompilations(pinned, from, size);
     }
 
     @GetMapping("/compilation/{compilationId}")
@@ -70,22 +69,15 @@ public class PublicController {
         return client.getCompilationById(compilationId);
     }
 
-    @GetMapping("/categories/{categoryId}")
-    public ResponseEntity<Object> getCategoryById(@PathVariable(name = "categoryId") Long categoryId) {
-        return client.getCategoryById(categoryId);
-    }
-
     @GetMapping("/categories")
     public ResponseEntity<Object> getCategories(@RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return client.getCategories(from, size);
     }
-
-    private static void dateValidation(String start, String end) {
-        LocalDateTime rangeStart = LocalDateTime.parse(start);
-        LocalDateTime rangeEnd = LocalDateTime.parse(end);
-        if (rangeStart.isBefore(rangeEnd)) {
-            throw new IncorrectDateException("Введенные даны некорректны");
-        }
+    @GetMapping("/categories/{categoryId}")
+    public ResponseEntity<Object> getCategoryById(@PathVariable(name = "categoryId") long categoryId) {
+        return client.getCategoryById(categoryId);
     }
+
+
 }
