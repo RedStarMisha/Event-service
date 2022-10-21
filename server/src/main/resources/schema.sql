@@ -15,7 +15,7 @@ create table if not exists locations(
 
 create table if not exists categories(
     id bigint generated always as identity primary key ,
-    name varchar(100)
+    name varchar(100) unique
 );
 
 create table if not exists events (
