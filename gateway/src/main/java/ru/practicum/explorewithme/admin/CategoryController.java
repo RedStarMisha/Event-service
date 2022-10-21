@@ -10,6 +10,7 @@ import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/admin/categories")
@@ -17,20 +18,21 @@ import javax.validation.Valid;
 @Validated
 public class CategoryController {
 
-//    private final CategoryClient client;
-//
-//    @PatchMapping
-//    public ResponseEntity<Object> updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
-//        return client.updateCategory(categoryDto);
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Object> addCategory(@RequestBody @Valid NewCategoryDto categoryDto) {
-//        return client.addCategory(categoryDto);
-//    }
-//
-//    @DeleteMapping("/{catId}")
-//    public ResponseEntity<Object> deleteCategory(@PathVariable(name = "catId") long catId) {
-//        return client.deleteCategory(catId);
-//    }
+    private final CategoryClient client;
+
+    @PatchMapping
+    public ResponseEntity<Object> updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        return client.updateCategory(categoryDto);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> addCategory(@RequestBody @Valid NewCategoryDto categoryDto) {
+        return client.addCategory(categoryDto);
+    }
+
+    @DeleteMapping("/{catId}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable(name = "catId")
+                                             @Positive(message = "Id категории должно быть положительное") Long catId) {
+        return client.deleteCategory(catId);
+    }
 }

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.user;
+package ru.practicum.explorewithme.server.admin.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

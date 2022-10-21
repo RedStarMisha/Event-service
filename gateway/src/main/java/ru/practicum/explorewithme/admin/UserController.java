@@ -23,8 +23,8 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<Object> getUsers(@RequestParam(name = "ids", required = false) long[] ids,
-                                           @RequestParam(name = "from") @PositiveOrZero Integer from,
-                                           @RequestParam(name = "size") @Positive int size) {
+                                           @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                           @RequestParam(name = "size", defaultValue = "10") @Positive int size) {
         return client.getUsers(ids, from, size);
     }
 

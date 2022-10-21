@@ -17,7 +17,9 @@ public class PublicClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getEvents(Map<String, Object> parameters) {
-        return get(EVENTS, parameters);
+        String queryParam = "?text={text}&categories={categories}&paid={paid}&rangeStart={rangeStart}&" +
+                "rangeEnd={rangeEnd}&available={available}&sort={sort}&from={from}&size={size}";
+        return get(EVENTS + queryParam, parameters);
     }
 
     public ResponseEntity<Object> getEventById(long id) {
@@ -29,7 +31,8 @@ public class PublicClient extends BaseClient {
                 "pinned", pinned,
                 "from", from,
                 "size", size);
-        return get(COMPILATIONS, param);
+        String queryParam = "?pinned={pinned}&from={from}&size={size}";
+        return get(COMPILATIONS + queryParam, param);
     }
     public ResponseEntity<Object> getCompilationById(long id) {
         return get(COMPILATIONS + "/" + id);
@@ -39,7 +42,8 @@ public class PublicClient extends BaseClient {
         Map<String, Object> param = Map.of(
                 "from", from,
                 "size", size);
-        return get(CATEGORIES, param);
+        String queryParam = "?from={from}&size={size}";
+        return get(CATEGORIES + queryParam, param);
     }
 
     public ResponseEntity<Object> getCategoryById(long categoryId) {

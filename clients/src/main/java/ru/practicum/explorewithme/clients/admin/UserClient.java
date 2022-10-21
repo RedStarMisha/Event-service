@@ -8,8 +8,6 @@ import ru.practicum.explorewithme.models.user.NewUserRequest;
 import java.util.Map;
 
 public class UserClient extends BaseClient {
-    private static final String USERS = "/users";
-
 
     public UserClient(RestTemplate rest) {
         super(rest);
@@ -21,7 +19,7 @@ public class UserClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        return get("", param);
+        return get("?ids={ids}&from={from}&size={size}", param);
     }
 
     public ResponseEntity<Object> addUser(NewUserRequest newUserRequest) {

@@ -4,9 +4,6 @@ import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +21,7 @@ public class BaseClient {
         return post(path, parameters, null);
     }
     protected <T>ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
-        UriComponents uri = UriComponentsBuilder.newInstance().path(path).build();
-        return makeReqAndGetResp(uri.expand(parameters).getPath(), HttpMethod.POST, parameters, body);
+        return makeReqAndGetResp(path, HttpMethod.POST, parameters, body);
     }
 
     protected ResponseEntity<Object> get(String url) {
@@ -33,8 +29,7 @@ public class BaseClient {
     }
 
     protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
-        UriComponents uri = UriComponentsBuilder.newInstance().path(path).build();
-        return makeReqAndGetResp(uri.expand(parameters).getPath(), HttpMethod.GET, parameters, null);
+        return makeReqAndGetResp(path, HttpMethod.GET, parameters, null);
     }
 
     protected <T> ResponseEntity<Object> patch(String path, T body) {
@@ -79,6 +74,4 @@ public class BaseClient {
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         return headers;
     }
-
-
 }

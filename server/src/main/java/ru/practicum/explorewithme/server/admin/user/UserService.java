@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.user;
+package ru.practicum.explorewithme.server.admin.user;
 
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;

@@ -14,7 +14,8 @@ public class EventClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getEvents(Map<String, Object> param) {
-        return get("", param);
+        return get("?users={users}&states={states}&categories={categories}&rangeStart={rangeStart}&" +
+                "rangeEnd={rangeEnd}&from={from}&size={size}", param);
     }
 
     public ResponseEntity<Object> updateEvent(long eventId, AdminUpdateEventRequest updateEventRequest) {

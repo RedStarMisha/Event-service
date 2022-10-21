@@ -21,7 +21,8 @@ public class PrivateClient extends BaseClient{
                 "from", from,
                 "size", size
         );
-        return get("/" + userId + EVENTS, param);
+        String queryParam = "?from={from}&size={size}";
+        return get("/" + userId + EVENTS + queryParam, param);
     }
 
     public ResponseEntity<Object> updateEvent(Long userId, UpdateEventRequest request) {
@@ -32,7 +33,7 @@ public class PrivateClient extends BaseClient{
         return post("/" + userId + EVENTS, newEventDto);
     }
 
-    public ResponseEntity<Object> getEventByOwnerIdAndEventId(Long userId, Long eventId) {
+    public ResponseEntity<Object> getEventByOwnerIdAndEventId(long userId, long eventId) {
         return get("/" + userId + EVENTS + "/" + eventId);
     }
 
@@ -58,7 +59,8 @@ public class PrivateClient extends BaseClient{
 
     public ResponseEntity<Object> addNewRequestByUser(long userId, long eventId) {
         Map<String, Object> param = Map.of("eventId", eventId);
-        return post("/" + userId + REQUESTS, param);
+        String queryParam = "?eventId={eventId}";
+        return post("/" + userId + REQUESTS + queryParam, param);
     }
 
     public ResponseEntity<Object> cancelUserRequest(long userId, long requestId) {
