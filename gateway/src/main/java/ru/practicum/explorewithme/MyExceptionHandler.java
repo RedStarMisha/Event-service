@@ -15,7 +15,7 @@ public class MyExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError validationException(MethodArgumentNotValidException e) {
-        return new ApiError(e.getFieldErrors(), e.getMessage(), e.getLocalizedMessage(), HttpStatus.BAD_REQUEST,
+        return new ApiError(e.getFieldErrors(), e.getMessage(), "Ошибка валидации", HttpStatus.BAD_REQUEST,
                 LocalDateTime.now());
     }
 }
