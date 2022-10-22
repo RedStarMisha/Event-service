@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 public class CategoryDto {
     @NotNull
     @Positive
-    long id;
+    Long id;
     @NotBlank
     String name;
 }

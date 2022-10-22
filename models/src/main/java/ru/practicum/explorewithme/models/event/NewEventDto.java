@@ -1,15 +1,17 @@
 package ru.practicum.explorewithme.models.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ru.practicum.explorewithme.models.Location;
-import ru.practicum.explorewithme.models.State;
-import ru.practicum.explorewithme.models.category.CategoryDto;
-import ru.practicum.explorewithme.models.user.UserShortDto;
+import lombok.Getter;
+import lombok.Setter;
+import ru.practicum.explorewithme.models.validation.CheckEventDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@CheckEventDate
 public class NewEventDto {
     @NotBlank
     private String annotation;
@@ -21,6 +23,7 @@ public class NewEventDto {
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull
     private LocalDateTime eventDate;
 
     @NotNull

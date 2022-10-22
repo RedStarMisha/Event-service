@@ -5,17 +5,18 @@ create table if not exists users (
     created timestamp
 );
 
-create table if not exists locations(
+create table if not exists locations (
     id bigint generated always as identity primary key ,
-    lat double precision,
-    lon double precision,
+    lat float,
+    lon float,
     description text,
+    title text,
     unique (lat, lon)
 );
 
 create table if not exists categories(
     id bigint generated always as identity primary key ,
-    name varchar(100) unique
+    name text unique
 );
 
 create table if not exists events (
@@ -24,8 +25,10 @@ create table if not exists events (
     annotation text,
     description text,
     initiator bigint references users,
-    category int references categories,
-    eventDate timestamp,
+    category bigint references categories,
+    created timestamp,
+    event_date timestamp,
+    published timestamp,
     location bigint references locations,
     paid boolean,
     partition_limit int,

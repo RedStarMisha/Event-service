@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.server.admin.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.explorewithme.server.LocalDateTimeConverter;

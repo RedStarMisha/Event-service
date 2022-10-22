@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.server.exceptions.UserNotFoundException;
+import ru.practicum.explorewithme.server.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,9 +25,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     @Override
-    public List<UserDto> getUsers(@Nullable long[] ids, int from, int size) {
+    public List<UserDto> getUsers(long[] ids, int from, int size) {
 
-        if (ids == null) {
+        if (ids.length == 0) {
             log.info("Get all users");
             return repository.findAll(makePageable(from, size)).map(UserMapper::toUserDto).toList();
         }

@@ -12,13 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @AllArgsConstructor(onConstructor_ = @Autowired)
-@Validated
 public class UserController {
 
     private final UserService service;
 
     @GetMapping("/users")
-    public List<UserDto> getUsers(@RequestParam(name = "ids", required = false) long[] ids,
+    public List<UserDto> getUsers(@RequestParam(name = "ids") long[] ids,
                                   @RequestParam(name = "from") int from,
                                   @RequestParam(name = "size")  int size) {
         return service.getUsers(ids, from, size);

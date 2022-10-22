@@ -7,23 +7,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.explorewithme.models.ApiError;
 
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-
 @RestControllerAdvice
-public class MyExceptionHandler {
+public class GatewayExceptionHandler {
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError validationException(MethodArgumentNotValidException e) {
         return new ApiError(e.getFieldErrors(), e.getMessage(), "The request was formed incorrectly",
                 HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({ConstraintViolationException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError databaseException(ConstraintViolationException e) {
-        return new ApiError(e.getMessage(), "Integrity constraint has been violated", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({Throwable.class})

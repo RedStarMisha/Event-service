@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Value
@@ -18,6 +19,7 @@ public class ApiError {
     LocalDateTime timestamp = LocalDateTime.now();
 
     public ApiError(String message, String reason, HttpStatus status) {
+        errors = new ArrayList<>();
         this.message = message;
         this.reason = reason;
         this.status = status;
