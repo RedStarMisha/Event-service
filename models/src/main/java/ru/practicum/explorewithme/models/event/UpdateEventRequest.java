@@ -1,10 +1,15 @@
 package ru.practicum.explorewithme.models.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import ru.practicum.explorewithme.models.validation.CheckEventDate;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public class UpdateEventRequest {
+@Data
+@CheckEventDate
+public class UpdateEventRequest implements EventDateCheckable {
 
     private String annotation;
 
@@ -16,11 +21,11 @@ public class UpdateEventRequest {
     private LocalDateTime eventDate;
 
     @NotNull
-    private long eventId;
+    private Long eventId;
 
-    private boolean paid;
+    private Boolean paid;
 
-    private int participantLimit;
+    private Integer participantLimit;
 
     private String title;
 }

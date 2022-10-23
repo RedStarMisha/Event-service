@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @CheckEventDate
-public class NewEventDto {
+public class NewEventDto implements EventDateCheckable {
     @NotBlank
     private String annotation;
 

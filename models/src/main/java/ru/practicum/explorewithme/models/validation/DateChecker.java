@@ -1,13 +1,13 @@
 package ru.practicum.explorewithme.models.validation;
 
 
-import ru.practicum.explorewithme.models.event.NewEventDto;
+import ru.practicum.explorewithme.models.event.EventDateCheckable;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 
-public class DateChecker implements ConstraintValidator<CheckEventDate, NewEventDto> {
+public class DateChecker implements ConstraintValidator<CheckEventDate, EventDateCheckable> {
 
     @Override
     public void initialize(CheckEventDate constraintAnnotation) {
@@ -15,7 +15,7 @@ public class DateChecker implements ConstraintValidator<CheckEventDate, NewEvent
     }
 
     @Override
-    public boolean isValid(NewEventDto dto, ConstraintValidatorContext constraintValidatorContext) {
-        return dto.getEventDate().minusHours(2).isAfter(LocalDateTime.now());
+    public boolean isValid(EventDateCheckable dto, ConstraintValidatorContext constraintValidatorContext) {
+        return dto.getEventDate() == null || dto.getEventDate().minusHours(2).isAfter(LocalDateTime.now());
     }
 }

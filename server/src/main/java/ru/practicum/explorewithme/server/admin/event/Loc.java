@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.server.admin.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.explorewithme.models.event.Location;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Data
 @Table(name = "locations")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Loc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
