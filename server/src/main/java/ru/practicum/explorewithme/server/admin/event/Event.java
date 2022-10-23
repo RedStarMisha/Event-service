@@ -2,13 +2,17 @@ package ru.practicum.explorewithme.server.admin.event;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 import ru.practicum.explorewithme.models.State;
-import ru.practicum.explorewithme.server.LocalDateTimeConverter;
+import ru.practicum.explorewithme.server.admin.request.Request;
+import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 import ru.practicum.explorewithme.server.admin.category.Category;
 import ru.practicum.explorewithme.server.admin.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -63,6 +67,14 @@ public class Event {
 
     @Enumerated(EnumType.ORDINAL)
     private State state;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @Where(clause = "status = 'CONFIRMED'")
+    private Set<Request> confirmedRequests;
+
+    @Transient
+            @Formula(value = "confirmedRequests.size()")
+    int size;
 
 
 }

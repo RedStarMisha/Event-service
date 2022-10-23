@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server;
+package ru.practicum.explorewithme.server.utils;
 
 import javax.persistence.AttributeConverter;
 import java.sql.Timestamp;

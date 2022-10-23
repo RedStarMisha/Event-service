@@ -1,8 +1,9 @@
-package ru.practicum.explorewithme.server.admin.user;
+package ru.practicum.explorewithme.server.utils.mappers;
 
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.models.user.UserShortDto;
+import ru.practicum.explorewithme.server.admin.user.User;
 
 public class UserMapper {
     public static User toUser(NewUserRequest newUserRequest) {

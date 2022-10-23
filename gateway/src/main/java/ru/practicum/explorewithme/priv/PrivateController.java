@@ -78,7 +78,7 @@ public class PrivateController {
 
     @PostMapping("/{userId}/requests")
     public ResponseEntity<Object> addNewRequestByUser(@PathVariable(name = "userId") @Positive Long userId,
-                                                      @PathVariable(name = "eventId") @Positive Long eventId) {
+                                                      @RequestParam(name = "eventId") @Positive Long eventId) {
         return client.addNewRequestByUser(userId, eventId);
     }
 

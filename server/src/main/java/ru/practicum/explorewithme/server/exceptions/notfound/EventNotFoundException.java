@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.exceptions;
+package ru.practicum.explorewithme.server.exceptions.notfound;
 
 public class EventNotFoundException extends EntityNotFoundException {
 

@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.server.admin.user;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.server.LocalDateTimeConverter;
+import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

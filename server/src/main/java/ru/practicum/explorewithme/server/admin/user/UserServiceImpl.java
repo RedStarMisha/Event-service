@@ -3,19 +3,19 @@ package ru.practicum.explorewithme.server.admin.user;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
-import ru.practicum.explorewithme.server.exceptions.UserNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
+import ru.practicum.explorewithme.server.utils.mappers.UserMapper;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static ru.practicum.explorewithme.server.admin.user.UserMapper.toUser;
-import static ru.practicum.explorewithme.server.admin.user.UserMapper.toUserDto;
+import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
+import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUser;
+import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserDto;
 
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -47,10 +47,5 @@ public class UserServiceImpl implements UserService {
         repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         log.info("User with id = {} is deleted", userId);
         repository.deleteById(userId);
-    }
-
-    private Pageable makePageable(int from, int size) {
-        int page = from / size;
-        return PageRequest.of(page, size);
     }
 }

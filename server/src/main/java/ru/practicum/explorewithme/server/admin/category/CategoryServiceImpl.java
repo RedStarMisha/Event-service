@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
-import ru.practicum.explorewithme.server.exceptions.CategoryNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 
-import static ru.practicum.explorewithme.server.admin.category.CategoryMapper.toCategory;
-import static ru.practicum.explorewithme.server.admin.category.CategoryMapper.toDto;
+import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toCategory;
+import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;
 
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)

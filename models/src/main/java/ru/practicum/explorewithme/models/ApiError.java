@@ -12,14 +12,15 @@ import java.util.List;
 @Value
 @AllArgsConstructor
 public class ApiError {
-    List<FieldError> errors;
+//    List<FieldError> errors;
+    StackTraceElement[] errors;
     String message;
     String reason;
     HttpStatus status;
     LocalDateTime timestamp = LocalDateTime.now();
 
     public ApiError(String message, String reason, HttpStatus status) {
-        errors = new ArrayList<>();
+        errors = null;
         this.message = message;
         this.reason = reason;
         this.status = status;
