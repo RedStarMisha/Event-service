@@ -1,8 +1,7 @@
-package ru.practicum.explorewithme.server.admin.category;
+package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.server.admin.event.Event;
 
 import javax.persistence.*;
 import java.util.Set;

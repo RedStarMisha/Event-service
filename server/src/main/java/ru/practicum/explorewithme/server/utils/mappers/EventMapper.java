@@ -2,10 +2,10 @@ package ru.practicum.explorewithme.server.utils.mappers;
 
 import ru.practicum.explorewithme.models.State;
 import ru.practicum.explorewithme.models.event.*;
-import ru.practicum.explorewithme.server.admin.category.Category;
-import ru.practicum.explorewithme.server.admin.event.Event;
-import ru.practicum.explorewithme.server.admin.event.Loc;
-import ru.practicum.explorewithme.server.admin.user.User;
+import ru.practicum.explorewithme.server.models.Category;
+import ru.practicum.explorewithme.server.models.Event;
+import ru.practicum.explorewithme.server.models.Loc;
+import ru.practicum.explorewithme.server.models.User;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

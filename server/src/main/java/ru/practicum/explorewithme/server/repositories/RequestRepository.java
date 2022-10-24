@@ -3,7 +3,7 @@ package ru.practicum.explorewithme.server.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.explorewithme.models.RequestStatus;
-import ru.practicum.explorewithme.server.admin.request.Request;
+import ru.practicum.explorewithme.server.models.Request;
 
 import java.util.List;
 import java.util.Optional;

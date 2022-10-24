@@ -1,11 +1,11 @@
-package ru.practicum.explorewithme.server.admin.user;
+package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
+import ru.practicum.explorewithme.server.services.admin.UserService;
 
 import java.util.List;
 

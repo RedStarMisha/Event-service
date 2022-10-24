@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.priv;
+package ru.practicum.explorewithme.server.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
+import ru.practicum.explorewithme.server.services.PrivateService;
 
 import java.util.List;
 

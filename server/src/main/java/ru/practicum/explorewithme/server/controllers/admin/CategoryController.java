@@ -1,10 +1,11 @@
-package ru.practicum.explorewithme.server.admin.category;
+package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
+import ru.practicum.explorewithme.server.services.admin.CategoryService;
 
 
 @RestController

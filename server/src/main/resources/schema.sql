@@ -44,14 +44,14 @@ create table if not exists participation_requests (
     status int
 );
 
-create table if not exists selections (
+create table if not exists compilations (
     id bigint generated always as identity primary key ,
     pinned boolean,
-    name text
+    title text
 );
 
-create table if not exists events_selections (
-    selection_id bigint references selections,
+create table if not exists events_compilations (
+    compilation_id bigint references compilations,
     event_id bigint references events,
-    unique (selection_id, event_id)
+    primary key (compilation_id, event_id)
 );

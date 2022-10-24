@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.admin.category;
+package ru.practicum.explorewithme.server.services.admin;
 
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;

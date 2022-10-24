@@ -1,14 +1,20 @@
 package ru.practicum.explorewithme.models.compilation;
 
+import lombok.Data;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-@Value
+@Data
 public class NewCompilationDto {
+    @NotNull
+    @NotEmpty
     long[] events;
 
-    boolean pinned;
+    @NotNull
+    Boolean pinned;
 
     @NotBlank
     String title;

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.publ;
+package ru.practicum.explorewithme.server.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.admin.user;
+package ru.practicum.explorewithme.server.services.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
+import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.utils.mappers.UserMapper;
 

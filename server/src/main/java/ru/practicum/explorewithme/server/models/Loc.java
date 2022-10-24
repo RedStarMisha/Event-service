@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.admin.event;
+package ru.practicum.explorewithme.server.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

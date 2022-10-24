@@ -23,29 +23,29 @@ public class CompilationsController {
     }
 
     @DeleteMapping("/{compId}")
-    public ResponseEntity<Object> deleteCompilation(@PathVariable(name = "compId") long compId) {
+    public ResponseEntity<Object> deleteCompilation(@PathVariable(name = "compId") Long compId) {
         return client.deleteCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/events/{eventId}")
-    public ResponseEntity<Object> deleteEventFromCompilation(@PathVariable(name = "compId") long compId,
-                                                             @PathVariable(name = "eventId") long eventId) {
+    public ResponseEntity<Object> deleteEventFromCompilation(@PathVariable(name = "compId") Long compId,
+                                                             @PathVariable(name = "eventId") Long eventId) {
         return client.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/{compId}/events/{eventId}")
-    public ResponseEntity<Object> addEventFromCompilation(@PathVariable(name = "compId") long compId,
-                                                             @PathVariable(name = "eventId") long eventId) {
+    public ResponseEntity<Object> addEventFromCompilation(@PathVariable(name = "compId") Long compId,
+                                                             @PathVariable(name = "eventId") Long eventId) {
         return client.addEventFromCompilation(compId, eventId);
     }
 
     @DeleteMapping("/{compId}/pin")
-    public ResponseEntity<Object> unpinCompilation(@PathVariable(name = "compId") long compId) {
+    public ResponseEntity<Object> unpinCompilation(@PathVariable(name = "compId") Long compId) {
         return client.unpinCompilation(compId);
     }
 
     @PatchMapping("/{compId}/pin")
-    public ResponseEntity<Object> pinCompilation(@PathVariable(name = "compId") long compId) {
+    public ResponseEntity<Object> pinCompilation(@PathVariable(name = "compId") Long compId) {
         return client.pinCompilation(compId);
     }
 }

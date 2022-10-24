@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.server.utils.mappers;
 
 import ru.practicum.explorewithme.models.ParticipationRequestDto;
-import ru.practicum.explorewithme.server.admin.request.Request;
+import ru.practicum.explorewithme.server.models.Request;
 
 public class RequestMapper {
     public static ParticipationRequestDto toRequestDto(Request request) {

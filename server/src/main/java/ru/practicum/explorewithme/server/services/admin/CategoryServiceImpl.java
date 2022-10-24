@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.admin.category;
+package ru.practicum.explorewithme.server.services.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
+import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toCategory;
@@ -37,7 +39,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(long catId) {
-        repository.findById(catId).orElseThrow(() -> new CategoryNotFoundException(catId));
+        Category category = repository.findById(catId).orElseThrow(() -> new CategoryNotFoundException(catId));
+        if (category.getEvents().isEmpty()) {
+            throw new RequestConditionException("Нельзя удалить категорию у которой с которой связано событие");
+        }
         log.info("Delete category with id = {}", catId);
         repository.deleteById(catId);
     }

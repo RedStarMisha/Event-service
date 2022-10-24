@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.priv;
+package ru.practicum.explorewithme.server.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +11,11 @@ import ru.practicum.explorewithme.models.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
-import ru.practicum.explorewithme.server.admin.category.Category;
-import ru.practicum.explorewithme.server.admin.event.Event;
-import ru.practicum.explorewithme.server.admin.event.Loc;
-import ru.practicum.explorewithme.server.admin.request.Request;
-import ru.practicum.explorewithme.server.admin.user.User;
+import ru.practicum.explorewithme.server.models.Category;
+import ru.practicum.explorewithme.server.models.Event;
+import ru.practicum.explorewithme.server.models.Loc;
+import ru.practicum.explorewithme.server.models.Request;
+import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
@@ -42,7 +42,6 @@ public class PrivateServiceImpl implements PrivateService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
-
     private final RequestRepository requestRepository;
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {

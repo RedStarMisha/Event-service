@@ -1,16 +1,20 @@
 package ru.practicum.explorewithme.models.compilation;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 
+import java.util.Set;
+
 @Data
+@AllArgsConstructor
 public class CompilationDto {
 
-    EventShortDto events;
+    private Set<EventShortDto> events;
 
-    long id;
+    private long id;
 
-    boolean pinned;
+    private boolean pinned;
 
-    String title;
+    private String title;
 }

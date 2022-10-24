@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.server.utils.mappers;
 
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
-import ru.practicum.explorewithme.server.admin.category.Category;
+import ru.practicum.explorewithme.server.models.Category;
 
 public class CategoryMapper {
     public static Category toCategory(NewCategoryDto newCategoryDto) {

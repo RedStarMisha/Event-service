@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.priv;
+package ru.practicum.explorewithme.server.services;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
