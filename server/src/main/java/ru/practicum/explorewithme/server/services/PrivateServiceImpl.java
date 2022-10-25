@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.models.ParticipationRequestDto;
-import ru.practicum.explorewithme.models.RequestStatus;
-import ru.practicum.explorewithme.models.State;
+import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.RequestStatus;
+import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
-import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.models.Loc;
@@ -82,14 +81,18 @@ public class PrivateServiceImpl implements PrivateService {
             loc = Optional.of(locRepository.save(new Loc(location)));
         }
 
-        Event event = EventMapper.toEvent(eventDto, category, user, loc.get());
+        Event event = toEvent(eventDto, category, user, loc.get());
 
-        return EventMapper.toEventFull(eventRepository.save(event));
+        return toEventFull(eventRepository.save(event));
     }
 
     @Override
     public EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId) {
-        return null;
+        Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+
+        event.setCountConfirmed(requestRepository.findConfirmedRequests(eventId));
+        return toEventFull(event);
     }
 
     @Override

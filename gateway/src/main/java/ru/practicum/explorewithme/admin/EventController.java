@@ -47,7 +47,7 @@ public class EventController {
 
     @PutMapping("/{eventId}")
     public ResponseEntity<Object> updateEvent(@PathVariable(name = "eventId") long eventId,
-                                              @RequestBody @Valid AdminUpdateEventRequest updateEventRequest) {
+                                              @RequestBody AdminUpdateEventRequest updateEventRequest) {
         return client.updateEvent(eventId, updateEventRequest);
     }
 

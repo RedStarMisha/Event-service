@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.server.utils.mappers;
 
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
 import ru.practicum.explorewithme.models.compilation.NewCompilationDto;
+import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.server.models.Compilation;
 import ru.practicum.explorewithme.server.models.Event;
 
@@ -13,9 +14,12 @@ public class CompilationsMapper {
         return new Compilation(dto.getTitle(), dto.getPinned(), events);
     }
 
-    public static CompilationDto toCompilationDto(Compilation compilation) {
+    public static CompilationDto toCompilationDto(Compilation compilation, Set<EventShortDto> shortEvents) {
         return new CompilationDto(
-                compilation.getEvents().stream().map(EventMapper::toEventShort)
-        )
+                shortEvents,
+                compilation.getId(),
+                compilation.isPinned(),
+                compilation.getTitle()
+        );
     }
 }

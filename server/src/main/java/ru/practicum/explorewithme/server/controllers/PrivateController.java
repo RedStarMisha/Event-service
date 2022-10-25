@@ -3,7 +3,7 @@ package ru.practicum.explorewithme.server.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.models.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.NewEventDto;

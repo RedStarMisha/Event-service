@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.explorewithme.models.ApiError;
-import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.EntityNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.*;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 
 @RestControllerAdvice
@@ -27,10 +24,10 @@ public class ServerExceptionHandler {
         return new ApiError(e.getStackTrace(), e.getMessage(), e.getReason(), HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, EventNotFoundException.class,
-    CategoryNotFoundException.class, RequestConditionException.class})
+    CompilationNotFoundException.class, RequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError entityNotFoundException(EntityNotFoundException e) {
-        return new ApiError(e.getStackTrace(), e.getMessage(), String.format("Requested %s not found", e.getEntityType()),
+        return new ApiError(e.getStackTrace(), e.getMessage(), "The required object was not found.",
                 HttpStatus.NOT_FOUND);
     }
 }

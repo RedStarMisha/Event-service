@@ -26,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         Category category = repository.findById(categoryDto.getId())
                 .orElseThrow(() -> new CategoryNotFoundException(categoryDto.getId()));
+        category.setName(categoryDto.getName());
         log.info("Update name category - {} on {}", category.getName(), categoryDto.getName());
         return toDto(repository.save(category));
     }
@@ -40,8 +41,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(long catId) {
         Category category = repository.findById(catId).orElseThrow(() -> new CategoryNotFoundException(catId));
-        if (category.getEvents().isEmpty()) {
-            throw new RequestConditionException("Нельзя удалить категорию у которой с которой связано событие");
+        if (!category.getEvents().isEmpty()) {
+            throw new RequestConditionException("Нельзя удалить категорию с которой связано событие");
         }
         log.info("Delete category with id = {}", catId);
         repository.deleteById(catId);

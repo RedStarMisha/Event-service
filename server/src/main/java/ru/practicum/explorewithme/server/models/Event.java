@@ -1,10 +1,8 @@
 package ru.practicum.explorewithme.server.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
+import lombok.*;
 import org.hibernate.annotations.Where;
-import ru.practicum.explorewithme.models.State;
+import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
@@ -13,7 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "events")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
 @NoArgsConstructor
 public class Event {
     @Id
@@ -71,6 +72,9 @@ public class Event {
 
     @ManyToMany(mappedBy = "events")
     private Set<Compilation> compilations;
+
+    @Transient
+    private long countConfirmed;
 
 
 }

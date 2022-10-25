@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.models.RequestStatus;
+import ru.practicum.explorewithme.models.request.RequestStatus;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;

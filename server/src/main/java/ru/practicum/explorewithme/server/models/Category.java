@@ -1,13 +1,15 @@
 package ru.practicum.explorewithme.server.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString
 @Table(name = "categories")
 @NoArgsConstructor
 public class Category {

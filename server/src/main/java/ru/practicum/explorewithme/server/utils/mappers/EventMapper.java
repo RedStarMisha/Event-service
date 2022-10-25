@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.server.utils.mappers;
 
-import ru.practicum.explorewithme.models.State;
+import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.models.Event;
@@ -27,15 +27,17 @@ public class EventMapper {
         event.setPaid(newEventDto.isPaid());
         event.setCreated(LocalDateTime.now());
         event.setState(State.PENDING);
+        event.setParticipantLimit(newEventDto.getParticipantLimit());
         return event;
     }
 
     public static EventFullDto toEventFull(Event event) {
         Location location = new Location(event.getLocation().getLatitude(), event.getLocation().getLongitude());
-        return new EventFullDto(event.getAnnotation(), toDto(event.getCategory()), 0, event.getCreated(),
-                event.getDescription(), event.getEventDate(), event.getId(), toUserShort(event.getInitiator()), location,
-                event.isPaid(), event.getParticipantLimit(), event.getPublished(), event.isModeration(), event.getState(),
-                event.getTitle(), 0);
+
+        return new EventFullDto(event.getAnnotation(), toDto(event.getCategory()), event.getCountConfirmed(),
+                event.getCreated(), event.getDescription(), event.getEventDate(), event.getId(),
+                toUserShort(event.getInitiator()), location, event.isPaid(), event.getParticipantLimit(),
+                event.getPublished(), event.isModeration(), event.getState(), event.getTitle(), 0);
     }
 
     public static Event makeUpdatableModel(Event event, UpdateEventRequest request, Category category) {

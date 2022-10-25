@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.models.event;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import ru.practicum.explorewithme.models.validation.CheckEventDate;
 
 import javax.validation.constraints.NotBlank;
@@ -29,9 +30,9 @@ public class NewEventDto implements EventDateCheckable {
     @NotNull
     private Location location;
 
-    private boolean paid;
+    private boolean paid = false;
 
-    private int participantLimit;
+    private int participantLimit = 10;
 
     private boolean requestModeration;
 

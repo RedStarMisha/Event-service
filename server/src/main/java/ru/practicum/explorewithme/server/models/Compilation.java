@@ -34,4 +34,12 @@ public class Compilation {
         this.pinned = pinned;
         this.events = events;
     }
+
+    public void deleteEvent(Event event) {
+        events.remove(event);
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+    }
 }

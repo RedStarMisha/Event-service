@@ -3,8 +3,6 @@ package ru.practicum.explorewithme.models.event;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.practicum.explorewithme.models.State;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.user.UserShortDto;
 

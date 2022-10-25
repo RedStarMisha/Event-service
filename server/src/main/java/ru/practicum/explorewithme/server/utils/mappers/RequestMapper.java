@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.server.utils.mappers;
 
-import ru.practicum.explorewithme.models.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.models.Request;
 
 public class RequestMapper {

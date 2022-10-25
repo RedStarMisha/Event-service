@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.server.exceptions.notfound;
 
 public class CategoryNotFoundException extends EntityNotFoundException {
     public CategoryNotFoundException(Long id) {
-        super("Категория с id = " + id + " не найдена");
+        super( "Category", id);
     }
 
     @Override
