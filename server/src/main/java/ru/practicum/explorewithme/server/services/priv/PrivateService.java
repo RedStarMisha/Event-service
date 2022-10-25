@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services;
+package ru.practicum.explorewithme.server.services.priv;
 
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.event.EventFullDto;
@@ -19,16 +19,9 @@ public interface PrivateService {
     EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId);
 
     EventFullDto cancelEventByOwner(long userId, long eventId);
-
     List<ParticipationRequestDto> getEventRequests(long userId, long eventId);
 
     ParticipationRequestDto confirmRequestForEvent(long userId, long eventId, long reqId);
 
     ParticipationRequestDto rejectRequestForEvent(long userId, long eventId, long reqId);
-
-    List<ParticipationRequestDto> getEventRequestsByUser(long userId);
-
-    ParticipationRequestDto addNewRequestByUser(long userId, long eventId);
-
-    ParticipationRequestDto cancelUserRequest(long userId, long requestId);
 }

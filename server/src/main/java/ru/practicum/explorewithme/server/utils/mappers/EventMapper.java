@@ -33,11 +33,23 @@ public class EventMapper {
 
     public static EventFullDto toEventFull(Event event) {
         Location location = new Location(event.getLocation().getLatitude(), event.getLocation().getLongitude());
-
-        return new EventFullDto(event.getAnnotation(), toDto(event.getCategory()), event.getCountConfirmed(),
-                event.getCreated(), event.getDescription(), event.getEventDate(), event.getId(),
-                toUserShort(event.getInitiator()), location, event.isPaid(), event.getParticipantLimit(),
-                event.getPublished(), event.isModeration(), event.getState(), event.getTitle(), 0);
+        return new EventFullDto(
+                event.getAnnotation(),
+                toDto(event.getCategory()),
+                event.getNumberConfirmed(),
+                event.getCreated(),
+                event.getDescription(),
+                event.getEventDate(),
+                event.getId(),
+                toUserShort(event.getInitiator()),
+                location,
+                event.isPaid(),
+                event.getParticipantLimit(),
+                event.getPublished(),
+                event.isModeration(),
+                event.getState(),
+                event.getTitle(),
+                0);
     }
 
     public static Event makeUpdatableModel(Event event, UpdateEventRequest request, Category category) {
@@ -52,12 +64,12 @@ public class EventMapper {
         return event;
     }
 
-    public static EventShortDto toEventShort(Event event, Long count) {
+    public static EventShortDto toEventShort(Event event) {
         EventShortDto eventShort = new EventShortDto();
         eventShort.setId(event.getId());
         eventShort.setAnnotation(event.getAnnotation());
         eventShort.setCategory(toDto(event.getCategory()));
-        eventShort.setConfirmedRequests(count);
+        eventShort.setConfirmedRequests(event.getNumberConfirmed());
         eventShort.setEventDate(event.getEventDate());
         eventShort.setInitiator(toUserShort(event.getInitiator()));
         eventShort.setPaid(event.isPaid());

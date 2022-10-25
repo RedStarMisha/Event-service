@@ -32,7 +32,7 @@ public class NewEventDto implements EventDateCheckable {
 
     private boolean paid = false;
 
-    private int participantLimit = 10;
+    private int participantLimit = 0;
 
     private boolean requestModeration;
 

@@ -1,6 +1,8 @@
 package ru.practicum.explorewithme.server.utils;
 
 import lombok.Getter;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.practicum.explorewithme.models.event.EventSort;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,4 +35,15 @@ public class SelectionCondition {
         LocalDateTime endDate = start != null ? LocalDateTime.parse(end, formatter) : null;
         return new SelectionCondition(users, states, categories, startDate, endDate, from, size);
     }
+
+    @RequestParam(name = "text", required = false) String text,
+    @RequestParam(name = "categories", required = false) int[] categories,
+    @RequestParam(name = "paid", required = false) Boolean paid,
+    @RequestParam(name = "rangeStart", required = false) String rangeStart,
+    @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
+    @RequestParam(name = "available", defaultValue = "false") boolean available,
+    @RequestParam(name = "sort", defaultValue = "EVENT_DATE")
+    EventSort sort,
+    @RequestParam(name = "from", defaultValue = "0") int from,
+    @RequestParam(name = "size", defaultValue = "10") int size
 }

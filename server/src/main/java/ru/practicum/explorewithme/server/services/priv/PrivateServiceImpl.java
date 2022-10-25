@@ -1,20 +1,16 @@
-package ru.practicum.explorewithme.server.services;
+package ru.practicum.explorewithme.server.services.priv;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
-import ru.practicum.explorewithme.models.request.RequestStatus;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
+import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.RequestStatus;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
-import ru.practicum.explorewithme.server.models.Category;
-import ru.practicum.explorewithme.server.models.Event;
-import ru.practicum.explorewithme.server.models.Loc;
-import ru.practicum.explorewithme.server.models.Request;
-import ru.practicum.explorewithme.server.models.User;
+import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
@@ -22,7 +18,6 @@ import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestCond
 import ru.practicum.explorewithme.server.repositories.*;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,8 +42,7 @@ public class PrivateServiceImpl implements PrivateService {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         List<Event> events = eventRepository.findAllByInitiator_Id(userId, makePageable(from, size));
 
-        return events.stream().map(event -> toEventShort(event, requestRepository.findConfirmedRequests(event.getId())))
-                .collect(Collectors.toList());
+        return events.stream().map(event -> toEventShort(event)).collect(Collectors.toList());
     }
 
     @Override
@@ -59,7 +53,7 @@ public class PrivateServiceImpl implements PrivateService {
         Category category = request.getCategory() != null ? categoryRepository.findById(request.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(request.getCategory())) : null;
 
-        if (List.of(State.PENDING, State.CANCELED).contains(event.getState())) {
+        if (!List.of(State.PENDING, State.CANCELED).contains(event.getState())) {
             throw new RequestConditionException("Нельзя менять опубликованные события");
         }
 
@@ -91,71 +85,63 @@ public class PrivateServiceImpl implements PrivateService {
         Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        event.setCountConfirmed(requestRepository.findConfirmedRequests(eventId));
         return toEventFull(event);
     }
 
     @Override
     public EventFullDto cancelEventByOwner(long userId, long eventId) {
-        return null;
-    }
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
 
+        switch (event.getState()) {
+            case PUBLISHED:
+                throw new RequestConditionException("Нельзя отменить опубликованное событие");
+            case CANCELED:
+                throw new RequestConditionException("Событие уже отменено");
+            default:
+                event.setState(State.CANCELED);
+                return toEventFull(event);
+        }
+    }
     @Override
     public List<ParticipationRequestDto> getEventRequests(long userId, long eventId) {
-        return null;
-    }
-
-    @Override
-    public ParticipationRequestDto confirmRequestForEvent(long userId, long eventId, long reqId) {
-        return null;
-    }
-
-    @Override
-    public ParticipationRequestDto rejectRequestForEvent(long userId, long eventId, long reqId) {
-        return null;
-    }
-
-    @Override
-    public List<ParticipationRequestDto> getEventRequestsByUser(long userId) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        eventRepository.findByInitiator_IdAndId(userId, eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        return requestRepository.findAllByRequestor_Id(userId).stream().map(RequestMapper::toRequestDto)
+        return requestRepository.findAllByEvent_Id(eventId).stream().map(RequestMapper::toRequestDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ParticipationRequestDto addNewRequestByUser(long userId, long eventId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-
-        Event event = eventRepository.findByIdAndState(eventId, State.PUBLISHED)
+    public ParticipationRequestDto confirmRequestForEvent(long userId, long eventId, long reqId) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
+        Request request = requestRepository.findById(reqId).orElseThrow(() -> new RequestNotFoundException(reqId));
 
-        if (event.getInitiator().getId() == userId){
-            throw new RequestConditionException("Пользователь не может подать заявку на участие в своем событии");
-        }
-
-        if (event.getEventDate().isBefore(LocalDateTime.now())) {
-            throw new RequestConditionException("Событие уже прошло");
-
-        }
-
-        requestRepository.findByRequestor_IdAndEvent_Id(userId, eventId).ifPresent((request) ->
-            new RequestConditionException(String.format("Запрос на участие в событии %s уже отправлен", event.getTitle())));
-
-        if (event.getParticipantLimit() <= requestRepository.findConfirmedRequests(eventId)) {
+        if (event.getParticipantLimit() == event.getNumberConfirmed()) {
+            requestRepository.rejectedAllRequestsByEventId(eventId);
             throw new RequestConditionException("Лимит участников события достигнут");
         }
+        eventRepository.addConfirmedRequest(eventId);
 
-        Request request = event.isModeration() ? Request.makePending(user, event) : Request.makeConfirmed(user, event);
+        request.setStatus(RequestStatus.CONFIRMED);
 
-        return toRequestDto(requestRepository.save(request));
+        return toRequestDto(request);
     }
 
     @Override
-    public ParticipationRequestDto cancelUserRequest(long userId, long requestId) {
+    public ParticipationRequestDto rejectRequestForEvent(long userId, long eventId, long reqId) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Request request = requestRepository.findById(requestId).orElseThrow(() -> new RequestNotFoundException(requestId));
+        eventRepository.findByInitiator_IdAndId(userId, eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+        Request request = requestRepository.findById(reqId).orElseThrow(() -> new RequestNotFoundException(reqId));
+
         request.setStatus(RequestStatus.REJECTED);
-        return toRequestDto(requestRepository.save(request));
+
+        return toRequestDto(request);
     }
+
 }

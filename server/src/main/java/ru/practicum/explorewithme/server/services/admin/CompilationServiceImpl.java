@@ -16,6 +16,7 @@ import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.repositories.RequestRepository;
+import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -40,13 +41,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
         Set<Event> events = Arrays.stream(compilationDto.getEvents()).mapToObj(id -> eventRepository.findById(id)
-                .filter(event -> event.getState() == State.PUBLISHED)
                     .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toSet());
 
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
 
-        Set<EventShortDto> shortEvents = events.stream().map(event ->
-                toEventShort(event, requestRepository.findConfirmedRequests(event.getId()))).collect(Collectors.toSet());
+        Set<EventShortDto> shortEvents = events.stream().map(EventMapper::toEventShort).collect(Collectors.toSet());
 
         return toCompilationDto(compilation, shortEvents);
     }

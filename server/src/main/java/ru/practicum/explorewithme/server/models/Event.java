@@ -73,8 +73,8 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     private Set<Compilation> compilations;
 
-    @Transient
-    private long countConfirmed;
+    @Column(name = "number_confirmed")
+    private int numberConfirmed;
 
 
 }

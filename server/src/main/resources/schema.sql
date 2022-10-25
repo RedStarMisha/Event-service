@@ -33,7 +33,8 @@ create table if not exists events (
     paid boolean,
     partition_limit int,
     moderation boolean,
-    state int
+    state int,
+    number_confirmed int
 );
 
 create table if not exists participation_requests (
