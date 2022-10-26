@@ -24,7 +24,7 @@ public class PrivateController {
     @GetMapping("/{userId}/events")
     public ResponseEntity<Object> getEventsByOwnerId(@PathVariable(name = "userId") Long userId,
                                              @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                             @RequestParam(name = "size", defaultValue = "10") @Positive int size) {
+                                             @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         return client.getEventsByOwnerId(userId, from, size);
     }
 

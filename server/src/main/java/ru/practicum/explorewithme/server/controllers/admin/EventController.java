@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.server.services.admin.EventService;
-import ru.practicum.explorewithme.server.utils.SelectionCondition;
+import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
 
 import java.util.List;
 
@@ -26,7 +26,8 @@ public class EventController {
                                         @RequestParam(name = "from", defaultValue = "0") int from,
                                         @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        SelectionCondition condition = SelectionCondition.of(users, states, categories, rangeStart, rangeEnd, from, size);
+        SelectionConditionForAdmin condition = SelectionConditionForAdmin.of(users, states, categories, rangeStart,
+                rangeEnd, from, size);
 
         return service.getEvents(condition);
     }

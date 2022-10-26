@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.server.repositories;
 
+import com.mysema.query.types.expr.BooleanExpression;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("update Event e set e.numberConfirmed = e.numberConfirmed + 1 where e.id=?1")
     void addConfirmedRequest(long eventId);
+
+    List<Event> findByParam(BooleanExpression expression, Pageable pageable);
 
 }
