@@ -57,7 +57,7 @@ public class PrivateServiceImpl implements PrivateService {
             throw new RequestConditionException("Нельзя менять опубликованные события");
         }
 
-        event = makeUpdatableModel(event, request, category);
+        event = makeUpdatableModelPrivate(event, request, category);
 
         return toEventFull(eventRepository.save(event));
     }
@@ -71,6 +71,7 @@ public class PrivateServiceImpl implements PrivateService {
 
         //интересно почему не работает через orElseThrow
         Optional<Loc> loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon());
+
         if (loc.isEmpty()) {
             loc = Optional.of(locRepository.save(new Loc(location)));
         }

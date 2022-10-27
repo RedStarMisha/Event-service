@@ -1,12 +1,13 @@
 package ru.practicum.explorewithme.server.utils;
 
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.models.QEvent;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

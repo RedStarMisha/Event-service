@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.server.utils.mappers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.server.models.Category;
@@ -52,7 +53,7 @@ public class EventMapper {
                 0);
     }
 
-    public static Event makeUpdatableModel(Event event, UpdateEventRequest request, Category category) {
+    public static Event makeUpdatableModelPrivate(Event event, UpdateEventRequest request, Category category) {
         Optional.ofNullable(request.getAnnotation()).ifPresent(event::setAnnotation);
         Optional.ofNullable(category).ifPresent(event::setCategory);
         Optional.ofNullable(request.getDescription()).ifPresent(event::setDescription);
@@ -61,6 +62,19 @@ public class EventMapper {
         Optional.ofNullable(request.getParticipantLimit()).ifPresent(event::setParticipantLimit);
         Optional.ofNullable(request.getTitle()).ifPresent(event::setTitle);
         event.setState(State.PENDING);
+        return event;
+    }
+
+    public static Event makeUpdatableModelAdmin(Event event, AdminUpdateEventRequest request) {
+        Optional.ofNullable(request.getAnnotation()).ifPresent(event::setAnnotation);
+        Optional.ofNullable(request.getDescription()).ifPresent(event::setDescription);
+        Optional.ofNullable(request.getEventDate()).filter(date -> LocalDateTime.now().isBefore(date))
+                .ifPresent(event::setEventDate);
+        Optional.ofNullable(request.getPaid()).ifPresent(event::setPaid);
+        Optional.ofNullable(request.getParticipantLimit()).filter(limit -> limit > event.getNumberConfirmed() || limit == 0)
+                .ifPresent(event::setParticipantLimit);
+        Optional.ofNullable(request.getTitle()).ifPresent(event::setTitle);
+        Optional.ofNullable(request.getRequestModeration()).ifPresent(event::setModeration);
         return event;
     }
 

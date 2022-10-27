@@ -11,7 +11,7 @@ public class AdminUpdateEventRequest {
 
     private String annotation;
 
-    private CategoryDto category;
+    private Long category;
 
     private String description;
 
@@ -20,11 +20,11 @@ public class AdminUpdateEventRequest {
 
     private Location location;
 
-    private boolean paid;
+    private Boolean paid;
 
-    private int participantLimit;
+    private Integer participantLimit;
 
-    private boolean requestModeration;
+    private Boolean requestModeration;
 
     private String title;
 }

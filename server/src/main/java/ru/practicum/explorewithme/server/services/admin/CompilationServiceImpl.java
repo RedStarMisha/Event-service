@@ -35,7 +35,6 @@ public class CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
-    private final RequestRepository requestRepository;
 
 
     @Override
@@ -44,6 +43,7 @@ public class CompilationServiceImpl implements CompilationService {
                     .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toSet());
 
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
+        log.info("Compilation {} добавлена");
 
         Set<EventShortDto> shortEvents = events.stream().map(EventMapper::toEventShort).collect(Collectors.toSet());
 
@@ -54,6 +54,7 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteCompilation(long compId) {
         compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
         compilationRepository.deleteById(compId);
+        log.info("Compilation с id={} удалена");
     }
 
     @Override
@@ -68,6 +69,8 @@ public class CompilationServiceImpl implements CompilationService {
         compilation.deleteEvent(event);
 
         compilationRepository.save(compilation);
+
+        log.info("Event с id={} удалено из Compilation с id={}", eventId, compId);
     }
 
     @Override
@@ -82,6 +85,7 @@ public class CompilationServiceImpl implements CompilationService {
         compilation.addEvent(event);
 
         compilationRepository.save(compilation);
+        log.info("Event с id={} добавлено в Compilation с id={}", eventId, compId);
     }
 
     @Override
@@ -96,6 +100,8 @@ public class CompilationServiceImpl implements CompilationService {
         compilation.setPinned(false);
 
         compilationRepository.save(compilation);
+        log.info("Compilation с id={} снята с главной страницы", compId);
+
     }
 
     @Override
@@ -110,5 +116,6 @@ public class CompilationServiceImpl implements CompilationService {
         compilation.setPinned(true);
 
         compilationRepository.save(compilation);
+        log.info("Compilation с id={} размещена на главной странице", compId);
     }
 }

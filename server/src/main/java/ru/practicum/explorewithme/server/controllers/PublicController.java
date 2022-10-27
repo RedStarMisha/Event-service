@@ -43,7 +43,7 @@ public class PublicController {
     }
 
     @GetMapping("/events/{eventId}")
-    public EventFullDto getEventById(@PathVariable(name = "eventId") int eventId) {
+    public EventFullDto getEventById(@PathVariable(name = "eventId") long eventId) {
         return service.getEventById(eventId);
     }
 

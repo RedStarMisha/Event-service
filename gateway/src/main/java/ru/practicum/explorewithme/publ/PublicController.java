@@ -51,7 +51,7 @@ public class PublicController {
     }
 
     @GetMapping("/events/{eventId}")
-    public ResponseEntity<Object> getEventById(@PathVariable(name = "eventId") int eventId) {
+    public ResponseEntity<Object> getEventById(@PathVariable(name = "eventId") long eventId) {
         return client.getEventById(eventId);
     }
 

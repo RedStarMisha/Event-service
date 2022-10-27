@@ -12,7 +12,7 @@ public interface PublicService {
 
     List<EventShortDto> getEvents(SelectionConditionForPublic condition);
 
-    EventFullDto getEventById(int eventId);
+    EventFullDto getEventById(long eventId);
 
     List<CompilationDto> getCompilations(boolean pinned, int from, int size);
 
