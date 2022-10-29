@@ -24,7 +24,6 @@ import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUpdatableModelAdmin;
@@ -43,6 +42,7 @@ public class EventServiceImpl implements EventService {
         log.info("Запрошены Events с параметрами поиска {}", condition);
         QEvent qEvent = QEvent.event;
         SelectionConditionForAdmin.SearchParam param = condition.getSearchParameters(qEvent);
+
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
                 .map(EventMapper::toEventFull).collect(Collectors.toList());
     }
@@ -62,12 +62,11 @@ public class EventServiceImpl implements EventService {
         event = makeUpdatableModelAdmin(event, updateEventRequest);
 
         Location location = updateEventRequest.getLocation();
-        //интересно почему не работает через orElseThrow
-        Optional<Loc> loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon());
-        if (loc.isEmpty()) {
-            loc = Optional.of(locRepository.save(new Loc(location)));
-        }
-        event.setLocation(loc.get());
+
+        Loc loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon())
+                .orElseGet(() -> locRepository.save(new Loc(location)));
+
+        event.setLocation(loc);
 
         return toEventFull(eventRepository.save(event));
     }

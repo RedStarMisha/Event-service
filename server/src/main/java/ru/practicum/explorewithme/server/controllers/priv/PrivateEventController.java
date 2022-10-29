@@ -10,12 +10,13 @@ import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor(onConstructor_ = @Autowired)
-public class PrivateController {
+public class PrivateEventController {
 
     private final PrivateService service;
 
@@ -41,8 +42,8 @@ public class PrivateController {
 
     @GetMapping("/{userId}/events/{eventId}")
     public EventFullDto getEventByOwnerIdAndEventId(@PathVariable(name = "userId") long userId,
-                                                     @PathVariable(name = "eventId") long eventId) {
-        return service.getEventByOwnerIdAndEventId(userId, eventId);
+                                                    @PathVariable(name = "eventId") long eventId, HttpServletRequest request) {
+        return service.getEventByOwnerIdAndEventId(userId, eventId, request);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")

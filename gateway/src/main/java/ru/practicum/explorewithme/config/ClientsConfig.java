@@ -5,17 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.explorewithme.clients.PrivateClient;
-import ru.practicum.explorewithme.clients.PublicClient;
-import ru.practicum.explorewithme.clients.admin.CategoryClient;
-import ru.practicum.explorewithme.clients.admin.CompilationsClient;
-import ru.practicum.explorewithme.clients.admin.EventClient;
-import ru.practicum.explorewithme.clients.admin.UserClient;
-import ru.practicum.explorewithme.publ.PublicController;
+import ru.practicum.explorewithme.clients.server.PrivateClient;
+import ru.practicum.explorewithme.clients.server.PublicClient;
+import ru.practicum.explorewithme.clients.server.admin.CategoryClient;
+import ru.practicum.explorewithme.clients.server.admin.CompilationsClient;
+import ru.practicum.explorewithme.clients.server.admin.EventClient;
+import ru.practicum.explorewithme.clients.server.admin.UserClient;
 
 @Configuration
 public class ClientsConfig {

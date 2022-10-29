@@ -6,15 +6,16 @@ import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface PublicService {
 
     List<EventShortDto> getEvents(SelectionConditionForPublic condition);
 
-    EventFullDto getEventById(long eventId);
+    EventFullDto getEventById(long eventId, HttpServletRequest request);
 
-    List<CompilationDto> getCompilations(boolean pinned, int from, int size);
+    List<CompilationDto> getCompilations(Boolean pinned, int from, int size);
 
     CompilationDto getCompilationById(Long compilationId);
 

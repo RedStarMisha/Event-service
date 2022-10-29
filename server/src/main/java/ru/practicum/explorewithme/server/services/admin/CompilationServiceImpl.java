@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
 import ru.practicum.explorewithme.models.compilation.NewCompilationDto;
-import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.CompilationNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
@@ -15,8 +13,6 @@ import ru.practicum.explorewithme.server.models.Compilation;
 import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
-import ru.practicum.explorewithme.server.repositories.RequestRepository;
-import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -25,7 +21,6 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilation;
 import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilationDto;
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventShort;
 
 @Service
 @Slf4j
@@ -45,9 +40,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
         log.info("Compilation {} добавлена");
 
-        Set<EventShortDto> shortEvents = events.stream().map(EventMapper::toEventShort).collect(Collectors.toSet());
-
-        return toCompilationDto(compilation, shortEvents);
+        return toCompilationDto(compilation);
     }
 
     @Override

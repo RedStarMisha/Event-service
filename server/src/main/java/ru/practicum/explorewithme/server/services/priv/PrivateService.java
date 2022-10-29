@@ -6,6 +6,7 @@ import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface PrivateService {
@@ -16,7 +17,7 @@ public interface PrivateService {
 
     EventFullDto addEvent(long userId, NewEventDto eventDto);
 
-    EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId);
+    EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId, HttpServletRequest request);
 
     EventFullDto cancelEventByOwner(long userId, long eventId);
     List<ParticipationRequestDto> getEventRequests(long userId, long eventId);

@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.clients.admin.UserClient;
+import ru.practicum.explorewithme.clients.server.admin.UserClient;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 
 import javax.validation.Valid;

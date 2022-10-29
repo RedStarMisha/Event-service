@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.clients.admin;
+package ru.practicum.explorewithme.clients.server.admin;
 
 import io.micrometer.core.lang.Nullable;
 import org.springframework.http.ResponseEntity;

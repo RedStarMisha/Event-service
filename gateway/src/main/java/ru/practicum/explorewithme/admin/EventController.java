@@ -5,10 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.clients.admin.EventClient;
+import ru.practicum.explorewithme.clients.server.admin.EventClient;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Map;

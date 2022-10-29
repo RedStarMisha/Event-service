@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.clients.admin.CategoryClient;
+import ru.practicum.explorewithme.clients.server.admin.CategoryClient;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
 

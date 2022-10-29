@@ -1,17 +1,20 @@
 package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.server.services.admin.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
 @AllArgsConstructor(onConstructor_ = @Autowired)
+@Slf4j
 public class UserController {
 
     private final UserService service;

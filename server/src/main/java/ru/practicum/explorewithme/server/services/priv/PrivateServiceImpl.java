@@ -3,12 +3,15 @@ package ru.practicum.explorewithme.server.services.priv;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.explorewithme.clients.stat.StatClient;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
+import ru.practicum.explorewithme.models.statistics.EndpointHit;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
@@ -18,6 +21,8 @@ import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestCond
 import ru.practicum.explorewithme.server.repositories.*;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +42,7 @@ public class PrivateServiceImpl implements PrivateService {
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
+    private final StatClient statClient;
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
@@ -69,22 +75,24 @@ public class PrivateServiceImpl implements PrivateService {
                 .orElseThrow(() -> new CategoryNotFoundException(eventDto.getCategory()));
         Location location = eventDto.getLocation();
 
-        //интересно почему не работает через orElseThrow
-        Optional<Loc> loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon());
+        Loc loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon())
+                .orElseGet(() -> locRepository.save(new Loc(location)));
 
-        if (loc.isEmpty()) {
-            loc = Optional.of(locRepository.save(new Loc(location)));
-        }
-
-        Event event = toEvent(eventDto, category, user, loc.get());
+        Event event = toEvent(eventDto, category, user, loc);
 
         return toEventFull(eventRepository.save(event));
     }
 
     @Override
-    public EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId) {
+    public EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId, HttpServletRequest request) {
         Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
+
+        EndpointHit endpointHit = new EndpointHit("event-server", request.getRequestURI(), request.getRemoteAddr(),
+                LocalDateTime.now());
+//        ResponseEntity<Object> saveStat = statClient.addHit(endpointHit);
+//        ResponseEntity<Object> getStat = statClient.getStats(event.getCreated(), LocalDateTime.now(),
+//                new String[]{"1"}, false);
 
         return toEventFull(event);
     }

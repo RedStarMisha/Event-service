@@ -50,7 +50,7 @@ public class EventMapper {
                 event.isModeration(),
                 event.getState(),
                 event.getTitle(),
-                0);
+                event.getViews());
     }
 
     public static Event makeUpdatableModelPrivate(Event event, UpdateEventRequest request, Category category) {

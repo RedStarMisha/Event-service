@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor(onConstructor_ = @Autowired)
-public class RequestController {
+public class PrivateRequestController {
 
     private final RequestService service;
 

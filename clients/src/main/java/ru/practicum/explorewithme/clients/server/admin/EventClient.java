@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.clients.admin;
+package ru.practicum.explorewithme.clients.server.admin;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;

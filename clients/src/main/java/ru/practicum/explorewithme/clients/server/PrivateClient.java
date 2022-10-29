@@ -1,14 +1,15 @@
-package ru.practicum.explorewithme.clients;
+package ru.practicum.explorewithme.clients.server;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 
 
 import java.util.Map;
 
-public class PrivateClient extends BaseClient{
+public class PrivateClient extends BaseClient {
     public PrivateClient(RestTemplate rest) {
         super(rest);
     }
