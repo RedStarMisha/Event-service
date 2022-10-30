@@ -78,7 +78,11 @@ public class PublicServiceImpl implements PublicService {
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Сервер сейчас не доступен");
         }
-        List<ViewStats> stats = objectMapper.readValue((String) response.getBody(), List.class) ;
+        List<Object> stats = objectMapper.convertValue(response.getBody(), List.class);
+                List<ViewStats> ss = stats
+                        .stream()
+                .map(o -> objectMapper.convertValue(o, ViewStats.class)).collect(Collectors.toList());
+      //  stats.stream(obj -> objectMapper.convertValue(obj, ViewStats.class))
         //event.setViews(stats.getHits());
         ViewStats stats1 = (ViewStats) stats.get(0);
         log.info(stats1.toString());
