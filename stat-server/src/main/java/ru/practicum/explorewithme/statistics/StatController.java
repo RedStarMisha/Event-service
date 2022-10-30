@@ -1,31 +1,33 @@
 package ru.practicum.explorewithme.statistics;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.statistics.EndpointHit;
 import ru.practicum.explorewithme.models.statistics.ViewStats;
 
-import javax.validation.Valid;
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
+@Slf4j
 public class StatController {
 
     private final StatsService service;
 
-    @PostMapping
-    public EndpointHit saveStats(@RequestBody @Valid EndpointHit hit) {
+    @PostMapping("/hit")
+    public EndpointHit saveStats(@RequestBody EndpointHit hit) {
+        log.info("endpoint {} добавлен", hit);
         return service.saveStats(hit);
     }
 
-    @GetMapping
-    public ViewStats getStats(@RequestParam(name = "start") LocalDateTime start,
-                              @RequestParam(name = "end") LocalDateTime end,
-                              @RequestParam(name = "uris", required = false) String[] uris,
-                              @RequestParam(name = "unique", required = false) Boolean unique) {
-        return service.getStats(start, end, uris, unique);
+    @GetMapping("/stats")
+    public List<ViewStats> getStats(@RequestParam(name = "uris", required = false) String[] uris,
+            @RequestParam(name = "unique", defaultValue = "false") boolean unique, HttpServletRequest request) throws UnsupportedEncodingException {
+        return service.getStats(request.getQueryString(), uris, unique);
     }
 
 

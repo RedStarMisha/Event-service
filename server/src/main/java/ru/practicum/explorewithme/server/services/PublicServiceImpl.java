@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.server.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
 import ru.practicum.explorewithme.server.utils.mappers.CategoryMapper;
 import ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.rmi.ServerException;
@@ -44,6 +46,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEven
 @Transactional
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class PublicServiceImpl implements PublicService {
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final EventRepository eventRepository;
     private final CompilationRepository compilationRepository;
     private final CategoryRepository categoryRepository;
@@ -72,19 +75,22 @@ public class PublicServiceImpl implements PublicService {
         ResponseEntity<Object> response = statClient.getStats(event.getCreated(), LocalDateTime.now(),
                 uris, false);
 
-        if (response.getStatusCode() != HttpStatus.ACCEPTED) {
+        if (response.getStatusCode() != HttpStatus.OK) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Сервер сейчас не доступен");
         }
-        ViewStats stats = (ViewStats) response.getBody();
-        event.setViews(stats.getHits());
+        List<ViewStats> stats = objectMapper.readValue((String) response.getBody(), List.class) ;
+        //event.setViews(stats.getHits());
+        ViewStats stats1 = (ViewStats) stats.get(0);
+        log.info(stats1.toString());
         return event;
     }
 
     private void saveStats(String requestURI, String remoteAddr) {
         EndpointHit endpointHit = new EndpointHit("server", requestURI, remoteAddr, LocalDateTime.now());
+
         ResponseEntity<Object> response = statClient.addHit(endpointHit);
 
-        if (response.getStatusCode() != HttpStatus.ACCEPTED) {
+        if (response.getStatusCode() != HttpStatus.OK) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Сервер сейчас не доступен");
         }
     }
