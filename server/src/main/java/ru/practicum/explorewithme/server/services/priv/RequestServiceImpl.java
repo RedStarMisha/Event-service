@@ -71,7 +71,7 @@ public class RequestServiceImpl implements RequestService {
             request = Request.makePending(user, event);
         } else {
             request = Request.makeConfirmed(user, event);
-            eventRepository.addConfirmedRequest(eventId);
+            eventRepository.addConfirmedRequest(event.getNumberConfirmed() + 1, eventId);
         }
 
         return toRequestDto(requestRepository.save(request));
@@ -81,7 +81,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto cancelUserRequest(long userId, long requestId) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Request request = requestRepository.findById(requestId).orElseThrow(() -> new RequestNotFoundException(requestId));
-        request.setStatus(RequestStatus.REJECTED);
+        request.setStatus(RequestStatus.CANCELED);
         return toRequestDto(requestRepository.save(request));
     }
 }

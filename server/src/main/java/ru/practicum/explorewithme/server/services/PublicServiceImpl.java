@@ -68,7 +68,6 @@ public class PublicServiceImpl implements PublicService {
             throw new RequestConditionException("Event не опубликован");
         }
 
-
         event = statsHandler.statsHandle(event, request.getRequestURI(), request.getRemoteAddr());
 
         log.info("Запрошен Event c id = {}", eventId);

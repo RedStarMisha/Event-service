@@ -27,6 +27,11 @@ public class StatsHandler {
         return getStats(event, new String[]{uri});
     }
 
+    public Event statsHandle(Event event) {
+        String uri = "/events/" + event.getId();
+        return getStats(event, new String[]{uri});
+    }
+
     public Event statsHandle(Event event, String uri, String ip) {
         saveStats(uri, ip);
         return getStats(event, new String[]{uri});
@@ -39,8 +44,12 @@ public class StatsHandler {
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Сервер сейчас не доступен");
         }
-        ViewStats stats = response.getBody().get(0);
-        event.setViews(stats.getHits());
+
+        if (response.getBody().size() > 0) {
+            ViewStats stats = response.getBody().get(0);
+            event.setViews(stats.getHits());
+        }
+
         return event;
     }
 

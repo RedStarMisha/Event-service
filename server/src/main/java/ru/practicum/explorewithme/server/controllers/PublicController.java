@@ -52,14 +52,14 @@ public class PublicController {
         return service.getEventById(eventId, request);
     }
 
-    @GetMapping("/compilation")
-    public List<CompilationDto> getCompilations(@RequestParam(name = "pinned", required = false) boolean pinned,
+    @GetMapping("/compilations")
+    public List<CompilationDto> getCompilations(@RequestParam(name = "pinned", required = false) Boolean pinned,
                                                 @RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return service.getCompilations(pinned, from, size);
     }
 
-    @GetMapping("/compilation/{compilationId}")
+    @GetMapping("/compilations/{compilationId}")
     public CompilationDto getCompilationById(@PathVariable(name = "compilationId") Long compilationId) {
         return service.getCompilationById(compilationId);
     }

@@ -5,6 +5,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class PublicClient extends BaseClient {
@@ -27,11 +28,12 @@ public class PublicClient extends BaseClient {
         return get(EVENTS + "/" + id);
     }
 
-    public ResponseEntity<Object> getCompilations(boolean pinned, int from, int size) {
-        Map<String, Object> param = Map.of(
-                "pinned", pinned,
-                "from", from,
-                "size", size);
+    public ResponseEntity<Object> getCompilations(Boolean pinned, int from, int size) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("pinned", pinned);
+        param.put("from", from);
+        param.put("size", size);
+
         String queryParam = "?pinned={pinned}&from={from}&size={size}";
         return get(COMPILATIONS + queryParam, param);
     }

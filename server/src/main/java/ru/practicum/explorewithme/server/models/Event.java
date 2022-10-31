@@ -36,6 +36,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "category")
+    @ToString.Exclude
     private Category category;
 
     @Column(name = "created")
@@ -67,10 +68,11 @@ public class Event {
     private State state;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    @Where(clause = "status = 'CONFIRMED'")
+    //@Where(clause = "status = 'CONFIRMED'")
     private Set<Request> confirmedRequests;
 
     @ManyToMany(mappedBy = "events")
+    @ToString.Exclude
     private Set<Compilation> compilations;
 
     @Column(name = "number_confirmed")

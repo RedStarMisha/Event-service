@@ -60,14 +60,14 @@ public class PublicController {
         return client.getEventById(eventId);
     }
 
-    @GetMapping("/compilation")
+    @GetMapping("/compilations")
     public ResponseEntity<Object> getCompilations(@RequestParam(name = "pinned", required = false) Boolean pinned,
                                                   @RequestParam(name = "from", defaultValue = "0") int from,
                                                   @RequestParam(name = "size", defaultValue = "10") int size) {
         return client.getCompilations(pinned, from, size);
     }
 
-    @GetMapping("/compilation/{compilationId}")
+    @GetMapping("/compilations/{compilationId}")
     public ResponseEntity<Object> getCompilationById(@PathVariable(name = "compilationId") Long compilationId) {
         return client.getCompilationById(compilationId);
     }

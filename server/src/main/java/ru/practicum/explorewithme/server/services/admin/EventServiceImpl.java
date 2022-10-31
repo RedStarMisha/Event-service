@@ -55,7 +55,7 @@ public class EventServiceImpl implements EventService {
         SearchParam param = condition.getSearchParameters(qEvent);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .peek(event -> statsHandler.statsHandle(event, request.getRemoteAddr())).map(EventMapper::toEventFull)
+                .peek(event -> statsHandler.statsHandle(event)).map(EventMapper::toEventFull)
                 .collect(Collectors.toList());
     }
 
@@ -75,12 +75,12 @@ public class EventServiceImpl implements EventService {
 
         Loc location = event.getLocation();
 
-        Loc loc = locRepository.findByLatitudeAndLongitude(location.getLatitude(), location.getLongitude())
+        locRepository.findByLatitudeAndLongitude(location.getLatitude(), location.getLongitude())
                 .orElseGet(() -> locRepository.save(location));
 
-        event.setLocation(loc);
+        event = eventRepository.save(event);
 
-        return toEventFull(eventRepository.save(event));
+        return toEventFull(statsHandler.statsHandle(event));
     }
 
     @Override
@@ -93,11 +93,15 @@ public class EventServiceImpl implements EventService {
         if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new RequestConditionException("Слишком поздно для публикации события");
         }
+
         event.setState(State.PUBLISHED);
         event.setPublished(LocalDateTime.now());
+
+        event = eventRepository.save(event);
+
         log.info("Event с id={} опубликован {}", eventId, event.getPublished());
 
-        return toEventFull(eventRepository.save(event));
+        return toEventFull(statsHandler.statsHandle(event));
     }
 
     @Override
@@ -110,9 +114,11 @@ public class EventServiceImpl implements EventService {
 
         event.setState(State.CANCELED);
 
+        event = eventRepository.save(event);
+
         log.info("Event с id={} отменен", eventId);
 
-        return toEventFull(eventRepository.save(event));
+        return toEventFull(statsHandler.statsHandle(event));
     }
 
 

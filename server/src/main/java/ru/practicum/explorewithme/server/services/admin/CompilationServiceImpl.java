@@ -16,6 +16,7 @@ import ru.practicum.explorewithme.server.repositories.EventRepository;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,11 +35,11 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
-        Set<Event> events = Arrays.stream(compilationDto.getEvents()).mapToObj(id -> eventRepository.findById(id)
-                    .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toSet());
+        List<Event> events = Arrays.stream(compilationDto.getEvents()).mapToObj(id -> eventRepository.findById(id)
+                    .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toList());
 
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
-        log.info("Compilation {} добавлена");
+        log.info("Compilation {} добавлена", compilation);
 
         return toCompilationDto(compilation);
     }
@@ -47,11 +48,13 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteCompilation(long compId) {
         compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
         compilationRepository.deleteById(compId);
-        log.info("Compilation с id={} удалена");
+        log.info("Compilation с id={} удалена", compId);
     }
 
     @Override
     public void deleteEventFromCompilation(long compId, long eventId) {
+        log.info("Удаляем Event с id={} из Compilation с id={}", eventId, compId);
+
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
@@ -71,6 +74,8 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
+        log.info("Добавляем Event в Compilation {}", compilation);
+
         if(compilation.getEvents().contains(event)) {
             throw new RequestConditionException("Event с id = " + eventId + " уже в Compilation с id = " + compId);
         }
@@ -83,9 +88,10 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void unpinCompilation(long compId) {
+
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() ->
                 new CompilationNotFoundException(compId));
-
+        log.info("Будем откреплять Compilation {}с главной страницы", compilation);
         if(!compilation.isPinned()) {
             throw new RequestConditionException("Compilation с id = " + compId + " уже откреплена от главной страницы ");
         }

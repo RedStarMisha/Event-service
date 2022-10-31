@@ -6,21 +6,22 @@ import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.server.models.Compilation;
 import ru.practicum.explorewithme.server.models.Event;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompilationsMapper {
 
-    public static Compilation toCompilation(NewCompilationDto dto, Set<Event> events) {
+    public static Compilation toCompilation(NewCompilationDto dto, List<Event> events) {
         return new Compilation(dto.getTitle(), dto.getPinned(), events);
     }
 
     public static CompilationDto toCompilationDto(Compilation compilation) {
         return new CompilationDto(
-                compilation.getEvents().stream().map(EventMapper::toEventShort).collect(Collectors.toSet()),
                 compilation.getId(),
+                compilation.getTitle(),
                 compilation.isPinned(),
-                compilation.getTitle()
+                compilation.getEvents().stream().map(EventMapper::toEventShort).collect(Collectors.toList())
         );
     }
 

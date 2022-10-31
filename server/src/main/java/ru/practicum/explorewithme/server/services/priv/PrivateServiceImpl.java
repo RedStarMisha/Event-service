@@ -3,15 +3,12 @@ package ru.practicum.explorewithme.server.services.priv;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.clients.stat.StatClient;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.models.statistics.EndpointHit;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
@@ -19,12 +16,11 @@ import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundExcept
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.repositories.*;
+import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
@@ -42,13 +38,12 @@ public class PrivateServiceImpl implements PrivateService {
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
-    private final StatClient statClient;
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         List<Event> events = eventRepository.findAllByInitiator_Id(userId, makePageable(from, size));
 
-        return events.stream().map(event -> toEventShort(event)).collect(Collectors.toList());
+        return events.stream().map(EventMapper::toEventShort).collect(Collectors.toList());
     }
 
     @Override
@@ -78,9 +73,11 @@ public class PrivateServiceImpl implements PrivateService {
         Loc loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon())
                 .orElseGet(() -> locRepository.save(new Loc(location)));
 
-        Event event = toEvent(eventDto, category, user, loc);
+        Event event = eventRepository.save(toEvent(eventDto, category, user, loc));
 
-        return toEventFull(eventRepository.save(event));
+        log.info("Event {} с id = {} добавлен", event.getTitle(), event.getId());
+
+        return toEventFull(event);
     }
 
     @Override
@@ -88,11 +85,7 @@ public class PrivateServiceImpl implements PrivateService {
         Event event = eventRepository.findByInitiator_IdAndId(userId, eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        EndpointHit endpointHit = new EndpointHit("event-server", request.getRequestURI(), request.getRemoteAddr(),
-                LocalDateTime.now());
-//        ResponseEntity<Object> saveStat = statClient.addHit(endpointHit);
-//        ResponseEntity<Object> getStat = statClient.getStats(event.getCreated(), LocalDateTime.now(),
-//                new String[]{"1"}, false);
+        log.info("Event {} с id = {} запрошен", event.getTitle(), eventId);
 
         return toEventFull(event);
     }
@@ -134,9 +127,11 @@ public class PrivateServiceImpl implements PrivateService {
             requestRepository.rejectedAllRequestsByEventId(eventId);
             throw new RequestConditionException("Лимит участников события достигнут");
         }
-        eventRepository.addConfirmedRequest(eventId);
+        event.setNumberConfirmed(event.getNumberConfirmed() + 1);
+        eventRepository.save(event);
 
         request.setStatus(RequestStatus.CONFIRMED);
+        requestRepository.save(request);
 
         return toRequestDto(request);
     }

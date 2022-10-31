@@ -75,6 +75,7 @@ public class EventMapper {
                 .ifPresent(event::setParticipantLimit);
         Optional.ofNullable(request.getTitle()).ifPresent(event::setTitle);
         Optional.ofNullable(request.getRequestModeration()).ifPresent(event::setModeration);
+        Optional.ofNullable(request.getLocation()).ifPresent(l -> event.setLocation(new Loc(l)));
         return event;
     }
 

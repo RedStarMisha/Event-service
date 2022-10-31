@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class CompilationDto {
 
-    private Set<EventShortDto> events;
-
     private long id;
+
+    private String title;
 
     private boolean pinned;
 
-    private String title;
+    private List<EventShortDto> events;
 }

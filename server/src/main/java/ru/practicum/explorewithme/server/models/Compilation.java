@@ -2,8 +2,10 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,9 +29,9 @@ public class Compilation {
             joinColumns = @JoinColumn(name = "compilation_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
-    private Set<Event> events;
+    private List<Event> events;
 
-    public Compilation(String title, boolean pinned, Set<Event> events) {
+    public Compilation(String title, boolean pinned, List<Event> events) {
         this.title = title;
         this.pinned = pinned;
         this.events = events;
