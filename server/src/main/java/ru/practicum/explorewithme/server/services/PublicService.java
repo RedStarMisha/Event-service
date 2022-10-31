@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PublicService {
 
-    List<EventShortDto> getEvents(SelectionConditionForPublic condition);
+    List<EventShortDto> getEvents(SelectionConditionForPublic condition, HttpServletRequest request);
 
     EventFullDto getEventById(long eventId, HttpServletRequest request);
 

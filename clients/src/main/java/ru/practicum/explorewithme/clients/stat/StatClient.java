@@ -1,30 +1,38 @@
 package ru.practicum.explorewithme.clients.stat;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.lang.Nullable;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.statistics.EndpointHit;
+import ru.practicum.explorewithme.models.statistics.ViewStats;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
-public class StatClient extends BaseClient {
+public class StatClient {
+
+    private RestTemplate rest;
 
     public StatClient(RestTemplate rest) {
-        super(rest);
+        this.rest = rest;
     }
 
-    public ResponseEntity<Object> addHit(EndpointHit endpointHit) {
+
+    public ResponseEntity<EndpointHit> addHit(EndpointHit endpointHit) {
         return post("/hit", endpointHit);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
+    public ResponseEntity<List<ViewStats>> getStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
 
         Map<String, String> dateParam = Map.of(
                 "start", formatDate(start),
@@ -52,5 +60,18 @@ public class StatClient extends BaseClient {
     private static String formatDate(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return date.format(formatter);
+    }
+
+    private ResponseEntity<List<ViewStats>> get(String path, Map<String, Object> parameters) {
+        return rest.exchange(path, HttpMethod.GET, null, new ParameterizedTypeReference<>() {}, parameters);
+    }
+
+    private ResponseEntity<EndpointHit> post(String path, EndpointHit body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+        HttpEntity<EndpointHit> requestEntity = new HttpEntity<>(body, headers);
+        return rest.exchange(path, HttpMethod.POST, requestEntity, EndpointHit.class);
     }
 }

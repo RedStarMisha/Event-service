@@ -23,14 +23,14 @@ import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
 public class SelectionConditionForAdmin {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private int[] users;
-    private int[] states;
+    private State[] states;
     private int[] categories;
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
     private int from;
     private int size;
 
-    private SelectionConditionForAdmin(int[] users, int[] states, int[] categories, LocalDateTime rangeStart,
+    private SelectionConditionForAdmin(int[] users, State[] states, int[] categories, LocalDateTime rangeStart,
                                        LocalDateTime rangeEnd, int from, int size) {
         this.users = users;
         this.states = states;
@@ -41,29 +41,28 @@ public class SelectionConditionForAdmin {
         this.size = size;
     }
 
-    public static SelectionConditionForAdmin of(int[] users, int[] states, int[] categories, String start, String end,
+    public static SelectionConditionForAdmin of(int[] users, State[] states, int[] categories, String start, String end,
                                                 int from, int size) {
-        LocalDateTime startDate = start != null ? LocalDateTime.parse(start, formatter) : null;
-        LocalDateTime endDate = start != null ? LocalDateTime.parse(end, formatter) : null;
+        LocalDateTime startDate = start != null && !start.equals("") ? LocalDateTime.parse(start, formatter) : null;
+        LocalDateTime endDate = start != null && !end.equals("") ? LocalDateTime.parse(end, formatter) : null;
         return new SelectionConditionForAdmin(users, states, categories, startDate, endDate, from, size);
     }
 
     public SearchParam getSearchParameters(QEvent event) {
         List<BooleanExpression> parameters = new ArrayList<>();
 
-        if (users != null) {
+        if (users != null && users.length != 0) {
             List<Long> userIds = Arrays.stream(users).mapToLong(i -> i).boxed().collect(Collectors.toList());
             BooleanExpression usersExpression = event.initiator.id.in(userIds);
             parameters.add(usersExpression);
         }
 
-        if (states != null) {
-            List<State> stateList = Arrays.stream(states).mapToObj(ind -> State.values()[ind]).collect(Collectors.toList());
-            BooleanExpression statesExpression = event.state.in(stateList);
+        if (states != null && states.length != 0) {
+            BooleanExpression statesExpression = event.state.in(states);
             parameters.add(statesExpression);
         }
 
-        if (categories != null) {
+        if (categories != null && categories.length != 0) {
             List<Long> catIds = Arrays.stream(categories).mapToLong(i -> i).boxed().collect(Collectors.toList());
             BooleanExpression categoryExpression = event.category.id.in(catIds);
             parameters.add(categoryExpression);
@@ -86,12 +85,5 @@ public class SelectionConditionForAdmin {
         } else {
             return event.eventDate.between(rangeStart, rangeEnd);
         }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public class SearchParam {
-        private BooleanExpression booleanExpression;
-        private Pageable pageable;
     }
 }

@@ -7,9 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.admin.EventClient;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
+import ru.practicum.explorewithme.models.event.State;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.HashMap;
 import java.util.Map;
 
 import static ru.practicum.explorewithme.validation.ValidUtil.dateValidation;
@@ -24,23 +26,23 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<Object> getEvents(@RequestParam(name = "users", required = false) int[] users,
-                                            @RequestParam(name = "states", required = false) int[] states,
+                                            @RequestParam(name = "states", required = false) State[] states,
                                             @RequestParam(name = "categories", required = false) int[] categories,
                                             @RequestParam(name = "rangeStart", required = false) String rangeStart,
                                             @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
-                                            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                            @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+                                            @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         dateValidation(rangeStart, rangeEnd);
 
-        Map<String, Object> param = Map.of(
-                "users", users,
-                "states", states,
-                "categories", categories,
-                "rangeStart", rangeStart,
-                "rangeEnd", rangeEnd,
-                "from", from,
-                "size", size
-        );
+        Map<String, Object> param = new HashMap<>();
+        param.put("users", users);
+        param.put("states", states);
+        param.put("categories", categories);
+        param.put("rangeStart", rangeStart);
+        param.put("rangeEnd", rangeEnd);
+        param.put("from", from);
+        param.put("size", size);
+
         return client.getEvents(param);
     }
 

@@ -19,7 +19,7 @@ public class MyStatRepositoryImpl implements MyStatRepository {
     public Optional<Long> getViewsByParamDistinct(LocalDateTime start, LocalDateTime end, String uri) {
         QStatistic statistic = QStatistic.statistic;
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        return queryFactory.select(statistic.ip.countDistinct()).where(statistic.uri.eq(uri)
+        return queryFactory.select(statistic.ip.countDistinct()).from(statistic).where(statistic.uri.eq(uri)
                 .and(statistic.timestamp.between(start, end))).stream().findAny();
     }
 

@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
+import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.services.admin.EventService;
 import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -19,17 +21,17 @@ public class EventController {
 
     @GetMapping
     public List<EventFullDto> getEvents(@RequestParam(name = "users", required = false) int[] users,
-                                        @RequestParam(name = "states", required = false) int[] states,
+                                        @RequestParam(name = "states", required = false) State[] states,
                                         @RequestParam(name = "categories", required = false) int[] categories,
                                         @RequestParam(name = "rangeStart", required = false) String rangeStart,
                                         @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
                                         @RequestParam(name = "from", defaultValue = "0") int from,
-                                        @RequestParam(name = "size", defaultValue = "10") int size) {
+                                        @RequestParam(name = "size", defaultValue = "10") int size, HttpServletRequest request) {
 
         SelectionConditionForAdmin condition = SelectionConditionForAdmin.of(users, states, categories, rangeStart,
                 rangeEnd, from, size);
 
-        return service.getEvents(condition);
+        return service.getEvents(condition, request);
     }
 
     @PutMapping("/{eventId}")

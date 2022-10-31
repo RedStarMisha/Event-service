@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class EventShortDto {
+public class EventShortDto implements Comparable<EventShortDto> {
     private long id;
 
     private String annotation;
@@ -40,5 +40,10 @@ public class EventShortDto {
         this.initiator = initiator;
         this.paid = paid;
         this.title = title;
+    }
+
+    @Override
+    public int compareTo(EventShortDto o) {
+        return Long.compare(this.getViews(), o.getViews());
     }
 }

@@ -19,7 +19,7 @@ public class EventClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateEvent(long eventId, AdminUpdateEventRequest updateEventRequest) {
-        return patch("/" + eventId, updateEventRequest);
+        return put("/" + eventId, updateEventRequest);
     }
 
     public ResponseEntity<Object> publishEvent(long eventId) {

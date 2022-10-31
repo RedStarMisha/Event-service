@@ -43,6 +43,10 @@ public class BaseClient {
         return makeReqAndGetResp(path, HttpMethod.PATCH, parameters, body);
     }
 
+    protected <T> ResponseEntity<Object> put(String path, @Nullable T body) {
+        return makeReqAndGetResp(path, HttpMethod.PUT, null, body);
+    }
+
     protected <T> ResponseEntity<Object> delete(String path) {
         return delete(path, null);
     }

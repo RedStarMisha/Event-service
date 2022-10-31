@@ -13,6 +13,7 @@ import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 import ru.practicum.explorewithme.models.event.EventSort;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 import static ru.practicum.explorewithme.validation.ValidUtil.dateValidation;
@@ -30,7 +31,7 @@ public class PublicController {
                                             @RequestParam(name = "paid", required = false) Boolean paid,
                                             @RequestParam(name = "rangeStart", required = false) String rangeStart,
                                             @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
-                                            @RequestParam(name = "available", defaultValue = "false") boolean available,
+                                            @RequestParam(name = "available", required = false) Boolean available,
                                             @RequestParam(name = "sort", defaultValue = "EVENT_DATE") String sort,
                                             @RequestParam(name = "from", defaultValue = "0") int from,
                                             @RequestParam(name = "size", defaultValue = "10") int size) {
@@ -39,17 +40,18 @@ public class PublicController {
 
         dateValidation(rangeStart, rangeEnd);
 
-        Map<String, Object> parameters = Map.of(
-                "text", text,
-                "categories", categories,
-                "paid", paid,
-                "rangeStart", rangeStart,
-                "rangeEnd", rangeEnd,
-                "available", available,
-                "sort", sortType,
-                "from", from,
-                "size", size
-        );
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put(  "text", text);
+        parameters.put( "categories", categories);
+        parameters.put( "paid", paid);
+        parameters.put( "rangeStart", rangeStart);
+        parameters.put( "rangeEnd", rangeEnd);
+        parameters.put("available", available);
+        parameters.put("sort", sortType);
+        parameters.put("from", from);
+        parameters.put("size", size);
+
         return client.getEvents(parameters);
     }
 

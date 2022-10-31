@@ -88,7 +88,7 @@ public class EventMapper {
         eventShort.setInitiator(toUserShort(event.getInitiator()));
         eventShort.setPaid(event.isPaid());
         eventShort.setTitle(event.getTitle());
-        eventShort.setViews(0);
+        eventShort.setViews(event.getViews());
         return eventShort;
     }
 }

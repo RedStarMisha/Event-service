@@ -1,13 +1,19 @@
 package ru.practicum.explorewithme.server.services.admin;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+import ru.practicum.explorewithme.clients.stat.StatClient;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.Location;
 import ru.practicum.explorewithme.models.event.State;
+import ru.practicum.explorewithme.models.statistics.EndpointHit;
+import ru.practicum.explorewithme.models.statistics.ViewStats;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
@@ -18,9 +24,12 @@ import ru.practicum.explorewithme.server.models.QEvent;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.repositories.LocRepository;
+import ru.practicum.explorewithme.server.services.StatsHandler;
+import ru.practicum.explorewithme.server.utils.SearchParam;
 import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,21 +39,24 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUp
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventFull;
 
 @Service
-@AllArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 @Transactional
 public class EventServiceImpl implements EventService {
+
+    private final StatsHandler statsHandler;
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     @Override
-    public List<EventFullDto> getEvents(SelectionConditionForAdmin condition) {
+    public List<EventFullDto> getEvents(SelectionConditionForAdmin condition, HttpServletRequest request) {
         log.info("Запрошены Events с параметрами поиска {}", condition);
         QEvent qEvent = QEvent.event;
-        SelectionConditionForAdmin.SearchParam param = condition.getSearchParameters(qEvent);
+        SearchParam param = condition.getSearchParameters(qEvent);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .map(EventMapper::toEventFull).collect(Collectors.toList());
+                .peek(event -> statsHandler.statsHandle(event, request.getRemoteAddr())).map(EventMapper::toEventFull)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -61,10 +73,10 @@ public class EventServiceImpl implements EventService {
 
         event = makeUpdatableModelAdmin(event, updateEventRequest);
 
-        Location location = updateEventRequest.getLocation();
+        Loc location = event.getLocation();
 
-        Loc loc = locRepository.findByLatitudeAndLongitude(location.getLat(), location.getLon())
-                .orElseGet(() -> locRepository.save(new Loc(location)));
+        Loc loc = locRepository.findByLatitudeAndLongitude(location.getLatitude(), location.getLongitude())
+                .orElseGet(() -> locRepository.save(location));
 
         event.setLocation(loc);
 
@@ -102,4 +114,6 @@ public class EventServiceImpl implements EventService {
 
         return toEventFull(eventRepository.save(event));
     }
+
+
 }

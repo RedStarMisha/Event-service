@@ -34,15 +34,15 @@ public class PublicController {
                                          @RequestParam(name = "paid", required = false) Boolean paid,
                                          @RequestParam(name = "rangeStart", required = false) String rangeStart,
                                          @RequestParam(name = "rangeEnd", required = false) String rangeEnd,
-                                         @RequestParam(name = "available", defaultValue = "false") boolean available,
+                                         @RequestParam(name = "available", required = false) Boolean available,
                                          @RequestParam(name = "sort", defaultValue = "EVENT_DATE") EventSort sort,
                                          @RequestParam(name = "from", defaultValue = "0") int from,
-                                         @RequestParam(name = "size", defaultValue = "10") int size) {
+                                         @RequestParam(name = "size", defaultValue = "10") int size, HttpServletRequest request) {
 
         SelectionConditionForPublic condition = SelectionConditionForPublic.of(text, categories, paid, rangeStart,
                 rangeEnd, available, sort, from, size);
 
-        return service.getEvents(condition);
+        return service.getEvents(condition, request);
     }
 
     @GetMapping("/events/{eventId}")
