@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface LocRepository extends JpaRepository<Loc, Long> {
     Optional<Loc> findByLatitudeAndLongitude(float latitude, float longitude);
-
 }

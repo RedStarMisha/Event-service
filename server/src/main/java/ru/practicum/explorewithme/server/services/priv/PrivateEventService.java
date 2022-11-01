@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public interface PrivateService {
+public interface PrivateEventService {
 
     List<EventShortDto> getEventsByOwnerId(long userId, int from, int size);
 

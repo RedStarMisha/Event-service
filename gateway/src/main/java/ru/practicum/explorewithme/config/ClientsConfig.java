@@ -32,26 +32,31 @@ public class ClientsConfig {
         String prefix = "/admin/users";
         return new UserClient(makeRestTemplate(prefix));
     }
+
     @Bean
     public CategoryClient makeCategoryClient() {
         String prefix = "/admin/categories";
         return new CategoryClient(makeRestTemplate(prefix));
     }
+
     @Bean
     public CompilationsClient makeCompilationsClient() {
         String prefix = "/admin/compilations";
         return new CompilationsClient(makeRestTemplate(prefix));
     }
+
     @Bean
     public EventClient makeEventClient() {
         String prefix = "/admin/events";
         return new EventClient(makeRestTemplate(prefix));
     }
+
     @Bean
     public PrivateClient makePrivateClient() {
         String prefix = "/users";
         return new PrivateClient(makeRestTemplate(prefix));
     }
+
     @Bean
     public PublicClient makePublicClient() {
         return new PublicClient(makeRestTemplate(""));

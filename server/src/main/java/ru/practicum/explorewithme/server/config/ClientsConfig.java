@@ -16,7 +16,7 @@ public class ClientsConfig {
     @Value("${stats-server.url}")
     private String statsUrl;
 
-    private RestTemplateBuilder builder;
+    private final RestTemplateBuilder builder;
 
     @Autowired
     public ClientsConfig(RestTemplateBuilder builder) {

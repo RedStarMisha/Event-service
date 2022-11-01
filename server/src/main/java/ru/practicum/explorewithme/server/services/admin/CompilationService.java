@@ -10,7 +10,7 @@ public interface CompilationService {
 
     void deleteEventFromCompilation(long compId, long eventId);
 
-    void addEventFromCompilation(long compId, long eventId);
+    void addEventToCompilation(long compId, long eventId);
 
     void unpinCompilation(long compId);
 

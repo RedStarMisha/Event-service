@@ -24,7 +24,4 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     @Query("update Event e set e.numberConfirmed=?1 where e.id=?2")
     void addConfirmedRequest(int increment, long eventId);
-
-//    List<Event> findByParam(BooleanExpression expression, Pageable pageable);
-
 }

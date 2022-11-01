@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
-import ru.practicum.explorewithme.server.services.priv.RequestService;
+import ru.practicum.explorewithme.server.services.priv.PrivateRequestService;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class PrivateRequestController {
 
-    private final RequestService service;
+    private final PrivateRequestService service;
 
     @GetMapping("/{userId}/requests")
     public List<ParticipationRequestDto> getEventRequestsByUser(@PathVariable(name = "userId") long userId) {

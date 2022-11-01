@@ -31,7 +31,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRe
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 @Transactional
-public class PrivateServiceImpl implements PrivateService {
+public class PrivateEventServiceImpl implements PrivateEventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;

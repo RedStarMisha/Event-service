@@ -3,17 +3,12 @@ package ru.practicum.explorewithme.server.services.admin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-import ru.practicum.explorewithme.clients.stat.StatClient;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
-import ru.practicum.explorewithme.models.event.Location;
 import ru.practicum.explorewithme.models.event.State;
-import ru.practicum.explorewithme.models.statistics.EndpointHit;
-import ru.practicum.explorewithme.models.statistics.ViewStats;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
@@ -30,9 +25,10 @@ import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUpdatableModelAdmin;
@@ -55,7 +51,7 @@ public class EventServiceImpl implements EventService {
         SearchParam param = condition.getSearchParameters(qEvent);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .peek(event -> statsHandler.statsHandle(event)).map(EventMapper::toEventFull)
+                .peek(statsHandler::statsHandle).map(EventMapper::toEventFull)
                 .collect(Collectors.toList());
     }
 
@@ -71,14 +67,24 @@ public class EventServiceImpl implements EventService {
             event.setCategory(category);
         }
 
-        event = makeUpdatableModelAdmin(event, updateEventRequest);
+        makeUpdatableModelAdmin(event, updateEventRequest);
 
-        Loc location = event.getLocation();
-
-        locRepository.findByLatitudeAndLongitude(location.getLatitude(), location.getLongitude())
-                .orElseGet(() -> locRepository.save(location));
+//        Loc updLocation = event.getLocation();
+//
+//        Optional<Loc> location = locRepository.findByLatitudeAndLongitude(updLocation.getLatitude(), updLocation.getLongitude());
+//
+//        if (location.isPresent()) {
+//            event.setLocation(location.get());
+//        }
 
         event = eventRepository.save(event);
+//        event.setLocation(location.get());
+
+
+
+//                .orElseGet(() -> locRepository.save(updLocation));
+
+
 
         return toEventFull(statsHandler.statsHandle(event));
     }
@@ -120,6 +126,4 @@ public class EventServiceImpl implements EventService {
 
         return toEventFull(statsHandler.statsHandle(event));
     }
-
-
 }

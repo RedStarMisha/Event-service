@@ -34,8 +34,8 @@ public class CompilationsController {
     }
 
     @PatchMapping("/{compId}/events/{eventId}")
-    public ResponseEntity<Object> addEventFromCompilation(@PathVariable(name = "compId") Long compId,
-                                                             @PathVariable(name = "eventId") Long eventId) {
+    public ResponseEntity<Object> addEventToCompilation(@PathVariable(name = "compId") Long compId,
+                                                        @PathVariable(name = "eventId") Long eventId) {
         return client.addEventFromCompilation(compId, eventId);
     }
 

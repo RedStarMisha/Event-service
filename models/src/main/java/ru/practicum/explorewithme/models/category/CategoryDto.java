@@ -1,16 +1,18 @@
 package ru.practicum.explorewithme.models.category;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-@Value
+@Data
+@AllArgsConstructor
 public class CategoryDto {
     @NotNull
     @Positive
-    Long id;
+    private Long id;
     @NotBlank
-    String name;
+    private String name;
 }

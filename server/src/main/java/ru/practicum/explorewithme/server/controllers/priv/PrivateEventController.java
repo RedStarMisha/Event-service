@@ -8,7 +8,7 @@ import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
-import ru.practicum.explorewithme.server.services.priv.PrivateService;
+import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class PrivateEventController {
 
-    private final PrivateService service;
+    private final PrivateEventService service;
 
 
     @GetMapping("/{userId}/events")

@@ -2,12 +2,10 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -43,6 +41,9 @@ public class Compilation {
     }
 
     public void addEvent(Event event) {
+        if (events == null) {
+            events = new ArrayList<>();
+        }
         events.add(event);
     }
 }

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
+import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilationDto;
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventFull;
 
 @Service
@@ -87,8 +88,11 @@ public class PublicServiceImpl implements PublicService {
     @Override
     public CompilationDto getCompilationById(Long compilationId) {
         log.info("Запрошена Compilation с id = {}", compilationId);
-        return compilationRepository.findById(compilationId).map(CompilationsMapper::toCompilationDto)
+        Compilation compilation = compilationRepository.findById(compilationId)
                 .orElseThrow(() -> new CompilationNotFoundException(compilationId));
+
+        log.info("Запрошенный {}", compilation);
+        return toCompilationDto(compilation);
     }
 
     @Override

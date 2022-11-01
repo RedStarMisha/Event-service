@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.server.controllers;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +14,6 @@ import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.EventSort;
 import ru.practicum.explorewithme.server.services.PublicService;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
 import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +21,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
-@Slf4j
 public class PublicController {
 
     private final PublicService service;
@@ -47,8 +44,6 @@ public class PublicController {
 
     @GetMapping("/events/{eventId}")
     public EventFullDto getEventById(@PathVariable(name = "eventId") long eventId, HttpServletRequest request) {
-        log.info("uri = {}", request.getRequestURI());
-        log.info("ip = {}", request.getRemoteAddr());
         return service.getEventById(eventId, request);
     }
 

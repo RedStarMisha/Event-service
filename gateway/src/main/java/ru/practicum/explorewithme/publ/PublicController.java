@@ -12,7 +12,6 @@ import ru.practicum.explorewithme.clients.server.PublicClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 import ru.practicum.explorewithme.models.event.EventSort;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,17 +35,17 @@ public class PublicController {
                                             @RequestParam(name = "from", defaultValue = "0") int from,
                                             @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        EventSort sortType = EventSort.from(sort).orElseThrow(()-> new UnknownEnumElementException("Неизвестный тип сортировки"));
+        EventSort sortType = EventSort.from(sort).orElseThrow(() -> new UnknownEnumElementException("Неизвестный тип сортировки"));
 
         dateValidation(rangeStart, rangeEnd);
 
         Map<String, Object> parameters = new HashMap<>();
 
-        parameters.put(  "text", text);
-        parameters.put( "categories", categories);
-        parameters.put( "paid", paid);
-        parameters.put( "rangeStart", rangeStart);
-        parameters.put( "rangeEnd", rangeEnd);
+        parameters.put("text", text);
+        parameters.put("categories", categories);
+        parameters.put("paid", paid);
+        parameters.put("rangeStart", rangeStart);
+        parameters.put("rangeEnd", rangeEnd);
         parameters.put("available", available);
         parameters.put("sort", sortType);
         parameters.put("from", from);
@@ -69,7 +68,9 @@ public class PublicController {
 
     @GetMapping("/compilations/{compilationId}")
     public ResponseEntity<Object> getCompilationById(@PathVariable(name = "compilationId") Long compilationId) {
-        return client.getCompilationById(compilationId);
+        ResponseEntity<Object> response = client.getCompilationById(compilationId);
+        //return client.getCompilationById(compilationId);
+        return response;
     }
 
     @GetMapping("/categories")
@@ -77,6 +78,7 @@ public class PublicController {
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return client.getCategories(from, size);
     }
+
     @GetMapping("/categories/{categoryId}")
     public ResponseEntity<Object> getCategoryById(@PathVariable(name = "categoryId") Long categoryId) {
         return client.getCategoryById(categoryId);

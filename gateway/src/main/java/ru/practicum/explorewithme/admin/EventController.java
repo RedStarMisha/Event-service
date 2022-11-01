@@ -9,8 +9,6 @@ import ru.practicum.explorewithme.clients.server.admin.EventClient;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.State;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
 import java.util.Map;
 

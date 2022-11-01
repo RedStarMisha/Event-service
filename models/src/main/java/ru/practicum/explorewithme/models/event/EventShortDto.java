@@ -30,18 +30,6 @@ public class EventShortDto implements Comparable<EventShortDto> {
 
     private long views;
 
-    public EventShortDto(long id, String annotation, CategoryDto category, long confirmedRequests,
-                         LocalDateTime eventDate, UserShortDto initiator, boolean paid, String title) {
-        this.id = id;
-        this.annotation = annotation;
-        this.category = category;
-        this.confirmedRequests = confirmedRequests;
-        this.eventDate = eventDate;
-        this.initiator = initiator;
-        this.paid = paid;
-        this.title = title;
-    }
-
     @Override
     public int compareTo(EventShortDto o) {
         return Long.compare(this.getViews(), o.getViews());

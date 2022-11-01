@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.server.models;
 
 import lombok.*;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.Cascade;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
@@ -52,6 +52,7 @@ public class Event {
     private LocalDateTime published;
 
     @ManyToOne
+    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "location")
     private Loc location;
 
@@ -68,7 +69,6 @@ public class Event {
     private State state;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    //@Where(clause = "status = 'CONFIRMED'")
     private Set<Request> confirmedRequests;
 
     @ManyToMany(mappedBy = "events")

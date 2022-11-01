@@ -17,8 +17,6 @@ import ru.practicum.explorewithme.server.repositories.EventRepository;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilation;
@@ -58,7 +56,8 @@ public class CompilationServiceImpl implements CompilationService {
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
+        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() ->
+                new CompilationNotFoundException(compId));
 
         if(!compilation.getEvents().contains(event)) {
             throw new RequestConditionException("Event с id = " + eventId + " отсутсвует в Compilation с id = " + compId);
@@ -72,7 +71,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public void addEventFromCompilation(long compId, long eventId) {
+    public void addEventToCompilation(long compId, long eventId) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
@@ -94,7 +93,8 @@ public class CompilationServiceImpl implements CompilationService {
 
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() ->
                 new CompilationNotFoundException(compId));
-        log.info("Будем откреплять Compilation {}с главной страницы", compilation);
+        log.info("Будем откреплять Compilation {} с главной страницы", compilation);
+
         if(!compilation.isPinned()) {
             throw new RequestConditionException("Compilation с id = " + compId + " уже откреплена от главной страницы ");
         }

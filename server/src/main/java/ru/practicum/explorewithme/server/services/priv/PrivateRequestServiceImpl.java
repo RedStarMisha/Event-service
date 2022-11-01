@@ -29,7 +29,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRe
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 @Transactional
-public class RequestServiceImpl implements RequestService {
+public class PrivateRequestServiceImpl implements PrivateRequestService {
 
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;

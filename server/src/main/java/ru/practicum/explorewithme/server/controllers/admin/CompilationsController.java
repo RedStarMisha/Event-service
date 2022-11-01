@@ -32,7 +32,7 @@ public class CompilationsController {
     @PatchMapping("/{compId}/events/{eventId}")
     public void addEventFromCompilation(@PathVariable(name = "compId") long compId,
                                                           @PathVariable(name = "eventId") long eventId) {
-        service.addEventFromCompilation(compId, eventId);
+        service.addEventToCompilation(compId, eventId);
     }
 
     @DeleteMapping("/{compId}/pin")
