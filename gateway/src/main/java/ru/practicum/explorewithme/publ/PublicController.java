@@ -68,9 +68,7 @@ public class PublicController {
 
     @GetMapping("/compilations/{compilationId}")
     public ResponseEntity<Object> getCompilationById(@PathVariable(name = "compilationId") Long compilationId) {
-        ResponseEntity<Object> response = client.getCompilationById(compilationId);
-        //return client.getCompilationById(compilationId);
-        return response;
+        return client.getCompilationById(compilationId);
     }
 
     @GetMapping("/categories")

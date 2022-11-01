@@ -2,10 +2,7 @@ package ru.practicum.explorewithme.clients.stat;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.lang.Nullable;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.statistics.EndpointHit;
 import ru.practicum.explorewithme.models.statistics.ViewStats;
 
@@ -16,8 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.joining;
 
 public class StatClient {
 
@@ -43,12 +38,12 @@ public class StatClient {
                 "unique", unique
         );
         String encodeDate = dateParam.keySet().stream().map(key -> {
-                    try {
-                        return key + "=" + encodeValue(encodeValue(dateParam.get(key)));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).reduce((a, b) -> b + "&" + a).get();
+            try {
+                return key + "=" + encodeValue(encodeValue(dateParam.get(key)));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }).reduce((a, b) -> b + "&" + a).get();
 
         return get("/stats?" + encodeDate + "&uris={uris}&unique={unique}", otherParam);
     }
@@ -63,7 +58,8 @@ public class StatClient {
     }
 
     private ResponseEntity<List<ViewStats>> get(String path, Map<String, Object> parameters) {
-        return rest.exchange(path, HttpMethod.GET, null, new ParameterizedTypeReference<>() {}, parameters);
+        return rest.exchange(path, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        }, parameters);
     }
 
     private ResponseEntity<EndpointHit> post(String path, EndpointHit body) {
