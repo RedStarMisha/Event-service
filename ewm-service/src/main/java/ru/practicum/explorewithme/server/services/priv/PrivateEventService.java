@@ -19,6 +19,7 @@ public interface PrivateEventService {
     EventFullDto getEventByOwnerIdAndEventId(long userId, long eventId);
 
     EventFullDto cancelEventByOwner(long userId, long eventId);
+
     List<ParticipationRequestDto> getEventRequests(long userId, long eventId);
 
     ParticipationRequestDto confirmRequestForEvent(long userId, long eventId, long reqId);
