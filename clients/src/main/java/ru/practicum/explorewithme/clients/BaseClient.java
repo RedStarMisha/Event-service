@@ -4,6 +4,7 @@ import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +15,15 @@ public class BaseClient {
         this.rest = rest;
     }
 
-    protected <T>ResponseEntity<Object> post(String path, T body) {
+    protected <T> ResponseEntity<Object> post(String path, T body) {
         return post(path, null, body);
     }
+
     protected ResponseEntity<Object> post(String path, Map<String, Object> parameters) {
         return post(path, parameters, null);
     }
-    protected <T>ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
+
+    protected <T> ResponseEntity<Object> post(String path, @Nullable Map<String, Object> parameters, T body) {
         return makeReqAndGetResp(path, HttpMethod.POST, parameters, body);
     }
 
@@ -35,6 +38,7 @@ public class BaseClient {
     protected <T> ResponseEntity<Object> patch(String path, T body) {
         return patch(path, null, body);
     }
+
     protected <T> ResponseEntity<Object> patch(String path) {
         return patch(path, null, null);
     }
@@ -55,8 +59,8 @@ public class BaseClient {
         return makeReqAndGetResp(path, HttpMethod.DELETE, parameters, null);
     }
 
-    private <T>ResponseEntity<Object> makeReqAndGetResp(String path, HttpMethod method,
-                                                        @Nullable Map<String, Object> parameters, @Nullable T body) {
+    private <T> ResponseEntity<Object> makeReqAndGetResp(String path, HttpMethod method,
+                                                         @Nullable Map<String, Object> parameters, @Nullable T body) {
         HttpEntity<T> requestEntity = new HttpEntity<>(body, makeHeaders());
 
         ResponseEntity<Object> response;

@@ -37,6 +37,7 @@ public class PublicClient extends BaseClient {
         String queryParam = "?pinned={pinned}&from={from}&size={size}";
         return get(COMPILATIONS + queryParam, param);
     }
+
     public ResponseEntity<Object> getCompilationById(long id) {
         return get(COMPILATIONS + "/" + id);
     }

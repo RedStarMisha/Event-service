@@ -11,6 +11,7 @@ public class CategoryClient extends BaseClient {
     public CategoryClient(RestTemplate rest) {
         super(rest);
     }
+
     public ResponseEntity<Object> updateCategory(CategoryDto categoryDto) {
         return patch("", categoryDto);
     }
