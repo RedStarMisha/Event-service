@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.models.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import ru.practicum.explorewithme.models.category.CategoryDto;
 
 import java.time.LocalDateTime;
 
