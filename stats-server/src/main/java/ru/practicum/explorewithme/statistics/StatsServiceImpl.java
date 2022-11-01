@@ -10,8 +10,6 @@ import ru.practicum.explorewithme.models.statistics.ViewStats;
 import ru.practicum.explorewithme.util.ViewsParamDecoder;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +26,7 @@ import static ru.practicum.explorewithme.statistics.StatisticMapper.toStatistic;
 public class StatsServiceImpl implements StatsService {
 
     private final StatisticRepository repository;
+
     @Override
     public EndpointHit saveStats(EndpointHit endpointHit) {
         Statistic statistic = toStatistic(endpointHit);

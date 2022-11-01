@@ -63,6 +63,7 @@ public class PublicController {
                                            @RequestParam(name = "size", defaultValue = "10") int size) {
         return service.getCategories(from, size);
     }
+
     @GetMapping("/categories/{categoryId}")
     public CategoryDto getCategoryById(@PathVariable(name = "categoryId") long categoryId) {
         return service.getCategoryById(categoryId);

@@ -18,13 +18,15 @@ public class ServerExceptionHandler {
         return new ApiError(e.getStackTrace(), e.getMessage(), "Integrity constraint has been violated data",
                 HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler({RequestConditionException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiError requestConditionException(RequestConditionException e) {
         return new ApiError(e.getStackTrace(), e.getMessage(), e.getReason(), HttpStatus.FORBIDDEN);
     }
+
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, EventNotFoundException.class,
-    CompilationNotFoundException.class, RequestNotFoundException.class})
+            CompilationNotFoundException.class, RequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError entityNotFoundException(EntityNotFoundException e) {
         return new ApiError(e.getStackTrace(), e.getMessage(), "The required object was not found.",

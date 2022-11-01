@@ -33,7 +33,7 @@ public class SelectionConditionForPublic {
     private int size;
 
     private SelectionConditionForPublic(String text, int[] categories, Boolean paid, LocalDateTime rangeStart,
-                                       LocalDateTime rangeEnd, Boolean available, EventSort sort, int from, int size) {
+                                        LocalDateTime rangeEnd, Boolean available, EventSort sort, int from, int size) {
         this.text = text;
         this.categories = categories;
         this.paid = paid;
@@ -45,8 +45,8 @@ public class SelectionConditionForPublic {
         this.size = size;
     }
 
-    public static SelectionConditionForPublic of (String text, int[] categories, Boolean paid, String rangeStart,
-                                              String rangeEnd, Boolean available, EventSort sort, int from, int size) {
+    public static SelectionConditionForPublic of(String text, int[] categories, Boolean paid, String rangeStart,
+                                                 String rangeEnd, Boolean available, EventSort sort, int from, int size) {
 
         LocalDateTime start = rangeStart != null && !rangeStart.equals("") ? LocalDateTime.parse(rangeStart, formatter) : null;
         LocalDateTime end = rangeEnd != null && !rangeEnd.equals("") ? LocalDateTime.parse(rangeEnd, formatter) : null;

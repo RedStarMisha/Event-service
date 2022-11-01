@@ -7,6 +7,7 @@ import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.server.models.User;
 
 import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     List<UserDto> findAllByIdIsIn(long[] ids, Pageable pageable);

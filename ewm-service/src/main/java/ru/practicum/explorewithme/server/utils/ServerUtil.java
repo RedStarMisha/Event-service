@@ -10,6 +10,7 @@ public class ServerUtil {
         int page = from / size;
         return PageRequest.of(page, size);
     }
+
     public static Pageable makePageable(int from, int size, Sort sort) {
         int page = from / size;
         return PageRequest.of(page, size, sort);

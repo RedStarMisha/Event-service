@@ -13,6 +13,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByRequestor_Id(long requestorId);
 
     List<Request> findAllByEvent_Id(long eventId);
+
     @Query("update Request r set r.status=2 where r.event.id=?1 and r.status=0")
     void rejectedAllRequestsByEventId(long eventId);
 }

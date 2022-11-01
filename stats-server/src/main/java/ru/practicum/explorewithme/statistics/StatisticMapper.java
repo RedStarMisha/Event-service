@@ -14,6 +14,7 @@ public class StatisticMapper {
         return new Statistic(endpointHit.getApp(), endpointHit.getUri(), endpointHit.getIp(), LocalDateTime.now(),
                 eventId);
     }
+
     public static EndpointHit toEndpointHit(Statistic statistic) {
         return new EndpointHit(statistic.getId(), statistic.getApp(), statistic.getUri(), statistic.getIp(),
                 statistic.getTimestamp());
