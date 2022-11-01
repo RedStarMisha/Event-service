@@ -17,6 +17,7 @@ import ru.practicum.explorewithme.server.repositories.EventRepository;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,8 +56,9 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteEventFromCompilation(long compId, long eventId) {
         log.info("Удаляем Event с id={} из Compilation с id={}", eventId, compId);
 
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+
+        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
 
         if(!compilation.getEvents().contains(event)) {
             throw new RequestConditionException("Event с id = " + eventId + " отсутсвует в Compilation с id = " + compId);
@@ -72,6 +74,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public void addEventFromCompilation(long compId, long eventId) {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotFoundException(compId));
+
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
         log.info("Добавляем Event в Compilation {}", compilation);
