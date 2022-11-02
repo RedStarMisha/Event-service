@@ -23,8 +23,20 @@ public class PrivateSubscriptionController {
     }
 
     @PatchMapping("/{subscriberId}/subscribe/{publisher}/revoke")
-    public void revokeRequestBySubscriber(@PathVariable(name = "subscriberId") Long subscriberId,
+    public ResponseEntity<Object> revokeRequestBySubscriber(@PathVariable(name = "subscriberId") Long subscriberId,
                                             @PathVariable(name = "publisher") Long publisher) {
-        client.revokeRequestBySubscriber(subscriberId, publisher);
+        return client.revokeRequestBySubscriber(subscriberId, publisher);
+    }
+    @PatchMapping("/{publisher}/subscribe/{subscriberId}/cancel")
+    public ResponseEntity<Object> cancelRequestByPublisher(@PathVariable(name = "subscriberId") Long subscriberId,
+                                            @PathVariable(name = "publisher") Long publisher) {
+        return client.cancelRequestByPublisher(subscriberId, publisher);
+    }
+
+    @PatchMapping("/{publisher}/subscribe/{subscriberId}")
+    public ResponseEntity<Object> acceptSubscribe(@PathVariable(name = "subscriberId") Long subscriberId,
+                                                  @PathVariable(name = "publisher") Long publisher,
+                                                  @RequestParam(name = "friendship") Boolean friendship) {
+        return client.acceptSubscribe(subscriberId, publisher, friendship);
     }
 }

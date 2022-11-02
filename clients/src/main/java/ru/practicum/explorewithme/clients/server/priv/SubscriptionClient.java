@@ -14,6 +14,13 @@ public class SubscriptionClient extends BaseClient {
     public ResponseEntity<Object> addSubcribe(Long subscriberId, Long publisher, NewSubscriptionRequest request) {
     }
 
-    public void revokeRequestBySubscriber(Long subscriberId, Long publisher) {
+    public ResponseEntity<Object> revokeRequestBySubscriber(Long subscriberId, Long publisher) {
+        return null;
+    }
+
+    public ResponseEntity<Object> cancelRequestByPublisher(Long subscriberId, Long publisher) {
+    }
+
+    public ResponseEntity<Object> acceptSubscribe(Long subscriberId, Long publisher, Boolean friendship) {
     }
 }
