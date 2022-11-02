@@ -6,7 +6,6 @@ import lombok.ToString;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.models.QEvent;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

@@ -12,6 +12,8 @@ import java.util.Map;
 public class ViewsParamDecoder {
     private Map<String, String> parameters = new HashMap<>();
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public ViewsParamDecoder(String query) {
         getParam(query);
     }
@@ -43,8 +45,6 @@ public class ViewsParamDecoder {
     private String decode(String value) throws UnsupportedEncodingException {
         return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
     }
-
-    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static LocalDateTime toLocalDateTime(String date) {
         return LocalDateTime.parse(date, FORMATTER);
