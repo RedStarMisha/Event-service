@@ -60,8 +60,9 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
             throw new RequestConditionException("Событие уже прошло");
         }
 
-        requestRepository.findByRequestor_IdAndEvent_Id(userId, eventId).ifPresent((request) ->
-                new RequestConditionException(String.format("Запрос на участие в событии %s уже отправлен", event.getTitle())));
+        requestRepository.findByRequestor_IdAndEvent_Id(userId, eventId).ifPresent((request) -> {
+            throw new RequestConditionException(String.format("Запрос на участие в событии %s уже отправлен", event.getTitle()));
+        });
 
         if (event.getParticipantLimit() != 0 && event.getParticipantLimit() <= event.getNumberConfirmed()) {
             throw new RequestConditionException("Лимит участников события достигнут");
