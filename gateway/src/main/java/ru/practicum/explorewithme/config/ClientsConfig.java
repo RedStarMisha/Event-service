@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.explorewithme.clients.server.PrivateClient;
+import ru.practicum.explorewithme.clients.server.priv.PrivateClient;
 import ru.practicum.explorewithme.clients.server.PublicClient;
 import ru.practicum.explorewithme.clients.server.admin.CategoryClient;
 import ru.practicum.explorewithme.clients.server.admin.CompilationsClient;
