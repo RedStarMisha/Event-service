@@ -23,8 +23,8 @@ public class PrivateController {
 
     @GetMapping("/{userId}/events")
     public ResponseEntity<Object> getEventsByOwnerId(@PathVariable(name = "userId") Long userId,
-                                             @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                             @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+                                                     @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                     @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         return client.getEventsByOwnerId(userId, from, size);
     }
 
@@ -42,13 +42,13 @@ public class PrivateController {
 
     @GetMapping("/{userId}/events/{eventId}")
     public ResponseEntity<Object> getEventByOwnerIdAndEventId(@PathVariable(name = "userId") @Positive Long userId,
-                                                     @PathVariable(name = "eventId") @Positive Long eventId) {
+                                                              @PathVariable(name = "eventId") @Positive Long eventId) {
         return client.getEventByOwnerIdAndEventId(userId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
     public ResponseEntity<Object> cancelEventByOwner(@PathVariable(name = "userId") @Positive Long userId,
-                                              @PathVariable(name = "eventId") @Positive Long eventId) {
+                                                     @PathVariable(name = "eventId") @Positive Long eventId) {
         return client.cancelEvent(userId, eventId);
     }
 
@@ -64,6 +64,7 @@ public class PrivateController {
                                                          @PathVariable(name = "reqId") @Positive Long reqId) {
         return client.confirmRequestForEvent(userId, eventId, reqId);
     }
+
     @PatchMapping("/{userId}/events/{eventId}/requests/{reqId}/reject")
     public ResponseEntity<Object> rejectRequestForEvent(@PathVariable(name = "userId") @Positive Long userId,
                                                         @PathVariable(name = "eventId") @Positive Long eventId,
