@@ -14,6 +14,7 @@ import ru.practicum.explorewithme.clients.server.admin.CategoryClient;
 import ru.practicum.explorewithme.clients.server.admin.CompilationsClient;
 import ru.practicum.explorewithme.clients.server.admin.EventClient;
 import ru.practicum.explorewithme.clients.server.admin.UserClient;
+import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 
 @Configuration
 public class ClientsConfig {
@@ -60,6 +61,12 @@ public class ClientsConfig {
     @Bean
     public PublicClient makePublicClient() {
         return new PublicClient(makeRestTemplate(""));
+    }
+
+    @Bean
+    public SubscriptionClient makeSubscriptionClient() {
+        String prefix = "/users";
+        return new SubscriptionClient(makeRestTemplate(prefix));
     }
 
     private RestTemplate makeRestTemplate(String prefix) {

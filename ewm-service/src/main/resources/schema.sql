@@ -56,3 +56,14 @@ create table if not exists events_compilations (
     event_id bigint references events,
     primary key (compilation_id, event_id)
 );
+
+create table if not exists subscription (
+    id bigint generated always as identity primary key ,
+    friendship_request boolean,
+    publisher bigint references users,
+    follower bigint references users,
+    created timestamp,
+    updated timestamp,
+    status int,
+    constraint unique (publisher, follower)
+)

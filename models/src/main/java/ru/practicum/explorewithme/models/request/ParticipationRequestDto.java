@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.models.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import ru.practicum.explorewithme.models.user.UserShortDto;
 
 import java.time.LocalDateTime;
 
