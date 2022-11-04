@@ -35,7 +35,8 @@ public class PublicController {
                                             @RequestParam(name = "from", defaultValue = "0") int from,
                                             @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        EventSort sortType = EventSort.from(sort).orElseThrow(() -> new UnknownEnumElementException("Неизвестный тип сортировки"));
+        EventSort sortType = EventSort.from(sort).orElseThrow(() ->
+                new UnknownEnumElementException("Неизвестный тип сортировки"));
 
         dateValidation(rangeStart, rangeEnd);
 

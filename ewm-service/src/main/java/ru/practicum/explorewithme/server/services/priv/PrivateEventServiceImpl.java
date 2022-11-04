@@ -60,7 +60,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             throw new RequestConditionException("Нельзя менять опубликованные события");
         }
 
-        event = makeUpdatableModelPrivate(event, request, category);
+        makeUpdatableModelPrivate(event, request, category);
 
         log.info("Event с id = {} обновлен. Новые параметры {}", request.getEventId(), request);
         return toEventFull(eventRepository.save(event));

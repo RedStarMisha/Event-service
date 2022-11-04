@@ -34,12 +34,13 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getStats(String queryString, String[] uris, boolean unique) throws UnsupportedEncodingException {
+    public List<ViewStats> getStats(String queryString, String[] uris, boolean unique)
+            throws UnsupportedEncodingException {
         ViewsParamDecoder decoder = new ViewsParamDecoder(queryString);
         LocalDateTime start = decoder.getStart();
         LocalDateTime end = decoder.getEnd();
 
-        return Arrays.stream(uris).map(uri -> repository.findFirstByUri(uri)).filter(Optional::isPresent).map(Optional::get)
+        return Arrays.stream(uris).map(repository::findFirstByUri).filter(Optional::isPresent).map(Optional::get)
                 .map(st -> new ViewStats(st.getApp(), st.getUri(), getViews(start, end, st.getUri(), unique)))
                 .collect(Collectors.toList());
     }
