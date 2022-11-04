@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
 
 import java.util.List;
@@ -26,28 +27,53 @@ public class PrivateSubscriptionController {
         return dto;
     }
 
-    @PatchMapping("/{followerId}/subscribe/{publisher}/revoke")
+    @PatchMapping("/{followerId}/subscribe/{subscriptionId}/revoke")
     public void revokeRequestBySubscriber(@PathVariable(name = "followerId") Long followerId,
-                                                            @PathVariable(name = "publisher") Long publisher) {
-        service.revokeRequestBySubscriber(followerId, publisher);
+                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        service.revokeRequestBySubscriber(followerId, subscriptionId);
     }
 
-    @PatchMapping("/{publisher}/subscribe/{followerId}/cancel")
-    public void cancelRequestByPublisher(@PathVariable(name = "followerId") Long followerId,
+    @PatchMapping("/{publisher}/subscribe/{subscriptionId}/cancel")
+    public void cancelRequestByPublisher(@PathVariable(name = "subscriptionId") Long subscriptionId,
                                                            @PathVariable(name = "publisher") Long publisher) {
-        service.cancelRequestByPublisher(followerId, publisher);
+        service.cancelRequestByPublisher(publisher, subscriptionId);
     }
 
-    @PatchMapping("/{publisher}/friendship/{friendshipId}/")
-    public void acceptFriendshipByPublisher(@PathVariable(name = "friendshipId") Long friendshipId,
-                                            @PathVariable(name = "publisher") Long publisher) {
-        service.acceptFriendship(publisher, friendshipId);
+    @PatchMapping("/{publisher}/subscribe/{subscriptionId}/friendship")
+    public void acceptFriendshipByPublisher(@PathVariable(name = "subscriptionId") Long subscriptionId,
+                                            @PathVariable(name = "publisher") Long publisher,
+                                            @RequestParam(name = "friendship") Boolean friendship) {
+        service.acceptFriendship(publisher, subscriptionId, friendship);
     }
 
-    @GetMapping("/{followerId}/subscribe")
-    public List<SubscriptionRequestDto> getSubscriptions(@PathVariable(name = "followerId") long followerId,
-                                             @RequestParam(name = "status", required = false) SubscriptionStatus status,
-                                             @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
-        return service.getSubscriptions(followerId, status, from, size);
+    @GetMapping("/{userId}/subscribe/subscribed")
+    public List<SubscriptionRequestDto> getSubscribed(@PathVariable(name = "userId") long userId,
+                                                      @RequestParam(name = "status", required = false) SubscriptionStatus status,
+                                                      @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
+        return service.getSubscribed(userId, status, from, size);
+    }
+
+    @GetMapping("/{userId}/subscribe/signed")
+    public List<SubscriptionRequestDto> getSigned(@PathVariable(name = "userId") long userId,
+                                                      @RequestParam(name = "status", required = false) SubscriptionStatus status,
+                                                      @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
+        return service.getSigned(userId, status, from, size);
+    }
+
+    @GetMapping("/{userId}/subscriptions")
+    public List<UserShortDto> getSubscriptions(@PathVariable(name = "userId") long userId,
+                                               @RequestParam(name = "friends") boolean friends,
+                                               @RequestParam(name = "from", defaultValue = "0") int from,
+                                               @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        return service.getSubscriptions(userId, friends, from, size);
+    }
+    @GetMapping("/{userId}/followers")
+    public List<UserShortDto> getFollowers(@PathVariable(name = "userId") long userId,
+                                               @RequestParam(name = "friends") boolean friends,
+                                               @RequestParam(name = "from", defaultValue = "0") int from,
+                                               @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        return service.getFollowers(userId, friends, from, size);
     }
 }

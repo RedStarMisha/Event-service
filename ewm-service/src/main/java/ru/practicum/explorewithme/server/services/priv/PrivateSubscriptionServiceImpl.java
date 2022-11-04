@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.server.services.priv;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,26 +52,30 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     }
 
     @Override
-    public void revokeRequestBySubscriber(Long followerId, Long publisherId) {
+    public void revokeRequestBySubscriber(Long followerId, Long subscriptionId) {
     }
 
     @Override
-    public void cancelRequestByPublisher(Long followerId, Long publisherId) {
+    public void cancelRequestByPublisher(Long publisherId, Long subscriptionId) {
 
     }
 
     @Override
-    public void acceptFriendship(long publisherId, long friendshipId) {
+    public void acceptFriendship(long publisherId, long friendshipId, boolean friendship) {
         userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
         SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_Id(friendshipId, publisherId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(friendshipId));
 
         if (request.getStatus() != SubscriptionStatus.WAITING) {
-            throw new RequestConditionException("Нет заявки на дружбу с id = " + friendshipId);
+            throw new RequestConditionException("Нет такой заявки на дружбу");
         }
 
-        request.setStatus(SubscriptionStatus.FRIENDSHIP);
+        if (friendship) {
+            request.setStatus(SubscriptionStatus.FRIENDSHIP);
+        } else {
+            request.setStatus(SubscriptionStatus.SUBSCRIPTION);
+        }
 
         log.info("Добавлен друг по заявке {}", request);
 
@@ -80,8 +83,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     }
 
     @Override
-    public List<SubscriptionRequestDto> getSubscriptions(long followerId, @Nullable SubscriptionStatus status, int from,
-                                                         int size) {
+    public List<SubscriptionRequestDto> getSubscribed(long followerId, @Nullable SubscriptionStatus status, int from,
+                                                      int size) {
         userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         List<SubscriptionRequest> list;
 
@@ -93,5 +96,10 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
             list =  subscriptionRepository.findAllByFollower_IdAndStatus(followerId, status, makePageable(from, size));
         }
         return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SubscriptionRequestDto> getSigned(long userId, SubscriptionStatus status, int from, int size) {
+        return null;
     }
 }
