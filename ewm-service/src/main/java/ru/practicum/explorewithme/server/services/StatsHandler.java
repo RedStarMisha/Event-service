@@ -38,8 +38,8 @@ public class StatsHandler {
     }
 
     private Event getStats(Event event, String[] uris) {
-        ResponseEntity<List<ViewStats>> response = statClient.getStats(event.getCreated(), LocalDateTime.now().plusMinutes(1L),
-                uris, false);
+        ResponseEntity<List<ViewStats>> response = statClient.getStats(event.getCreated(),
+                LocalDateTime.now().plusMinutes(1L), uris, false);
 
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Сервер сейчас не доступен");

@@ -78,7 +78,8 @@ public class PublicServiceImpl implements PublicService {
 
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
-        List<Compilation> compilations = pinned == null ? compilationRepository.findAll(makePageable(from, size)).getContent() :
+        List<Compilation> compilations = pinned == null ?
+                compilationRepository.findAll(makePageable(from, size)).getContent() :
                 compilationRepository.findAllByPinned(pinned, makePageable(from, size));
         log.info("Запрошены Compilations с оплатой - {}", pinned);
 

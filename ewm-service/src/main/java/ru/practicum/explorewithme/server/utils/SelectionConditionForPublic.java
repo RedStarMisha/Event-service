@@ -96,9 +96,9 @@ public class SelectionConditionForPublic {
     private BooleanExpression dateExpression(LocalDateTime rangeStart, LocalDateTime rangeEnd, QEvent event) {
         if (rangeStart == null && rangeEnd == null) {
             return event.eventDate.after(LocalDateTime.now());
-        } else if (rangeStart == null && rangeEnd != null) {
+        } else if (rangeStart == null) {
             return event.eventDate.before(rangeEnd);
-        } else if (rangeStart != null && rangeEnd == null) {
+        } else if (rangeEnd == null) {
             return event.eventDate.after(rangeStart);
         } else {
             return event.eventDate.between(rangeStart, rangeEnd);

@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.clients.server.admin;
 
-import io.micrometer.core.lang.Nullable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
@@ -15,9 +15,9 @@ public class UserClient extends BaseClient {
         super(rest);
     }
 
-     public ResponseEntity<Object> getUsers(@Nullable long[] ids, int from, int size) {
-         Map<String, Object> param = new HashMap<>(Map.of("from", from, "size", size));
-         param.put("ids", ids);
+    public ResponseEntity<Object> getUsers(@Nullable long[] ids, int from, int size) {
+        Map<String, Object> param = new HashMap<>(Map.of("from", from, "size", size));
+        param.put("ids", ids);
 
         return get("?ids={ids}&from={from}&size={size}", param);
     }
