@@ -2,8 +2,8 @@ package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
@@ -19,18 +19,17 @@ public class PrivateSubscriptionController {
 
     private final PrivateSubscriptionService service;
 
-    @PostMapping("/{followerId}/subscribe/{publisher}")
-    public SubscriptionRequestDto addSubscribe(@PathVariable(name = "followerId") Long followerId,
-                                               @PathVariable(name = "publisher") Long publisher,
+    @PostMapping("/{publisherId}/subscribe")
+    public SubscriptionRequestDto addSubscribe(@RequestHeader("X-EWM-User-Id") long userId,
+                                               @PathVariable(name = "publisherId") Long publisherId,
                                                @RequestBody NewSubscriptionRequest request) {
-        SubscriptionRequestDto dto = service.addSubscribe(followerId, publisher, request);
-        return dto;
+        return service.addSubscribe(userId, publisherId, request);
     }
 
-    @PatchMapping("/{followerId}/subscribe/{subscriptionId}/revoke")
-    public void revokeRequestBySubscriber(@PathVariable(name = "followerId") Long followerId,
-                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        service.revokeRequestBySubscriber(followerId, subscriptionId);
+    @PatchMapping("/subscriptions/{subscriptionId}/revoke")
+    public void revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
+                                          @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        service.revokeRequestBySubscriber(userId, subscriptionId);
     }
 
     @PatchMapping("/{publisher}/subscribe/{subscriptionId}/cancel")
@@ -40,24 +39,26 @@ public class PrivateSubscriptionController {
     }
 
     @PatchMapping("/{publisher}/subscribe/{subscriptionId}/friendship")
-    public void acceptFriendshipByPublisher(@PathVariable(name = "subscriptionId") Long subscriptionId,
-                                            @PathVariable(name = "publisher") Long publisher,
-                                            @RequestParam(name = "friendship") Boolean friendship) {
-        service.acceptFriendship(publisher, subscriptionId, friendship);
+    public void acceptSubscribe(@PathVariable(name = "subscriptionId") Long subscriptionId,
+                                @PathVariable(name = "publisher") Long publisher,
+                                @RequestParam(name = "friendship") Boolean friendship,
+                                @RequestParam(name = "group", required = false) FriendshipGroup group) {
+
+        service.acceptSubscribe(publisher, subscriptionId, friendship, group);
     }
 
     @GetMapping("/{userId}/subscribe/subscribed")
-    public List<SubscriptionRequestDto> getSubscribed(@PathVariable(name = "userId") long userId,
-                                                      @RequestParam(name = "status", required = false) SubscriptionStatus status,
-                                                      @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
-        return service.getSubscribed(userId, status, from, size);
+    public List<SubscriptionRequestDto> getIncomingSubscriptions(@PathVariable(name = "userId") long userId,
+                                     @RequestParam(name = "status", required = false) SubscriptionStatus status,
+                                     @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
+        return service.getIncomingSubscriptions(userId, status, from, size);
     }
 
     @GetMapping("/{userId}/subscribe/signed")
-    public List<SubscriptionRequestDto> getSigned(@PathVariable(name = "userId") long userId,
-                                                      @RequestParam(name = "status", required = false) SubscriptionStatus status,
-                                                      @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
-        return service.getSigned(userId, status, from, size);
+    public List<SubscriptionRequestDto> getOutgoingSubscriptions(@PathVariable(name = "userId") long userId,
+                                                                 @RequestParam(name = "status", required = false) SubscriptionStatus status,
+                                                                 @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
+        return service.getOutgoingSubscriptions(userId, status, from, size);
     }
 
     @GetMapping("/{userId}/subscriptions")

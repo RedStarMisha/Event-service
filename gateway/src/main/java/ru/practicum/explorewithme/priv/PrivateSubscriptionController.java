@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 
@@ -16,66 +17,71 @@ public class PrivateSubscriptionController {
 
     private final SubscriptionClient client;
 
-    @PostMapping("/{follower}/subscribe/{publisher}")
-    public ResponseEntity<Object> addSubscribe(@PathVariable(name = "follower") Long follower,
-                                            @PathVariable(name = "publisher") Long publisher,
+    @PostMapping("/{publisherId}/subscribe")
+    public ResponseEntity<Object> addSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
+                                            @PathVariable(name = "publisherId") Long publisherId,
                                             @RequestBody NewSubscriptionRequest request) {
-        return client.addSubscribe(follower, publisher, request);
+        return client.addSubscribe(userId, publisherId, request);
     }
 
-    @PatchMapping("/{follower}/subscribe/{subscriptionId}/revoke")
-    public ResponseEntity<Object> revokeRequestBySubscriber(@PathVariable(name = "follower") Long follower,
-                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        return client.revokeRequestBySubscriber(follower, subscriptionId);
+    @PatchMapping("/subscriptions/{subscriptionId}/revoke")
+    public ResponseEntity<Object> revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
+                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        return client.revokeRequestBySubscriber(userId, subscriptionId);
     }
-    @PatchMapping("/{publisher}/subscribe/{subscriptionId}/cancel")
-    public ResponseEntity<Object> cancelRequestByPublisher(@PathVariable(name = "subscriptionId") Long subscriptionId,
-                                            @PathVariable(name = "publisher") Long publisher) {
-        return client.cancelRequestByPublisher(publisher, subscriptionId);
-    }
-
-    @PatchMapping("/{publisherId}/subscribe/{subscriptionId}/friendship")
-    public ResponseEntity<Object> acceptSubscribe(@PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                  @PathVariable(name = "publisherId") Long publisherId,
-                                                  @RequestParam(name = "friendship") Boolean friendship) {
-        return client.acceptFriendship(publisherId, subscriptionId, friendship);
+    @PatchMapping("/subscriptions/{subscriptionId}/cancel")
+    public ResponseEntity<Object> cancelRequestByPublisher(@RequestHeader("X-EWM-User-Id") Long userId,
+                                                           @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        return client.cancelRequestByPublisher(userId, subscriptionId);
     }
 
-    @GetMapping("/{userId}/subscribe/subscribed")
-    public ResponseEntity<Object> getSubscribed(@PathVariable(name = "userId") long userId,
+    @PatchMapping("/subscriptions/{subscriptionId}/accept")
+    public ResponseEntity<Object> acceptSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
+                                                  @PathVariable(name = "subscriptionId") Long subscriptionId,
+                                                  @RequestParam(name = "friendship") Boolean friendship,
+                                                  @RequestParam(name = "group", required = false) FriendshipGroup group) {
+        return client.acceptSubscribe(userId, subscriptionId, friendship, group);
+    }
+
+    @GetMapping("/subscriptions/incoming")
+    public ResponseEntity<Object> getIncomingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
                                                 @RequestParam(name = "status", required = false) String stringStatus,
                                                 @RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
                 .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
 
-        return client.getSubscribed(userId, status, from, size);
+        return client.getIncomingSubscriptions(userId, status, from, size);
     }
-    @GetMapping("/{userId}/subscribe/signed")
-    public ResponseEntity<Object> getSigned(@PathVariable(name = "userId") long userId,
+    @GetMapping("/subscriptions/outgoing")
+    public ResponseEntity<Object> getOutgoingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
                                                 @RequestParam(name = "status", required = false) String stringStatus,
                                                 @RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
                 .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
 
-        return client.getSigned(userId, status, from, size);
+        return client.getOutgoingSubscriptions(userId, status, from, size);
     }
 
-    @GetMapping("/{userId}/subscriptions")
-    public ResponseEntity<Object> getSubscriptions(@PathVariable(name = "userId") long userId,
+    @GetMapping("/following")
+    public ResponseEntity<Object> getFollowing(@RequestHeader("X-EWM-User-Id") Long userId,
                                                    @RequestParam(name = "friends") Boolean friends,
                                                 @RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        return client.getSubscriptions(userId, friends, from, size);
+        return client.getFollowing(userId, friends, from, size);
     }
-    @GetMapping("/{userId}/followers")
-    public ResponseEntity<Object> getFollowers(@PathVariable(name = "userId") long userId,
+    @GetMapping("/followers")
+    public ResponseEntity<Object> getFollowers(@RequestHeader("X-EWM-User-Id") Long userId,
                                             @RequestParam(name = "friends") Boolean friends,
+                                            @RequestParam(name = "group", required = false) String friendshipGroup,
                                             @RequestParam(name = "from", defaultValue = "0") int from,
                                             @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        return client.getFollowers(userId, friends, from, size);
+        FriendshipGroup group = FriendshipGroup.from(friendshipGroup)
+                .orElseThrow(() -> new UnknownEnumElementException(friendshipGroup));
+
+        return client.getFollowers(userId, friends, group, from, size);
     }
 }

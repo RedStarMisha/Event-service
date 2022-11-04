@@ -13,7 +13,11 @@ import java.util.Optional;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<SubscriptionRequest, Long> {
 
-    Optional<SubscriptionRequest> findByIdAndPublisher_Id(long subscriptionId, long publisherId);
+    Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatusIsNot(long subscriptionId, long publisherId,
+                                                                        SubscriptionStatus status);
+
+    Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatusIs(long subscriptionId, long publisherId,
+                                                                        SubscriptionStatus status);
 
     Optional<SubscriptionRequest> findByIdAndFollower_Id(long subscriptionId, long followerId);
     List<SubscriptionRequest> findAllByFollower_Id(long followerId, Pageable pageable);

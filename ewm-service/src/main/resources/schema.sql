@@ -66,4 +66,14 @@ create table if not exists subscription (
     updated timestamp,
     status int,
     constraint unique (publisher, follower)
-)
+);
+
+create table if not exists followers (
+    id bigint generated always as identity primary key ,
+    friendship_group int,
+    added timestamp,
+    publisher bigint references users,
+    follower bigint references users,
+    subscription bigint references subscription
+);
+

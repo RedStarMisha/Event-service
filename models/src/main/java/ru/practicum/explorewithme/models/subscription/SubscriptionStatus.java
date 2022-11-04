@@ -3,9 +3,8 @@ package ru.practicum.explorewithme.models.subscription;
 import java.util.Optional;
 
 public enum SubscriptionStatus {
-    FRIENDSHIP,
     WAITING,
-    SUBSCRIPTION,
+    CONSIDER,
     REVOKE,
     CANCELED;
 
