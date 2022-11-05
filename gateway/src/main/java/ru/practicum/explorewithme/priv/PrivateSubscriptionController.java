@@ -61,6 +61,8 @@ public class PrivateSubscriptionController {
         SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
                 .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
 
+        if (status == SubscriptionStatus.REVOKE) throw new UnknownEnumElementException(stringStatus);
+
         return client.getOutgoingSubscriptions(userId, status, from, size);
     }
 

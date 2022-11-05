@@ -10,6 +10,7 @@ import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
@@ -22,6 +23,7 @@ import ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
@@ -44,8 +46,9 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         User follower = userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         User publisher = userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        subscriptionRepository.findByFollower_IdAndPublisher_Id(followerId, publisherId)
-                .orElseThrow(() -> new RequestConditionException("Запрос на подписку уже отправлялся"));
+        Optional<SubscriptionRequest> request1 = subscriptionRepository.findByFollower_IdAndPublisher_Id(followerId,
+                        publisherId);
+               // .orElseThrow(() -> new RequestConditionException("Запрос на подписку уже отправлялся"));
 
         SubscriptionRequest request = toSubscriptionRequest(newRequest, publisher, follower);
 
@@ -96,6 +99,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
             publisherId, SubscriptionStatus.WAITING).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
 
         request.setStatus(SubscriptionStatus.CONSIDER);
+        request.setUpdated(LocalDateTime.now());
 
         log.info("Добавлен пользователь по заявке {}", request);
 
@@ -103,8 +107,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     }
 
     @Override
-    public List<SubscriptionRequestDto> getIncomingSubscriptions(long followerId, @Nullable SubscriptionStatus status, int from,
-                                                                 int size) {
+    public List<SubscriptionRequestDto> getIncomingSubscriptions(long followerId, @Nullable SubscriptionStatus status,
+                                                                 int from, int size) {
         userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         List<SubscriptionRequest> list;
 
@@ -123,11 +127,22 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         List<SubscriptionRequest> list;
 
         if (status == null) {
-            list =  subscriptionRepository.findAllByFollower_Id(followerId, makePageable(from, size));
+            list =  subscriptionRepository.findAllByPublisher(userId, makePageable(from, size));
         } else {
-            list =  subscriptionRepository.findAllByFollower_IdAndStatus(followerId, status, makePageable(from, size));
+            list =  subscriptionRepository.findAllByPublisher_IdAndStatusIs(userId, status, makePageable(from, size));
         }
 
         return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserShortDto> getFollowing(long userId, boolean friends, int from, int size) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return null;
+    }
+
+    @Override
+    public List<UserShortDto> getFollowers(long userId, boolean friends, int from, int size) {
+        return null;
     }
 }

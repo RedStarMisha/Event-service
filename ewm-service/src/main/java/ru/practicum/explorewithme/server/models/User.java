@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.server.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Where;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
@@ -10,7 +10,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString()
 @NoArgsConstructor
 public class User {
     @Id
@@ -29,6 +32,26 @@ public class User {
         this.email = email;
         created = LocalDateTime.now();
     }
+
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "followers",
+//            joinColumns = @JoinColumn(name = "publisher"),
+//            inverseJoinColumns = @JoinColumn(name = "follower")
+//    )
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
+    @ToString.Exclude
+//    @Where(clause = "friendship_group == null")
+    private Set<Follower> followers;
+
+//    create table if not exists followers (
+//            id bigint generated always as identity primary key ,
+//            friendship_group int,
+//            added timestamp,
+//            publisher bigint references users,
+//            follower bigint references users,
+//            subscription bigint references subscription
+//    );
 
 //    @ManyToMany
 //    @JoinTable(

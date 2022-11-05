@@ -38,13 +38,13 @@ public class PrivateSubscriptionController {
         service.cancelRequestByPublisher(publisher, subscriptionId);
     }
 
-    @PatchMapping("/{publisher}/subscribe/{subscriptionId}/friendship")
-    public void acceptSubscribe(@PathVariable(name = "subscriptionId") Long subscriptionId,
-                                @PathVariable(name = "publisher") Long publisher,
+    @PatchMapping("/subscriptions/{subscriptionId}/accept")
+    public void acceptSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
+                                @PathVariable(name = "subscriptionId") Long subscriptionId,
                                 @RequestParam(name = "friendship") Boolean friendship,
                                 @RequestParam(name = "group", required = false) FriendshipGroup group) {
 
-        service.acceptSubscribe(publisher, subscriptionId, friendship, group);
+        service.acceptSubscribe(userId, subscriptionId, friendship, group);
     }
 
     @GetMapping("/{userId}/subscribe/subscribed")
@@ -59,22 +59,5 @@ public class PrivateSubscriptionController {
                                                                  @RequestParam(name = "status", required = false) SubscriptionStatus status,
                                                                  @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
         return service.getOutgoingSubscriptions(userId, status, from, size);
-    }
-
-    @GetMapping("/{userId}/subscriptions")
-    public List<UserShortDto> getSubscriptions(@PathVariable(name = "userId") long userId,
-                                               @RequestParam(name = "friends") boolean friends,
-                                               @RequestParam(name = "from", defaultValue = "0") int from,
-                                               @RequestParam(name = "size", defaultValue = "10") int size) {
-
-        return service.getSubscriptions(userId, friends, from, size);
-    }
-    @GetMapping("/{userId}/followers")
-    public List<UserShortDto> getFollowers(@PathVariable(name = "userId") long userId,
-                                               @RequestParam(name = "friends") boolean friends,
-                                               @RequestParam(name = "from", defaultValue = "0") int from,
-                                               @RequestParam(name = "size", defaultValue = "10") int size) {
-
-        return service.getFollowers(userId, friends, from, size);
     }
 }

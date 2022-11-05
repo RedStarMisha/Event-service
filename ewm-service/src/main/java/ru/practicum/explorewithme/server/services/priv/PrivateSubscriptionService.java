@@ -21,7 +21,7 @@ public interface PrivateSubscriptionService {
 
     List<SubscriptionRequestDto> getOutgoingSubscriptions(long userId, SubscriptionStatus status, int from, int size);
 
-    List<UserShortDto> getSubscriptions(long userId, boolean friends, int from, int size);
+    List<UserShortDto> getFollowing(long userId, boolean friends, int from, int size);
 
     List<UserShortDto> getFollowers(long userId, boolean friends, int from, int size);
 }

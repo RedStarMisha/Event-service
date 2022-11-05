@@ -35,7 +35,9 @@ public class SubscriptionClient extends BaseClient {
         param.put("friendship", friendship);
         param.put("group", group);
 
-        return patch("/subscriptions/" + subscriptionId + "/accept", userId, param);
+        String queryPath = "?friendship={friendship}&group={group}";
+
+        return patch("/subscriptions/" + subscriptionId + "/accept" + queryPath, userId, param);
     }
 
     public ResponseEntity<Object> getIncomingSubscriptions(Long userId, SubscriptionStatus status, int from, int size) {
@@ -84,5 +86,9 @@ public class SubscriptionClient extends BaseClient {
         String queryPath = "?friends={friends}&friendshipGroup={friendshipGroup}&from={from}&size={size}";
 
         return get("/followers" + queryPath, userId, param);
+    }
+
+    public ResponseEntity<Object> getUser(long followerId, long userId) {
+        return get("/" + userId, followerId);
     }
 }

@@ -25,7 +25,7 @@ public class SubscriptionMapper {
 
     public static Follower toFollower(SubscriptionRequest request, boolean friendship, FriendshipGroup group) {
         FriendshipGroup group1 = group == null ? FriendshipGroup.ALL : group;
-        return friendship ? new Follower(group1, request.getPublisher(), request.getFollower()) :
-                new Follower(request.getPublisher(), request.getFollower());
+        return friendship ? new Follower(group1, request.getPublisher(), request.getFollower(), request) :
+                new Follower(request.getPublisher(), request.getFollower(), request);
     }
 }

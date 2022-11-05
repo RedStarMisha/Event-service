@@ -35,17 +35,19 @@ public class Follower {
     private User follower;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @Column(name = "subscription")
+    @JoinColumn(name = "subscription", referencedColumnName = "id")
     private SubscriptionRequest request;
 
-    public Follower(FriendshipGroup group, User publisher, User follower) {
+    public Follower(FriendshipGroup group, User publisher, User follower, SubscriptionRequest request) {
         this.group = group;
         this.publisher = publisher;
         this.follower = follower;
+        this.request = request;
     }
 
-    public Follower(User publisher, User follower) {
+    public Follower(User publisher, User follower, SubscriptionRequest request) {
         this.publisher = publisher;
         this.follower = follower;
+        this.request = request;
     }
 }

@@ -36,6 +36,13 @@ public class BaseClient {
     protected ResponseEntity<Object> get(String url) {
         return get(url, null, null);
     }
+    protected ResponseEntity<Object> get(String url, long userId) {
+        return get(url, userId, null);
+    }
+
+    protected ResponseEntity<Object> get(String url, Map<String, Object> parameters) {
+        return get(url, null, parameters);
+    }
 
     protected ResponseEntity<Object> get(String path, @Nullable Long userId, @Nullable Map<String, Object> parameters) {
         return makeReqAndGetResp(path, HttpMethod.GET, userId, parameters, null);
