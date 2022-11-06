@@ -5,7 +5,6 @@ import java.util.Optional;
 public enum EventState {
     FUTURE,
     PAST,
-    AVAILABLE,
     ALL;
 
     public static Optional<EventState> from(String stateString) {

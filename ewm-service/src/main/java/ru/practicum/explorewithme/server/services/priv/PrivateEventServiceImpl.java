@@ -16,13 +16,16 @@ import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundExcept
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.repositories.*;
+import ru.practicum.explorewithme.server.utils.SelectionConditionForPrivate;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.practicum.explorewithme.server.utils.ServerUtil.convertToDate;
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
@@ -38,6 +41,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
+
+    private final FollowersRepository followersRepository;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
@@ -152,6 +157,29 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         request.setStatus(RequestStatus.REJECTED);
 
         return toRequestDto(request);
+    }
+
+    @Override
+    public List<EventFullDto> getEventsWhereParticipant(long followerId, Long userId, SelectionConditionForPrivate selection) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        if (followerId != userId) {
+            userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
+            followersRepository.findByPublisher_IdAndFollower_Id(userId, followerId)
+                            .orElseThrow(() -> new RequestConditionException("Нет доступа"));
+        }
+
+
+
+
+
+        return null;
+    }
+
+    @Override
+    public List<EventFullDto> getEventsWhereCreator(long followerId, Long userId, EventState state, String start,
+                                                    String end, Boolean available, int from, int size) {
+        return null;
     }
 
 }

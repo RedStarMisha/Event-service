@@ -61,18 +61,23 @@ public class PrivateClient extends BaseClient {
 
     public ResponseEntity<Object> addNewRequestByUser(long userId, long eventId) {
         Map<String, Object> param = Map.of("eventId", eventId);
-        String queryParam = "?eventId={eventId}";
-        return post("/" + userId + REQUESTS + queryParam, param);
+        String queryUri = "?eventId={eventId}";
+        return post("/" + userId + REQUESTS + queryUri, param);
     }
 
     public ResponseEntity<Object> cancelUserRequest(long userId, long requestId) {
         return patch("/" + userId + REQUESTS + "/" + requestId + "/cancel");
     }
 
-    public ResponseEntity<Object> getEventsWhereParticipant(long followerId, Long userId, EventState state, int from, int size) {
-        return get("/" + userId + "/events/participant", followerId, )
+    public ResponseEntity<Object> getEventsWhereParticipant(long followerId, Long userId, Map<String, Object> param) {
+        String queryUri = "?state={state}&start={start}&end={end}&available={available}&from={from}&size={size}";
+
+        return get("/" + userId + "/events/participant" + queryUri, followerId, param);
     }
 
-    public ResponseEntity<Object> getEventsWhereCreator(long followerId, Long userId, EventState state, int from, int size) {
+    public ResponseEntity<Object> getEventsWhereCreator(long followerId, Long userId, Map<String, Object> param) {
+        String queryUri = "?state={state}&start={start}&end={end}&available={available}&from={from}&size={size}";
+
+        return get("/" + userId + "/events/creator" + queryUri, followerId, param);
     }
 }

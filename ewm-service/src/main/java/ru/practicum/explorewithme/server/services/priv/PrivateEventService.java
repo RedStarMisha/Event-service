@@ -1,10 +1,8 @@
 package ru.practicum.explorewithme.server.services.priv;
 
+import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
-import ru.practicum.explorewithme.models.event.EventFullDto;
-import ru.practicum.explorewithme.models.event.EventShortDto;
-import ru.practicum.explorewithme.models.event.NewEventDto;
-import ru.practicum.explorewithme.models.event.UpdateEventRequest;
+import ru.practicum.explorewithme.server.utils.SelectionConditionForPrivate;
 
 import java.util.List;
 
@@ -25,4 +23,8 @@ public interface PrivateEventService {
     ParticipationRequestDto confirmRequestForEvent(long userId, long eventId, long reqId);
 
     ParticipationRequestDto rejectRequestForEvent(long userId, long eventId, long reqId);
+
+    List<EventFullDto> getEventsWhereParticipant(long followerId, Long userId, SelectionConditionForPrivate selection);
+
+    List<EventFullDto> getEventsWhereCreator(long followerId, Long userId, SelectionConditionForPrivate selection);
 }
