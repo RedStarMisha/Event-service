@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
+import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.models.user.UserWithSubscriptionDto;
 
@@ -23,22 +25,26 @@ public class PrivateUserController {
         return client.getUser(followerId, userId);
     }
 
-//    @GetMapping("/{userId}/following")
-//    public ResponseEntity<Object> getFollowing(@RequestHeader("X-EWM-User-Id") long followerId,
-//                                           @PathVariable(name = "userId") long userId,
-//                                           @RequestParam(name = "friends") boolean friends,
-//                                           @RequestParam(name = "from", defaultValue = "0") int from,
-//                                           @RequestParam(name = "size", defaultValue = "10") int size) {
-//
-//        return client.getFollowing(followerId, userId, friends, from, size);
-//    }
-//    @GetMapping("/{userId}/followers")
-//    public ResponseEntity<Object> getFollowers(@RequestHeader("X-EWM-User-Id") long followerId,
-//                                           @PathVariable(name = "userId") long userId,
-//                                           @RequestParam(name = "friends") boolean friends,
-//                                           @RequestParam(name = "from", defaultValue = "0") int from,
-//                                           @RequestParam(name = "size", defaultValue = "10") int size) {
-//
-//        return client.getFollowers(followerId, userId, friends, from, size);
-//    }
+    @GetMapping("/{userId}/following")
+    public ResponseEntity<Object> getFollowing(@RequestHeader("X-EWM-User-Id") long followerId,
+                                           @PathVariable(name = "userId") long userId,
+                                           @RequestParam(name = "friends") boolean friends,
+                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                           @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        return client.getFollowing(followerId, userId, friends, from, size);
+    }
+
+    @GetMapping("/{userId}/followers")
+    public ResponseEntity<Object> getFollowers(@RequestHeader("X-EWM-User-Id") long followerId,
+                                           @PathVariable(name = "userId") long userId,
+                                           @RequestParam(name = "friends", defaultValue = "false") boolean friends,
+                                           @RequestParam(name = "group", required = false) String friendshipGroup,
+                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                           @RequestParam(name = "size", defaultValue = "10") int size) {
+        FriendshipGroup group = FriendshipGroup.from(friendshipGroup)
+                .orElseThrow(() -> new UnknownEnumElementException(friendshipGroup));
+
+        return client.getFollowers(followerId, userId, friends, group, from, size);
+    }
 }

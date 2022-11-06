@@ -62,7 +62,7 @@ public class SubscriptionClient extends BaseClient {
         return get("/subscriptions/outgoing" + queryPath, userId, param);
     }
 
-    public ResponseEntity<Object> getFollowing(long userId, Boolean friends, int from, int size) {
+    public ResponseEntity<Object> getFollowing(long followerId, long userId, Boolean friends, int from, int size) {
         Map<String, Object> param = Map.of(
                 "friends", friends,
                 "from", from,
@@ -71,11 +71,11 @@ public class SubscriptionClient extends BaseClient {
 
         String queryPath = "?friends={friends}&from={from}&size={size}";
 
-        return get("/following" + queryPath, userId, param);
+        return get("/" + userId + "/following" + queryPath, followerId, param);
     }
 
-    public ResponseEntity<Object> getFollowers(long userId, Boolean friends, @Nullable FriendshipGroup friendshipGroup,
-                                               int from, int size) {
+    public ResponseEntity<Object> getFollowers(long followerId, long userId, Boolean friends,
+                                               @Nullable FriendshipGroup friendshipGroup, int from, int size) {
         Map<String, Object> param = Map.of(
                 "friends", friends,
                 "friendshipGroup", friendshipGroup,
@@ -85,7 +85,7 @@ public class SubscriptionClient extends BaseClient {
 
         String queryPath = "?friends={friends}&friendshipGroup={friendshipGroup}&from={from}&size={size}";
 
-        return get("/followers" + queryPath, userId, param);
+        return get("/" + userId + "/followers" + queryPath, followerId, param);
     }
 
     public ResponseEntity<Object> getUser(long followerId, long userId) {

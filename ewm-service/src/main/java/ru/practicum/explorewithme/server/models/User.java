@@ -6,6 +6,7 @@ import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,7 +43,12 @@ public class User {
     @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
     @ToString.Exclude
 //    @Where(clause = "friendship_group == null")
-    private Set<Follower> followers;
+    private List<Follower> followers;
+
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
+    @ToString.Exclude
+//    @Where(clause = "friendship_group == null")
+    private List<Follower> friends;
 
 //    create table if not exists followers (
 //            id bigint generated always as identity primary key ,

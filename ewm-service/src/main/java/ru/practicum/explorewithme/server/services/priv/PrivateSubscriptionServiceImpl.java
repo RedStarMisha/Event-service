@@ -134,15 +134,4 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
         return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
     }
-
-    @Override
-    public List<UserShortDto> getFollowing(long userId, boolean friends, int from, int size) {
-        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        return null;
-    }
-
-    @Override
-    public List<UserShortDto> getFollowers(long userId, boolean friends, int from, int size) {
-        return null;
-    }
 }

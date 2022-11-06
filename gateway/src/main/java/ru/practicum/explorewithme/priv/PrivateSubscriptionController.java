@@ -65,25 +65,4 @@ public class PrivateSubscriptionController {
 
         return client.getOutgoingSubscriptions(userId, status, from, size);
     }
-
-    @GetMapping("/following")
-    public ResponseEntity<Object> getFollowing(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                   @RequestParam(name = "friends") Boolean friends,
-                                                @RequestParam(name = "from", defaultValue = "0") int from,
-                                                @RequestParam(name = "size", defaultValue = "10") int size) {
-
-        return client.getFollowing(userId, friends, from, size);
-    }
-    @GetMapping("/followers")
-    public ResponseEntity<Object> getFollowers(@RequestHeader("X-EWM-User-Id") Long userId,
-                                            @RequestParam(name = "friends") Boolean friends,
-                                            @RequestParam(name = "group", required = false) String friendshipGroup,
-                                            @RequestParam(name = "from", defaultValue = "0") int from,
-                                            @RequestParam(name = "size", defaultValue = "10") int size) {
-
-        FriendshipGroup group = FriendshipGroup.from(friendshipGroup)
-                .orElseThrow(() -> new UnknownEnumElementException(friendshipGroup));
-
-        return client.getFollowers(userId, friends, group, from, size);
-    }
 }

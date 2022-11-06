@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.server.controllers.priv;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.models.user.UserWithSubscriptionDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateUserService;
@@ -31,13 +32,15 @@ public class PrivateUserController {
 
         return userService.getFollowing(followerId, userId, friends, from, size);
     }
+
     @GetMapping("/{userId}/followers")
     public List<UserShortDto> getFollowers(@RequestHeader("X-EWM-User-Id") long followerId,
                                            @PathVariable(name = "userId") long userId,
                                            @RequestParam(name = "friends") boolean friends,
+                                           @RequestParam(name = "group", required = false) FriendshipGroup group,
                                            @RequestParam(name = "from", defaultValue = "0") int from,
                                            @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        return userService.getFollowers(followerId, userId, friends, from, size);
+        return userService.getFollowers(followerId, userId, friends, group, from, size);
     }
 }
