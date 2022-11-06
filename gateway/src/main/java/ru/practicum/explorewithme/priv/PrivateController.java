@@ -6,12 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.PrivateClient;
+import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
+import ru.practicum.explorewithme.models.event.EventState;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
+import ru.practicum.explorewithme.validation.ValidUtil;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+
+import static ru.practicum.explorewithme.validation.ValidUtil.dateValidation;
 
 @RestController
 @RequestMapping("/users")
@@ -87,6 +93,34 @@ public class PrivateController {
     public ResponseEntity<Object> cancelUserRequest(@PathVariable(name = "userId") @Positive Long userId,
                                                     @PathVariable(name = "requestId") @Positive Long requestId) {
         return client.cancelUserRequest(userId, requestId);
+    }
+
+    @GetMapping("/{userId}/events/participant")
+    public ResponseEntity<Object> getEventsWhereParticipant(@RequestHeader("X-EWM-User-Id") long followerId,
+                                                    @PathVariable(name = "userId") Long userId,
+                                                    @PathVariable(name = "state") String stateString,
+                                                    @RequestParam(name = "rangeStart", required = false) String start,
+                                                    @RequestParam(name = "rangeEnd", required = false) String end,
+                                                    @RequestParam(name = "from", defaultValue = "0") int from,
+                                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+        EventState state = EventState.from(stateString)
+                .orElseThrow(() -> new UnknownEnumElementException(stateString));
+        dateValidation(start, end);
+        return client.getEventsWhereParticipant(followerId, userId, state, start, end, from, size);
+    }
+    @GetMapping("/{userId}/events/creator")
+    public ResponseEntity<Object> getEventsWhereCreator(@RequestHeader("X-EWM-User-Id") long followerId,
+                                                    @PathVariable(name = "userId") Long userId,
+                                                    @PathVariable(name = "state") String stateString,
+                                                    @RequestParam(name = "rangeStart", required = false) String start,
+                                                    @RequestParam(name = "rangeEnd", required = false) String end,
+                                                    @RequestParam(name = "from", defaultValue = "0") int from,
+                                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+        EventState state = EventState.from(stateString)
+                .orElseThrow(() -> new UnknownEnumElementException(stateString));
+        dateValidation(start, end);
+
+        return client.getEventsWhereCreator(followerId, userId, state, start, end, from, size);
     }
 
 }

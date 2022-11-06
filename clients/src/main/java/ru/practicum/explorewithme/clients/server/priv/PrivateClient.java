@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.clients.server.priv;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
+import ru.practicum.explorewithme.models.event.EventState;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 
@@ -66,5 +67,12 @@ public class PrivateClient extends BaseClient {
 
     public ResponseEntity<Object> cancelUserRequest(long userId, long requestId) {
         return patch("/" + userId + REQUESTS + "/" + requestId + "/cancel");
+    }
+
+    public ResponseEntity<Object> getEventsWhereParticipant(long followerId, Long userId, EventState state, int from, int size) {
+        return get("/" + userId + "/events/participant", followerId, )
+    }
+
+    public ResponseEntity<Object> getEventsWhereCreator(long followerId, Long userId, EventState state, int from, int size) {
     }
 }

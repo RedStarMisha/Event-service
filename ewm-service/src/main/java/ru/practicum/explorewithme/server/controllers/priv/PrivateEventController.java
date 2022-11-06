@@ -69,4 +69,5 @@ public class PrivateEventController {
                                                          @PathVariable(name = "reqId") long reqId) {
         return service.rejectRequestForEvent(userId, eventId, reqId);
     }
+
 }
