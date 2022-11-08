@@ -3,10 +3,13 @@ package ru.practicum.explorewithme.server.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.explorewithme.models.request.RequestStatus;
+import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "participation_requests")
@@ -31,6 +34,16 @@ public class Request {
 
     @Enumerated(value = EnumType.ORDINAL)
     private RequestStatus status = RequestStatus.PENDING;
+
+    @ElementCollection(targetClass = FriendshipGroup.class, fetch = FetchType.LAZY)
+    @CollectionTable(name = "request_group", joinColumns = @JoinColumn(name = "request"))
+    @Column(name = "friendship_group")
+    @Enumerated(EnumType.ORDINAL)
+    private Set<FriendshipGroup> groups = new HashSet<>(Set.of(FriendshipGroup.ALL));
+
+    public void addGroup(FriendshipGroup group) {
+        groups.add(group);
+    }
 
 
     private Request(User requestor, Event event, RequestStatus status) {

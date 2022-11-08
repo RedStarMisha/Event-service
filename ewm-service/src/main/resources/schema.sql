@@ -77,9 +77,8 @@ create table if not exists followers (
     subscription bigint references subscription
 );
 
-create table if not exists event_group (
-   id bigint generated always as identity primary key ,
-   event bigint references events,
+create table if not exists request_group (
+   request bigint references participation_requests,
    friendship_group int
 );
 

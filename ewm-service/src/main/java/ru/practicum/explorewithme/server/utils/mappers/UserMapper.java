@@ -22,6 +22,7 @@ public class UserMapper {
     }
 
     public static UserWithSubscriptionDto toUserWithSubscriptionDto(User user) {
-        return new UserWithSubscriptionDto(user.getId(), user.getName(), user.getFollowers().size(), 0);
+        return new UserWithSubscriptionDto(user.getId(), user.getName(), user.getFollowers().size(),
+                user.getFriends().size());
     }
 }

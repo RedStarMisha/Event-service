@@ -1,10 +1,8 @@
-package ru.practicum.explorewithme.server.utils;
+package ru.practicum.explorewithme.server.utils.selectioncondition;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.Getter;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import ru.practicum.explorewithme.models.event.EventSort;
+import lombok.ToString;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.models.QEvent;
 
@@ -18,48 +16,46 @@ import java.util.stream.Collectors;
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
 
 @Getter
-public class SelectionConditionForPublic {
-
+@ToString
+public class SelectionConditionForAdmin {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private String text;
+    private int[] users;
+    private State[] states;
     private int[] categories;
-    private Boolean paid;
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
-    private Boolean available;
-    private EventSort sort;
     private int from;
     private int size;
 
-    private SelectionConditionForPublic(String text, int[] categories, Boolean paid, LocalDateTime rangeStart,
-                                        LocalDateTime rangeEnd, Boolean available, EventSort sort, int from, int size) {
-        this.text = text;
+    private SelectionConditionForAdmin(int[] users, State[] states, int[] categories, LocalDateTime rangeStart,
+                                       LocalDateTime rangeEnd, int from, int size) {
+        this.users = users;
+        this.states = states;
         this.categories = categories;
-        this.paid = paid;
         this.rangeStart = rangeStart;
         this.rangeEnd = rangeEnd;
-        this.available = available;
-        this.sort = sort;
         this.from = from;
         this.size = size;
     }
 
-    public static SelectionConditionForPublic of(String text, int[] categories, Boolean paid, String rangeStart,
-                                                 String rangeEnd, Boolean available, EventSort sort, int from, int size) {
-
-        LocalDateTime start = rangeStart != null && !rangeStart.equals("") ? LocalDateTime.parse(rangeStart, formatter) : null;
-        LocalDateTime end = rangeEnd != null && !rangeEnd.equals("") ? LocalDateTime.parse(rangeEnd, formatter) : null;
-
-        return new SelectionConditionForPublic(text, categories, paid, start, end, available, sort, from, size);
+    public static SelectionConditionForAdmin of(int[] users, State[] states, int[] categories, String start, String end,
+                                                int from, int size) {
+        LocalDateTime startDate = start != null && !start.equals("") ? LocalDateTime.parse(start, formatter) : null;
+        LocalDateTime endDate = start != null && !end.equals("") ? LocalDateTime.parse(end, formatter) : null;
+        return new SelectionConditionForAdmin(users, states, categories, startDate, endDate, from, size);
     }
 
     public SearchParam getSearchParameters(QEvent event) {
         List<BooleanExpression> parameters = new ArrayList<>();
 
-        if (text != null && !text.equals("")) {
-            BooleanExpression statesExpression = event.annotation.likeIgnoreCase(text)
-                    .or(event.description.likeIgnoreCase(text));
+        if (users != null && users.length != 0) {
+            List<Long> userIds = Arrays.stream(users).mapToLong(i -> i).boxed().collect(Collectors.toList());
+            BooleanExpression usersExpression = event.initiator.id.in(userIds);
+            parameters.add(usersExpression);
+        }
+
+        if (states != null && states.length != 0) {
+            BooleanExpression statesExpression = event.state.in(states);
             parameters.add(statesExpression);
         }
 
@@ -69,28 +65,11 @@ public class SelectionConditionForPublic {
             parameters.add(categoryExpression);
         }
 
-        if (paid != null) {
-            parameters.add(event.paid.eq(paid));
-        }
-
-        parameters.add(event.state.eq(State.PUBLISHED));
-
         parameters.add(dateExpression(rangeStart, rangeEnd, event));
-
-        if (available != null && available) {
-            parameters.add(event.numberConfirmed.lt(event.participantLimit));
-        }
-
-        Pageable pageable = makePageable(from, size);
-
-        if (sort != null && sort == EventSort.EVENT_DATE) {
-            Sort sorting = Sort.by("eventDate").descending();
-            pageable = makePageable(from, size, sorting);
-        }
 
         BooleanExpression searchExpression = parameters.stream().reduce(BooleanExpression::and).get();
 
-        return new SearchParam(searchExpression, pageable);
+        return new SearchParam(searchExpression, makePageable(from, size));
     }
 
     private BooleanExpression dateExpression(LocalDateTime rangeStart, LocalDateTime rangeEnd, QEvent event) {

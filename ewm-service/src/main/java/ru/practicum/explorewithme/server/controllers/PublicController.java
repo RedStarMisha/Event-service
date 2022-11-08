@@ -12,7 +12,7 @@ import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.EventSort;
 import ru.practicum.explorewithme.server.services.PublicService;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPublic;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

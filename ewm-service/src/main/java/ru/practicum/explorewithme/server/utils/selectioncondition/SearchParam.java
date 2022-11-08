@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.utils;
+package ru.practicum.explorewithme.server.utils.selectioncondition;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;

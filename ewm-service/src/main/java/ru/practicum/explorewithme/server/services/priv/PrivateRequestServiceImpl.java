@@ -74,7 +74,7 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
             request = Request.makePending(user, event);
         } else {
             request = Request.makeConfirmed(user, event);
-            eventRepository.addConfirmedRequest(event.getNumberConfirmed() + 1, eventId);
+            eventRepository.addConfirmedRequest(eventId);
         }
 
         return toRequestDto(requestRepository.save(request));

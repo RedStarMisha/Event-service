@@ -14,6 +14,7 @@ import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
+import ru.practicum.explorewithme.server.models.Follower;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.FollowersRepository;
@@ -46,9 +47,12 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         User follower = userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         User publisher = userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        Optional<SubscriptionRequest> request1 = subscriptionRepository.findByFollower_IdAndPublisher_Id(followerId,
-                        publisherId);
-               // .orElseThrow(() -> new RequestConditionException("Запрос на подписку уже отправлялся"));
+        Optional<SubscriptionRequest> createdRequest =
+                subscriptionRepository.findByFollower_IdAndPublisher_Id(followerId, publisherId);
+
+        if (createdRequest.isPresent()) {
+            throw new RequestConditionException("Запрос на подписку уже отправлялся");
+        }
 
         SubscriptionRequest request = toSubscriptionRequest(newRequest, publisher, follower);
 

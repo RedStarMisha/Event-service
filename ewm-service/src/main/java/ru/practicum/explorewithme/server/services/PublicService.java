@@ -4,7 +4,7 @@ import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
 import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPublic;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

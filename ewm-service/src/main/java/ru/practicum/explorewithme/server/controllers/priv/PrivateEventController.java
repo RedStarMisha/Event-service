@@ -2,12 +2,11 @@ package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPrivate;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
 import java.util.List;
 
@@ -78,8 +77,8 @@ public class PrivateEventController {
                                                     @RequestParam(name = "available", required = false) Boolean available,
                                                     @RequestParam(name = "from", defaultValue = "0") int from,
                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
-        SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(state, start, end, available, from,
-                size);
+        SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(userId, state, start, end, available,
+                from, size);
         return service.getEventsWhereParticipant(followerId, userId, selection);
     }
     @GetMapping("/{userId}/events/creator")
@@ -91,7 +90,9 @@ public class PrivateEventController {
                                                 @RequestParam(name = "available", required = false) Boolean available,
                                                 @RequestParam(name = "from", defaultValue = "0") int from,
                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
-        return service.getEventsWhereCreator(followerId, userId, state, start, end, available, from, size);
-    }
+        SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(userId, state, start, end, available,
+                from, size);
 
+        return service.getEventsWhereCreator(followerId, userId, selection);
+    }
 }

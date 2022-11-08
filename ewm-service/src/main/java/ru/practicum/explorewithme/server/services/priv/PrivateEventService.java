@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.server.services.priv;
 
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPrivate;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
 import java.util.List;
 

@@ -47,17 +47,17 @@ public class PrivateSubscriptionController {
         service.acceptSubscribe(userId, subscriptionId, friendship, group);
     }
 
-    @GetMapping("/{userId}/subscribe/subscribed")
-    public List<SubscriptionRequestDto> getIncomingSubscriptions(@PathVariable(name = "userId") long userId,
+    @GetMapping("/subscriptions/incoming")
+    public List<SubscriptionRequestDto> getIncomingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
                                      @RequestParam(name = "status", required = false) SubscriptionStatus status,
                                      @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
         return service.getIncomingSubscriptions(userId, status, from, size);
     }
 
-    @GetMapping("/{userId}/subscribe/signed")
-    public List<SubscriptionRequestDto> getOutgoingSubscriptions(@PathVariable(name = "userId") long userId,
-                                                                 @RequestParam(name = "status", required = false) SubscriptionStatus status,
-                                                                 @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
+    @GetMapping("/subscriptions/outgoing")
+    public List<SubscriptionRequestDto> getOutgoingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
+                                             @RequestParam(name = "status", required = false) SubscriptionStatus status,
+                                             @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
         return service.getOutgoingSubscriptions(userId, status, from, size);
     }
 }

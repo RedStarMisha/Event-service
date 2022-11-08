@@ -7,7 +7,7 @@ import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.server.services.admin.EventService;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForAdmin;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
