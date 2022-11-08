@@ -5,29 +5,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
-import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
-import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
+import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
-import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
-import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
+import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
 
 @Service
@@ -170,8 +168,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmed(userId);
         } else {
             userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
-            FriendshipGroup group = followersRepository.findByPublisher_IdAndFollower_Id(userId, followerId)
-                    .filter(f -> f.getGroup() != null).map(Follower::getGroup)
+            Group group = followersRepository.checkFriendship(userId, followerId).map(Follower::getGroup)
                     .orElseThrow(() -> new RequestConditionException("Нет доступа"));
 
             eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group);

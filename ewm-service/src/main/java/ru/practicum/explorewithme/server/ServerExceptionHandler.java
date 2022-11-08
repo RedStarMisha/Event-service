@@ -26,7 +26,8 @@ public class ServerExceptionHandler {
     }
 
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, EventNotFoundException.class,
-            CompilationNotFoundException.class, RequestNotFoundException.class})
+            CompilationNotFoundException.class, RequestNotFoundException.class, GroupNotFoundException.class,
+            FollowerNotFoundException.class, SubscriptionNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError entityNotFoundException(EntityNotFoundException e) {
         return new ApiError(e.getStackTrace(), e.getMessage(), "The required object was not found.",

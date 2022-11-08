@@ -6,18 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
-import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
-import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
-import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.subscription.*;
 import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.Follower;
+import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.FollowersRepository;
+import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.SubscriptionRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper;
@@ -38,8 +37,9 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
-
     private final FollowersRepository followersRepository;
+
+    private final GroupRepository groupRepository;
 
 
     @Override
@@ -137,5 +137,15 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         }
 
         return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addNewGroup(Long userId, NewGroupDto groupDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Optional<Group> group = groupRepository.findByUser_IdAndTitleIgnoreCase(userId, groupDto.getTitle());
+        if (group.isPresent()) {
+            throw new RequestConditionException("Такая группа уже существует");
+        }
+        groupRepository.save(new Group(user, groupDto.getTitle().toUpperCase()));
     }
 }

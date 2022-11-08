@@ -3,7 +3,8 @@ package ru.practicum.explorewithme.models.subscription;
 import java.util.Optional;
 
 public enum FriendshipGroup {
-    ALL;
+    FOLLOWER,
+    FRIENDS_ALL;
 
     public static Optional<FriendshipGroup> from(String stringGroup) {
         for (FriendshipGroup group : values()) {

@@ -37,7 +37,7 @@ public class PrivateUserController {
     public List<UserShortDto> getFollowers(@RequestHeader("X-EWM-User-Id") long followerId,
                                            @PathVariable(name = "userId") long userId,
                                            @RequestParam(name = "friends") boolean friends,
-                                           @RequestParam(name = "group", required = false) FriendshipGroup group,
+                                           @RequestParam(name = "group", required = false) String group,
                                            @RequestParam(name = "from", defaultValue = "0") int from,
                                            @RequestParam(name = "size", defaultValue = "10") int size) {
 

@@ -39,11 +39,11 @@ public class PrivateUserController {
     public ResponseEntity<Object> getFollowers(@RequestHeader("X-EWM-User-Id") long followerId,
                                            @PathVariable(name = "userId") long userId,
                                            @RequestParam(name = "friends", defaultValue = "false") boolean friends,
-                                           @RequestParam(name = "group", required = false) String friendshipGroup,
+                                           @RequestParam(name = "group", required = false) String group,
                                            @RequestParam(name = "from", defaultValue = "0") int from,
                                            @RequestParam(name = "size", defaultValue = "10") int size) {
-        FriendshipGroup group = FriendshipGroup.from(friendshipGroup)
-                .orElseThrow(() -> new UnknownEnumElementException(friendshipGroup));
+//        FriendshipGroup group = FriendshipGroup.from(friendshipGroup)
+//                .orElseThrow(() -> new UnknownEnumElementException(friendshipGroup));
 
         return client.getFollowers(followerId, userId, friends, group, from, size);
     }

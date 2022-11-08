@@ -6,6 +6,7 @@ import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.server.models.Follower;
+import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
 
@@ -24,8 +25,8 @@ public class SubscriptionMapper {
     }
 
     public static Follower toFollower(SubscriptionRequest request, boolean friendship, FriendshipGroup group) {
-        FriendshipGroup group1 = group == null ? FriendshipGroup.ALL : group;
-        return friendship ? new Follower(group1, request.getPublisher(), request.getFollower(), request) :
-                new Follower(request.getPublisher(), request.getFollower(), request);
+        Group group1 = friendship ? new Group(request.getPublisher(), FriendshipGroup.FRIENDS_ALL.name()) :
+                new Group(request.getPublisher(), FriendshipGroup.FOLLOWER.name());
+        return new Follower(group1, request.getPublisher(), request.getFollower(), request);
     }
 }

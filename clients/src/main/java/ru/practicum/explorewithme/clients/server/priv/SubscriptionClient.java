@@ -5,6 +5,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.NewGroupDto;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 
@@ -75,20 +76,24 @@ public class SubscriptionClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getFollowers(long followerId, long userId, Boolean friends,
-                                               @Nullable FriendshipGroup friendshipGroup, int from, int size) {
+                                               @Nullable String group, int from, int size) {
         Map<String, Object> param = Map.of(
                 "friends", friends,
-                "friendshipGroup", friendshipGroup,
+                "group", group,
                 "from", from,
                 "size", size
         );
 
-        String queryPath = "?friends={friends}&friendshipGroup={friendshipGroup}&from={from}&size={size}";
+        String queryPath = "?friends={friends}&group={group}&from={from}&size={size}";
 
         return get("/" + userId + "/followers" + queryPath, followerId, param);
     }
 
     public ResponseEntity<Object> getUser(long followerId, long userId) {
         return get("/" + userId, followerId);
+    }
+
+    public ResponseEntity<Object> addNewGroup(Long userId, NewGroupDto groupDto) {
+        return post("/groups", userId, groupDto);
     }
 }

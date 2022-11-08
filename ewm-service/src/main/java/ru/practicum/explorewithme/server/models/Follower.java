@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
@@ -18,9 +17,9 @@ public class Follower {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Enumerated(value = EnumType.ORDINAL)
-    @Column(name = "friendship_group")
-    private FriendshipGroup group;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_level")
+    private Group group;
 
     @Convert(converter = LocalDateTimeConverter.class)
     @Column(name = "added")
@@ -38,7 +37,7 @@ public class Follower {
     @JoinColumn(name = "subscription", referencedColumnName = "id")
     private SubscriptionRequest request;
 
-    public Follower(FriendshipGroup group, User publisher, User follower, SubscriptionRequest request) {
+    public Follower(Group group, User publisher, User follower, SubscriptionRequest request) {
         this.group = group;
         this.publisher = publisher;
         this.follower = follower;

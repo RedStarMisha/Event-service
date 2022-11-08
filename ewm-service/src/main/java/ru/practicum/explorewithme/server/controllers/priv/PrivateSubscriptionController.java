@@ -3,11 +3,8 @@ package ru.practicum.explorewithme.server.controllers.priv;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
-import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
-import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
-import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
-import ru.practicum.explorewithme.models.user.UserShortDto;
+import ru.practicum.explorewithme.models.subscription.*;
+import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
 
 import java.util.List;
@@ -32,10 +29,10 @@ public class PrivateSubscriptionController {
         service.revokeRequestBySubscriber(userId, subscriptionId);
     }
 
-    @PatchMapping("/{publisher}/subscribe/{subscriptionId}/cancel")
-    public void cancelRequestByPublisher(@PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                           @PathVariable(name = "publisher") Long publisher) {
-        service.cancelRequestByPublisher(publisher, subscriptionId);
+    @PatchMapping("/subscriptions/{subscriptionId}/cancel")
+    public void cancelRequestByPublisher(@RequestHeader("X-EWM-User-Id") Long userId,
+                                         @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        service.cancelRequestByPublisher(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/accept")
@@ -59,5 +56,11 @@ public class PrivateSubscriptionController {
                                              @RequestParam(name = "status", required = false) SubscriptionStatus status,
                                              @RequestParam(name = "from") int from, @RequestParam(name = "size") int size) {
         return service.getOutgoingSubscriptions(userId, status, from, size);
+    }
+
+    @PostMapping("/groups")
+    public void addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
+                             @RequestBody NewGroupDto groupDto) {
+        service.addNewGroup(userId, groupDto);
     }
 }

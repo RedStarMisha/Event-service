@@ -68,9 +68,15 @@ create table if not exists subscription (
     unique (publisher, follower)
 );
 
+create table if not exists groups (
+    id bigint generated always as identity primary key ,
+    publisher bigint references users,
+    title text
+);
+
 create table if not exists followers (
     id bigint generated always as identity primary key ,
-    friendship_group int,
+    group_level int references groups,
     added timestamp,
     publisher bigint references users,
     follower bigint references users,
@@ -79,6 +85,9 @@ create table if not exists followers (
 
 create table if not exists request_group (
    request bigint references participation_requests,
-   friendship_group int
+   group_level bigint references groups,
+   PRIMARY KEY (request, group_level)
 );
+
+
 

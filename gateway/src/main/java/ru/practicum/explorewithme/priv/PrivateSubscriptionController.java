@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.NewGroupDto;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 
@@ -64,5 +65,11 @@ public class PrivateSubscriptionController {
         if (status == SubscriptionStatus.REVOKE) throw new UnknownEnumElementException(stringStatus);
 
         return client.getOutgoingSubscriptions(userId, status, from, size);
+    }
+
+    @PostMapping("/groups")
+    public ResponseEntity<Object> addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
+                            @RequestBody NewGroupDto groupDto) {
+        return client.addNewGroup(userId, groupDto);
     }
 }

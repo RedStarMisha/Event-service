@@ -39,15 +39,20 @@ public class User {
 //            joinColumns = @JoinColumn(name = "publisher"),
 //            inverseJoinColumns = @JoinColumn(name = "follower")
 //    )
-    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @Where(clause = "friendship_group = NULL")
-    private List<Follower> followers;
+//    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
+//    @ToString.Exclude
+//    @Where(clause = "friendship_group = NULL")
+//    private List<Follower> followers;
 
-    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @Where(clause = "friendship_group != NULL")
-    private List<Follower> friends;
+//    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
+//    @ToString.Exclude
+//    @Where(clause = "friendship_group != NULL")
+//    private List<Follower> friends;
+    @Transient
+    private long friends;
+
+    @Transient
+    private long followers;
 
 //    create table if not exists followers (
 //            id bigint generated always as identity primary key ,
