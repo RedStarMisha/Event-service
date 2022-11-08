@@ -47,4 +47,13 @@ public class SubscriptionRequest {
         this.follower = follower;
         this.status = status;
     }
+
+    public SubscriptionRequest(boolean friendshipRequest, User publisher, User follower, LocalDateTime updated,
+                               SubscriptionStatus status) {
+        this.friendshipRequest = friendshipRequest;
+        this.publisher = publisher;
+        this.follower = follower;
+        this.updated = updated;
+        this.status = status;
+    }
 }

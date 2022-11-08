@@ -10,6 +10,8 @@ import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
 
+import java.time.LocalDateTime;
+
 import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserShort;
 
 @Component
@@ -21,7 +23,10 @@ public class SubscriptionMapper {
     }
 
     public static SubscriptionRequest toSubscriptionRequest(NewSubscriptionRequest newRequest, User follower, User publisher) {
-        return new SubscriptionRequest(newRequest.isFriendship(), follower, publisher, SubscriptionStatus.WAITING);
+        return newRequest.isFriendship() ?
+                new SubscriptionRequest(newRequest.isFriendship(), follower, publisher, SubscriptionStatus.WAITING) :
+                new SubscriptionRequest(newRequest.isFriendship(), follower, publisher,
+                        LocalDateTime.now(), SubscriptionStatus.FOLLOWER);
     }
 
     public static Follower toFollower(SubscriptionRequest request, boolean friendship, FriendshipGroup group) {

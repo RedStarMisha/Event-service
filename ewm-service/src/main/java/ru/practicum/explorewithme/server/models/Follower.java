@@ -33,7 +33,7 @@ public class Follower {
     @JoinColumn(name = "follower")
     private User follower;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "subscription", referencedColumnName = "id")
     private SubscriptionRequest request;
 
@@ -48,5 +48,6 @@ public class Follower {
         this.publisher = publisher;
         this.follower = follower;
         this.request = request;
+        group = new Group(publisher, FriendshipGroup.FOLLOWER.name());
     }
 }

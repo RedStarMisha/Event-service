@@ -1,18 +1,17 @@
 package ru.practicum.explorewithme.server.services.priv;
 
 import ru.practicum.explorewithme.models.subscription.*;
-import ru.practicum.explorewithme.models.user.UserShortDto;
 
 import java.util.List;
 
 public interface PrivateSubscriptionService {
     SubscriptionRequestDto addSubscribe(Long followerId, Long publisherId, NewSubscriptionRequest newRequest);
 
-    void revokeRequestBySubscriber(Long followerId, Long subscriptionId);
+    SubscriptionRequestDto revokeRequestBySubscriber(Long followerId, Long subscriptionId);
 
-    void cancelRequestByPublisher(Long publisherId, Long subscriptionId);
+    SubscriptionRequestDto cancelSubscription(Long userId, Long subscriptionId, Boolean fully);
 
-    void acceptSubscribe(long publisherId, long friendshipId, boolean friendship, FriendshipGroup group);
+    SubscriptionRequestDto acceptSubscribe(long publisherId, long friendshipId, boolean friendship, FriendshipGroup group);
 
     List<SubscriptionRequestDto> getIncomingSubscriptions(long followerId, SubscriptionStatus status, int from, int size);
 

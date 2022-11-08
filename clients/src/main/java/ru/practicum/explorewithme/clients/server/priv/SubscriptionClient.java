@@ -22,11 +22,12 @@ public class SubscriptionClient extends BaseClient {
         return post("/" + publisherId + "/subscribe", userId, request);
     }
 
-    public ResponseEntity<Object> revokeRequestBySubscriber(Long userId, Long subscriptionId) {
-        return patch("/subscriptions/" + subscriptionId + "/revoke", userId);
+    public ResponseEntity<Object> revokeRequestBySubscriber(Long userId, Long subscriptionId, Boolean fully) {
+        Map<String, Object> param = Map.of("fully", fully);
+        return patch("/subscriptions/" + subscriptionId + "/revoke?fully={fully}", userId, param);
     }
 
-    public ResponseEntity<Object> cancelRequestByPublisher(Long userId, Long subscriptionId) {
+    public ResponseEntity<Object> cancelSubscription(Long userId, Long subscriptionId) {
         return patch("/subscriptions/" + subscriptionId + "/cancel", userId);
     }
 

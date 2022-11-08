@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
-import ru.practicum.explorewithme.server.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +13,17 @@ import java.util.Optional;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<SubscriptionRequest, Long> {
 
-    Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatus_Waiting(long subscriptionId, long publisherId);
+
+    @Query("from SubscriptionRequest s where s.id=?1 and s.status<>?2 and (s.follower.id=?3 or s.publisher.id=?3)")
+    Optional<SubscriptionRequest> findByIdAndUserIdAndStatusIsNot(long subscriptionId, SubscriptionStatus status,
+                                                            long userId);
 
     Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatusIs(long subscriptionId, long publisherId,
                                                                         SubscriptionStatus status);
 
     Optional<SubscriptionRequest> findByIdAndFollower_Id(long subscriptionId, long followerId);
+
+    @Query("from SubscriptionRequest s where s.id=?1 and s.follower.id=?2 and s.status=0")
     Optional<SubscriptionRequest> findByIdAndFollower_IdAndStatus_Waiting(long subscriptionId, long followerId);
     List<SubscriptionRequest> findAllByFollower_Id(long followerId, Pageable pageable);
 

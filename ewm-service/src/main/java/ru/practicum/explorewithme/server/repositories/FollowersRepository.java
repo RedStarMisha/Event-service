@@ -22,7 +22,7 @@ public interface FollowersRepository extends JpaRepository<Follower, Long> {
     @Query("from Follower f where f.follower.id=?1 and f.group.title='FOLLOWER'")
     List<Follower> findFollowers(long publisherId);
 
-    List<Follower> findAllByFollower_Id(long followerId);
+    Optional<Follower> findByRequest_Id(long subscriptionId);
     List<Follower> findAllByFollower_IdAndGroupNotNull(long followerId);
 
     @Query("select count(f) from Follower f where f.publisher.id=?1 and f.group.title<>'FOLLOWER'")

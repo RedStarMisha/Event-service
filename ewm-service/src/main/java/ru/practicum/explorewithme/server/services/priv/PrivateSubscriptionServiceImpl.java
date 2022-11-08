@@ -10,6 +10,7 @@ import ru.practicum.explorewithme.models.subscription.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
+import ru.practicum.explorewithme.server.models.Follower;
 import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
@@ -55,12 +56,16 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
         request = subscriptionRepository.save(request);
 
+        Group group = groupRepository.findByUser_IdAndTitleIgnoreCase(publisherId, "FOLLOWER").get();
+        Follower newFollower = new Follower(group, request.getPublisher(), request.getFollower(), request);
+        followersRepository.save(newFollower);
+
         log.info("SubscriptionRequest {} добавлен", request);
         return toSubscriptionDto(request);
     }
 
     @Override
-    public void revokeRequestBySubscriber(Long followerId, Long subscriptionId) {
+    public SubscriptionRequestDto revokeRequestBySubscriber(Long followerId, Long subscriptionId) {
         userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         SubscriptionRequest request = subscriptionRepository.findByIdAndFollower_IdAndStatus_Waiting(subscriptionId, followerId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
@@ -68,35 +73,61 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         request.setStatus(SubscriptionStatus.REVOKE);
         request.setUpdated(LocalDateTime.now());
 
-        subscriptionRepository.save(request);
+        request = subscriptionRepository.save(request);
+
+        log.info("SubscriptionRequest {} отменен followerом", request);
+        return toSubscriptionDto(request);
     }
 
     @Override
-    public void cancelRequestByPublisher(Long publisherId, Long subscriptionId) {
-        userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
+    public SubscriptionRequestDto cancelSubscription(Long userId, Long subscriptionId, Boolean fully) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_IdAndStatus_Waiting(subscriptionId,
-            publisherId).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
+        SubscriptionRequest request =
+            subscriptionRepository.findByIdAndUserIdAndStatusIsNot(subscriptionId, SubscriptionStatus.REVOKE, userId)
+                    .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
 
-        request.setStatus(SubscriptionStatus.CANCELED);
+        if (request.getPublisher().getId() == userId) {
+            request.setStatus(SubscriptionStatus.CANCELED_BY_PUBLISHER);
+            log.info("SubscriptionRequest {} отклонен publisherом", request);
+        } else {
+            request.setStatus(SubscriptionStatus.CANCELED_BY_FOLLOWER);
+            log.info("SubscriptionRequest {} отклонен followerом", request);
+        }
+
         request.setUpdated(LocalDateTime.now());
+        request = subscriptionRepository.save(request);
 
-        subscriptionRepository.save(request);
+        return toSubscriptionDto(request);
     }
 
     @Override
-    public void acceptSubscribe(long publisherId, long subscriptionId, boolean friendship, FriendshipGroup group) {
+    public SubscriptionRequestDto acceptSubscribe(long publisherId, long subscriptionId, boolean friendship,
+                                                  FriendshipGroup group1) {
         userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
         SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_IdAndStatusIs(subscriptionId,
             publisherId, SubscriptionStatus.WAITING).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
 
+        if (!friendship) {
+            request.setStatus(SubscriptionStatus.FOLLOWER);
+            request.setUpdated(LocalDateTime.now());
+            log.info("Заявка на дружбу по заявке {} отклонена", request);
+            return toSubscriptionDto(subscriptionRepository.save(request));
+        }
+
         request.setStatus(SubscriptionStatus.CONSIDER);
         request.setUpdated(LocalDateTime.now());
 
-        log.info("Добавлен пользователь по заявке {}", request);
+        Follower follower = followersRepository.findByRequest_Id(subscriptionId).get();
+        Group group = groupRepository.findByUser_IdAndTitleIgnoreCase(publisherId, "FRIENDS_ALL").get();
 
-        followersRepository.save(toFollower(request, friendship, group));
+        follower.setGroup(group);
+
+        log.info("Заявка на дружбу по заявке {} подтверждена", request);
+
+        followersRepository.save(follower);
+        return toSubscriptionDto(request);
     }
 
     @Override

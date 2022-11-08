@@ -6,7 +6,9 @@ public enum SubscriptionStatus {
     WAITING,
     CONSIDER,
     REVOKE,
-    CANCELED;
+    CANCELED_BY_PUBLISHER,
+    FOLLOWER,
+    CANCELED_BY_FOLLOWER;
 
     public static Optional<SubscriptionStatus> from(String stringState) {
         for (SubscriptionStatus state : values()) {

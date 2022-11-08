@@ -33,13 +33,14 @@ public class PrivateSubscriptionController {
 
     @PatchMapping("/subscriptions/{subscriptionId}/revoke")
     public ResponseEntity<Object> revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        return client.revokeRequestBySubscriber(userId, subscriptionId);
+                                                            @PathVariable(name = "subscriptionId") Long subscriptionId,
+                                                            @RequestParam(name = "fully") Boolean fully) {
+        return client.revokeRequestBySubscriber(userId, subscriptionId, fully);
     }
     @PatchMapping("/subscriptions/{subscriptionId}/cancel")
-    public ResponseEntity<Object> cancelRequestByPublisher(@RequestHeader("X-EWM-User-Id") Long userId,
+    public ResponseEntity<Object> cancelSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        return client.cancelRequestByPublisher(userId, subscriptionId);
+        return client.cancelSubscription(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/accept")
