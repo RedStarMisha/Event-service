@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.subscription.*;
 import ru.practicum.explorewithme.server.models.Group;
@@ -21,6 +22,12 @@ public class PrivateSubscriptionController {
                                                @PathVariable(name = "publisherId") Long publisherId,
                                                @RequestBody NewSubscriptionRequest request) {
         return service.addSubscribe(userId, publisherId, request);
+    }
+
+    @GetMapping("/subscriptions/{subscriptionId}")
+    public SubscriptionRequestDto getSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
+                                                  @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        return service.getSubscription(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/revoke")

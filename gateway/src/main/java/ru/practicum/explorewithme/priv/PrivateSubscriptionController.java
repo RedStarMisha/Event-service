@@ -25,6 +25,12 @@ public class PrivateSubscriptionController {
         return client.addSubscribe(userId, publisherId, request);
     }
 
+    @GetMapping("/subscriptions/{subscriptionId}")
+    public ResponseEntity<Object> getSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
+                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        return client.getSubscription(userId, subscriptionId);
+    }
+
     @PatchMapping("/subscriptions/{subscriptionId}/revoke")
     public ResponseEntity<Object> revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
                                                             @PathVariable(name = "subscriptionId") Long subscriptionId) {

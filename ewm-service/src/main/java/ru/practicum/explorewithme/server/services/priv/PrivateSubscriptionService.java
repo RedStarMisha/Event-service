@@ -19,4 +19,6 @@ public interface PrivateSubscriptionService {
     List<SubscriptionRequestDto> getOutgoingSubscriptions(long userId, SubscriptionStatus status, int from, int size);
 
     void addNewGroup(Long userId, NewGroupDto groupDto);
+
+    SubscriptionRequestDto getSubscription(Long userId, Long subscriptionId);
 }

@@ -96,4 +96,8 @@ public class SubscriptionClient extends BaseClient {
     public ResponseEntity<Object> addNewGroup(Long userId, NewGroupDto groupDto) {
         return post("/groups", userId, groupDto);
     }
+
+    public ResponseEntity<Object> getSubscription(Long userId, Long subscriptionId) {
+        return get("/subscriptions/" + subscriptionId, userId);
+    }
 }

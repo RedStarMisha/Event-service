@@ -7,11 +7,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.subscription.*;
-import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
-import ru.practicum.explorewithme.server.models.Follower;
 import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.SubscriptionRequest;
 import ru.practicum.explorewithme.server.models.User;
@@ -38,7 +36,6 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
     private final FollowersRepository followersRepository;
-
     private final GroupRepository groupRepository;
 
 
@@ -47,10 +44,10 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         User follower = userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         User publisher = userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        Optional<SubscriptionRequest> createdRequest =
-                subscriptionRepository.findByFollower_IdAndPublisher_Id(followerId, publisherId);
+        Optional<SubscriptionRequest> oldRequest =
+        subscriptionRepository.findByFollower_IdAndPublisher_IdAndStatusNot(followerId, publisherId, SubscriptionStatus.REVOKE);
 
-        if (createdRequest.isPresent()) {
+        if (oldRequest.isPresent()) {
             throw new RequestConditionException("Запрос на подписку уже отправлялся");
         }
 
@@ -65,12 +62,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     @Override
     public void revokeRequestBySubscriber(Long followerId, Long subscriptionId) {
         userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
-        SubscriptionRequest request = subscriptionRepository.findByIdAndFollower_Id(subscriptionId, followerId)
+        SubscriptionRequest request = subscriptionRepository.findByIdAndFollower_IdAndStatus_Waiting(subscriptionId, followerId)
                 .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
-
-        if (request.getStatus() != SubscriptionStatus.WAITING) {
-            throw new RequestConditionException("Заявка уже обработана, ее нельзя отменить");
-        }
 
         request.setStatus(SubscriptionStatus.REVOKE);
         request.setUpdated(LocalDateTime.now());
@@ -82,12 +75,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     public void cancelRequestByPublisher(Long publisherId, Long subscriptionId) {
         userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_IdAndStatusIsNot(subscriptionId,
-            publisherId, SubscriptionStatus.REVOKE).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
-
-        if (request.getStatus() != SubscriptionStatus.WAITING) {
-            throw new RequestConditionException("Заявка уже обработана, ее нельзя отменить");
-        }
+        SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_IdAndStatus_Waiting(subscriptionId,
+            publisherId).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
 
         request.setStatus(SubscriptionStatus.CANCELED);
         request.setUpdated(LocalDateTime.now());
@@ -147,5 +136,12 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
             throw new RequestConditionException("Такая группа уже существует");
         }
         groupRepository.save(new Group(user, groupDto.getTitle().toUpperCase()));
+    }
+
+    @Override
+    public SubscriptionRequestDto getSubscription(Long userId, Long subscriptionId) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return subscriptionRepository.findSubscription(subscriptionId, userId).map(SubscriptionMapper::toSubscriptionDto)
+                .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
     }
 }
