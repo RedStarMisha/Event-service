@@ -10,7 +10,6 @@ import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/admin/categories")
@@ -32,7 +31,8 @@ public class CategoryController {
 
     @DeleteMapping("/{catId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable(name = "catId")
-                                             @Positive(message = "Id категории должно быть положительное") Long catId) {
+                                                     //@Positive(message = "Id категории должно быть положительное")
+                                                     Long catId) {
         return client.deleteCategory(catId);
     }
 }

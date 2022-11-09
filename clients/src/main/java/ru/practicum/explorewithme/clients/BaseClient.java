@@ -29,7 +29,7 @@ public class BaseClient {
     }
 
     protected <T> ResponseEntity<Object> post(String path, @Nullable Long userId, @Nullable Map<String, Object> parameters,
-                                              T body) {
+                                             @Nullable T body) {
         return makeReqAndGetResp(path, HttpMethod.POST, userId, parameters, body);
     }
 
