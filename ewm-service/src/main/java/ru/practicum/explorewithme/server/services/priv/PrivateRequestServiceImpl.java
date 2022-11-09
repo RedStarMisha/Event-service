@@ -94,7 +94,7 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     }
 
     @Override
-    public ParticipationRequestDto setGroupToRequest(Long userId, Long requestId, Long groupId) {
+    public ParticipationRequestDto addGroupToRequest(Long userId, Long requestId, Long groupId) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Group group = groupRepository.findByIdAndUser_Id(groupId, userId).orElseThrow(() ->
                 new GroupNotFoundException(groupId));

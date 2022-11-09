@@ -34,9 +34,9 @@ public class PrivateRequestController {
     }
 
     @PatchMapping("/{userId}/requests/{requestId}")
-    public ParticipationRequestDto setGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
+    public ParticipationRequestDto addGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
                                                      @PathVariable(name = "requestId") @Positive Long requestId,
                                                      @RequestParam(name = "group") Long group) {
-        return service.setGroupToRequest(userId, requestId, group);
+        return service.addGroupToRequest(userId, requestId, group);
     }
 }

@@ -11,5 +11,5 @@ public interface PrivateRequestService {
 
     ParticipationRequestDto cancelUserRequest(long userId, long requestId);
 
-    ParticipationRequestDto setGroupToRequest(Long userId, Long requestId, Long group);
+    ParticipationRequestDto addGroupToRequest(Long userId, Long requestId, Long group);
 }
