@@ -18,6 +18,7 @@ public class GatewayExceptionHandler {
                 HttpStatus.BAD_REQUEST);
 
     }
+
     @ExceptionHandler({MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError validationException(MissingServletRequestParameterException e) {
