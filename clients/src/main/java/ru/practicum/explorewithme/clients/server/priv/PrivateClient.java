@@ -3,10 +3,8 @@ package ru.practicum.explorewithme.clients.server.priv;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
-import ru.practicum.explorewithme.models.event.EventState;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
-
 
 import java.util.Map;
 

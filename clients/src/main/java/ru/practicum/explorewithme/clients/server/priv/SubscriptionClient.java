@@ -1,10 +1,11 @@
 package ru.practicum.explorewithme.clients.server.priv;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
-import ru.practicum.explorewithme.models.subscription.*;
+import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
+import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.subscription.UpdateFollowerDto;
 import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
@@ -19,11 +20,6 @@ public class SubscriptionClient extends BaseClient {
 
     public ResponseEntity<Object> addSubscribe(Long userId, Long publisherId, NewSubscriptionRequest request) {
         return post("/" + publisherId + "/subscribe", userId, request);
-    }
-
-    public ResponseEntity<Object> revokeRequestBySubscriber(Long userId, Long subscriptionId, Boolean fully) {
-        Map<String, Object> param = Map.of("fully", fully);
-        return patch("/subscriptions/" + subscriptionId + "/revoke?fully={fully}", userId, param);
     }
 
     public ResponseEntity<Object> cancelSubscription(Long userId, Long subscriptionId) {

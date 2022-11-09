@@ -2,14 +2,12 @@ package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -72,6 +70,20 @@ public class PrivateEventController {
 
     @GetMapping("/{userId}/events/participant")
     public List<EventFullDto> getEventsWhereParticipant(@RequestHeader("X-EWM-User-Id") long followerId,
+                                                        @PathVariable(name = "userId") Long userId,
+                                                        @RequestParam(name = "state") EventState state,
+                                                        @RequestParam(name = "rangeStart", required = false) String start,
+                                                        @RequestParam(name = "rangeEnd", required = false) String end,
+                                                        @RequestParam(name = "available", required = false) Boolean available,
+                                                        @RequestParam(name = "from", defaultValue = "0") int from,
+                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
+        SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(userId, state, start, end, available,
+                from, size);
+        return service.getEventsWhereParticipant(followerId, userId, selection);
+    }
+
+    @GetMapping("/{userId}/events/creator")
+    public List<EventFullDto> getEventsWhereCreator(@RequestHeader("X-EWM-User-Id") long followerId,
                                                     @PathVariable(name = "userId") Long userId,
                                                     @RequestParam(name = "state") EventState state,
                                                     @RequestParam(name = "rangeStart", required = false) String start,
@@ -79,19 +91,6 @@ public class PrivateEventController {
                                                     @RequestParam(name = "available", required = false) Boolean available,
                                                     @RequestParam(name = "from", defaultValue = "0") int from,
                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
-        SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(userId, state, start, end, available,
-                from, size);
-        return service.getEventsWhereParticipant(followerId, userId, selection);
-    }
-    @GetMapping("/{userId}/events/creator")
-    public List<EventFullDto> getEventsWhereCreator(@RequestHeader("X-EWM-User-Id") long followerId,
-                                                @PathVariable(name = "userId") Long userId,
-                                                @RequestParam(name = "state") EventState state,
-                                                @RequestParam(name = "rangeStart", required = false) String start,
-                                                @RequestParam(name = "rangeEnd", required = false) String end,
-                                                @RequestParam(name = "available", required = false) Boolean available,
-                                                @RequestParam(name = "from", defaultValue = "0") int from,
-                                                @RequestParam(name = "size", defaultValue = "10") int size) {
         SelectionConditionForPrivate selection = SelectionConditionForPrivate.of(userId, state, start, end, available,
                 from, size);
 

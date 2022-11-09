@@ -84,7 +84,7 @@ public class SelectionConditionForPrivate {
             return event.eventDate.before(rangeEnd);
         } else if (rangeStart != null && rangeEnd == null) {
             return event.eventDate.after(rangeStart);
-        } else if (rangeStart != null){
+        } else if (rangeStart != null) {
             return event.eventDate.between(rangeStart, rangeEnd);
         }
         return null;

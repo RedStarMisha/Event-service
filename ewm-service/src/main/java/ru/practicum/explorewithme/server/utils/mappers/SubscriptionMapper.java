@@ -1,8 +1,10 @@
 package ru.practicum.explorewithme.server.utils.mappers;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.explorewithme.models.subscription.*;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.FollowerDto;
+import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
+import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
+import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.models.subscription.group.GroupDto;
 import ru.practicum.explorewithme.server.models.Follower;
 import ru.practicum.explorewithme.server.models.Group;
@@ -26,12 +28,6 @@ public class SubscriptionMapper {
                 new SubscriptionRequest(newRequest.isFriendship(), follower, publisher, SubscriptionStatus.WAITING) :
                 new SubscriptionRequest(newRequest.isFriendship(), follower, publisher,
                         LocalDateTime.now(), SubscriptionStatus.FOLLOWER);
-    }
-
-    public static Follower toFollower(SubscriptionRequest request, boolean friendship, FriendshipGroup group) {
-        Group group1 = friendship ? new Group(request.getPublisher(), FriendshipGroup.FRIENDS_ALL.name()) :
-                new Group(request.getPublisher(), FriendshipGroup.FOLLOWER.name());
-        return new Follower(group1, request.getPublisher(), request.getFollower(), request);
     }
 
     public static FollowerDto toFollowerDto(Follower follower) {

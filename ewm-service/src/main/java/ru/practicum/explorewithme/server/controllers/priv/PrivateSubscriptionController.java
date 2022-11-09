@@ -3,7 +3,9 @@ package ru.practicum.explorewithme.server.controllers.priv;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.models.subscription.*;
+import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
+import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
+import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.GroupDto;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
@@ -27,7 +29,7 @@ public class PrivateSubscriptionController {
 
     @GetMapping("/subscriptions/{subscriptionId}")
     public SubscriptionRequestDto getSubscriptionById(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                  @PathVariable(name = "subscriptionId") Long subscriptionId) {
+                                                      @PathVariable(name = "subscriptionId") Long subscriptionId) {
         return service.getSubscriptionById(userId, subscriptionId);
     }
 
@@ -65,6 +67,7 @@ public class PrivateSubscriptionController {
                             @RequestBody NewGroupDto groupDto) {
         service.addNewGroup(userId, groupDto);
     }
+
     @GetMapping("/groups")
     public List<GroupDto> getGroups(@RequestHeader("X-EWM-User-Id") Long userId) {
         return service.getGroups(userId);

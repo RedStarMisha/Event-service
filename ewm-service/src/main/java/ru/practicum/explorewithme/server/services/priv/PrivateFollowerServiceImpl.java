@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.subscription.FollowerDto;
 import ru.practicum.explorewithme.models.subscription.UpdateFollowerDto;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
-import ru.practicum.explorewithme.models.user.UserShortDto;
 import ru.practicum.explorewithme.models.user.UserWithSubscriptionDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.FollowerNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.GroupNotFoundException;
@@ -119,16 +117,5 @@ public class PrivateFollowerServiceImpl implements PrivateFollowerService {
         List<Follower> friendsList = groupId == null ? followersRepository.findAllFollowersWithStatusFriend(userId, page) :
                 followersRepository.findFollowersWithGroup(userId, groupId, page);
         return friendsList.stream().map(SubscriptionMapper::toFollowerDto).collect(Collectors.toList());
-    }
-
-    private Group checkGroup(long userId, String group, boolean friends) {
-        if (friends == false) {
-            return groupRepository.findByUser_IdAndTitleIgnoreCase(userId, FriendshipGroup.FOLLOWER.name()).get();
-        }
-        if (friends && group == null) {
-            return groupRepository.findByUser_IdAndTitleIgnoreCase(userId, FriendshipGroup.FRIENDS_ALL.name()).get();
-        }
-        return groupRepository.findByUser_IdAndTitleIgnoreCase(userId, group).orElseThrow(() ->
-                new GroupNotFoundException(group));
     }
 }

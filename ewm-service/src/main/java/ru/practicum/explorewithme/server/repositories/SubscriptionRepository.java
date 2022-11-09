@@ -16,18 +16,15 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionReques
 
     @Query("from SubscriptionRequest s where s.id=?1 and s.status<>?2 and (s.follower.id=?3 or s.publisher.id=?3)")
     Optional<SubscriptionRequest> findByIdAndUserIdAndStatusIsNot(long subscriptionId, SubscriptionStatus status,
-                                                            long userId);
+                                                                  long userId);
 
     Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatusIs(long subscriptionId, long publisherId,
-                                                                        SubscriptionStatus status);
+                                                                     SubscriptionStatus status);
 
-    Optional<SubscriptionRequest> findByIdAndFollower_Id(long subscriptionId, long followerId);
-
-    @Query("from SubscriptionRequest s where s.id=?1 and s.follower.id=?2 and s.status=0")
-    Optional<SubscriptionRequest> findByIdAndFollower_IdAndStatus_Waiting(long subscriptionId, long followerId);
     List<SubscriptionRequest> findAllByFollower_Id(long followerId, Pageable pageable);
 
     List<SubscriptionRequest> findAllByFollower_IdAndStatus(long followerId, SubscriptionStatus status, Pageable pageable);
+
     @Query("from SubscriptionRequest s where s.publisher.id=?1 and s.status<>2")
     List<SubscriptionRequest> findAllByPublisher(long publisherId, Pageable pageable);
 
@@ -36,13 +33,9 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionReques
     @Query("from SubscriptionRequest s where s.id=?1 and (s.publisher.id=?2 or  s.follower.id=?2)")
     Optional<SubscriptionRequest> findSubscriptionByIdAndUserId(long subscriptionId, long userId);
 
-    Optional<SubscriptionRequest> findByFollower_IdAndPublisher_Id(long followerId, long publisherId);
+
     Optional<SubscriptionRequest> findByFollower_IdAndPublisher_IdAndStatusNot(long followerId, long publisherId,
                                                                                SubscriptionStatus status);
-
-
-
-
 
 
 }

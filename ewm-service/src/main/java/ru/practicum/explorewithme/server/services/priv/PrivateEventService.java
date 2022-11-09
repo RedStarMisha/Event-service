@@ -1,6 +1,9 @@
 package ru.practicum.explorewithme.server.services.priv;
 
-import ru.practicum.explorewithme.models.event.*;
+import ru.practicum.explorewithme.models.event.EventFullDto;
+import ru.practicum.explorewithme.models.event.EventShortDto;
+import ru.practicum.explorewithme.models.event.NewEventDto;
+import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 

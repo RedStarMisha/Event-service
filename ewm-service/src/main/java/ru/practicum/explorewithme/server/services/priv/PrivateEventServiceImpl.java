@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.server.exceptions.notfound.*;
+import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
@@ -38,8 +41,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final RequestRepository requestRepository;
 
     private final FollowersRepository followersRepository;
-
-    private final GroupRepository groupRepository;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
