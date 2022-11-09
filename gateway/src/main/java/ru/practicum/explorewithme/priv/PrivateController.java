@@ -14,7 +14,6 @@ import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +29,8 @@ public class PrivateController {
 
     @GetMapping("/{userId}/events")
     public ResponseEntity<Object> getEventsByOwnerId(@PathVariable(name = "userId") Long userId,
-                                         @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                         @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+                                                     @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                     @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         return client.getEventsByOwnerId(userId, from, size);
     }
 
@@ -105,13 +104,13 @@ public class PrivateController {
 
     @GetMapping("/{userId}/events/participant")
     public ResponseEntity<Object> getEventsWhereParticipant(@RequestHeader("X-EWM-User-Id") long followerId,
-                                            @PathVariable(name = "userId") Long userId,
-                                            @RequestParam(name = "state") String stateString,
-                                            @RequestParam(name = "rangeStart", required = false) String start,
-                                            @RequestParam(name = "rangeEnd", required = false) String end,
-                                            @RequestParam(name = "available", required = false) Boolean available,
-                                            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                            @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
+                                                            @PathVariable(name = "userId") Long userId,
+                                                            @RequestParam(name = "state") String stateString,
+                                                            @RequestParam(name = "rangeStart", required = false) String start,
+                                                            @RequestParam(name = "rangeEnd", required = false) String end,
+                                                            @RequestParam(name = "available", required = false) Boolean available,
+                                                            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                            @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         EventState state = EventState.from(stateString)
                 .orElseThrow(() -> new UnknownEnumElementException(stateString));
         dateValidation(start, end);
@@ -126,15 +125,16 @@ public class PrivateController {
 
         return client.getEventsWhereParticipant(followerId, userId, param);
     }
+
     @GetMapping("/{userId}/events/creator")
     public ResponseEntity<Object> getEventsWhereCreator(@RequestHeader("X-EWM-User-Id") long followerId,
-                                                    @PathVariable(name = "userId") Long userId,
-                                                    @RequestParam(name = "state") String stateString,
-                                                    @RequestParam(name = "rangeStart", required = false) String start,
-                                                    @RequestParam(name = "rangeEnd", required = false) String end,
-                                                    @RequestParam(name = "available", required = false) Boolean available,
-                                                    @RequestParam(name = "from", defaultValue = "0") int from,
-                                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+                                                        @PathVariable(name = "userId") Long userId,
+                                                        @RequestParam(name = "state") String stateString,
+                                                        @RequestParam(name = "rangeStart", required = false) String start,
+                                                        @RequestParam(name = "rangeEnd", required = false) String end,
+                                                        @RequestParam(name = "available", required = false) Boolean available,
+                                                        @RequestParam(name = "from", defaultValue = "0") int from,
+                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
         EventState state = EventState.from(stateString).orElseThrow(() -> new UnknownEnumElementException(stateString));
         dateValidation(start, end);
 

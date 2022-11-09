@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
-import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
 @RestController
 @RequestMapping("/users")
@@ -20,20 +20,20 @@ public class PrivateSubscriptionController {
 
     @PostMapping("/{publisherId}/subscribe")
     public ResponseEntity<Object> addSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
-                                            @PathVariable(name = "publisherId") Long publisherId,
-                                            @RequestBody NewSubscriptionRequest request) {
+                                               @PathVariable(name = "publisherId") Long publisherId,
+                                               @RequestBody NewSubscriptionRequest request) {
         return client.addSubscribe(userId, publisherId, request);
     }
 
     @GetMapping("/subscriptions/{subscriptionId}")
     public ResponseEntity<Object> getSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
+                                                  @PathVariable(name = "subscriptionId") Long subscriptionId) {
         return client.getSubscription(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/cancel")
     public ResponseEntity<Object> cancelSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                           @PathVariable(name = "subscriptionId") Long subscriptionId) {
+                                                     @PathVariable(name = "subscriptionId") Long subscriptionId) {
         return client.cancelSubscription(userId, subscriptionId);
     }
 
@@ -47,19 +47,20 @@ public class PrivateSubscriptionController {
 
     @GetMapping("/subscriptions/incoming")
     public ResponseEntity<Object> getIncomingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                @RequestParam(name = "status", required = false) String stringStatus,
-                                                @RequestParam(name = "from", defaultValue = "0") int from,
-                                                @RequestParam(name = "size", defaultValue = "10") int size) {
+                                                           @RequestParam(name = "status", required = false) String stringStatus,
+                                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                                           @RequestParam(name = "size", defaultValue = "10") int size) {
         SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
                 .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
 
         return client.getIncomingSubscriptions(userId, status, from, size);
     }
+
     @GetMapping("/subscriptions/outgoing")
     public ResponseEntity<Object> getOutgoingSubscriptions(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                @RequestParam(name = "status", required = false) String stringStatus,
-                                                @RequestParam(name = "from", defaultValue = "0") int from,
-                                                @RequestParam(name = "size", defaultValue = "10") int size) {
+                                                           @RequestParam(name = "status", required = false) String stringStatus,
+                                                           @RequestParam(name = "from", defaultValue = "0") int from,
+                                                           @RequestParam(name = "size", defaultValue = "10") int size) {
         SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
                 .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
 
@@ -70,9 +71,10 @@ public class PrivateSubscriptionController {
 
     @PostMapping("/groups")
     public ResponseEntity<Object> addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
-                            @RequestBody NewGroupDto groupDto) {
+                                              @RequestBody NewGroupDto groupDto) {
         return client.addNewGroup(userId, groupDto);
     }
+
     @GetMapping("/groups")
     public ResponseEntity<Object> getGroups(@RequestHeader("X-EWM-User-Id") Long userId) {
         return client.getGroups(userId);
