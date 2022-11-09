@@ -97,10 +97,10 @@ public class PrivateController {
     }
 
     @PatchMapping("/{userId}/requests/{requestId}")
-    public ResponseEntity<Object> setGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
+    public ResponseEntity<Object> addGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
                                                     @PathVariable(name = "requestId") @Positive Long requestId,
                                                     @RequestParam(name = "group") Long group) {
-        return client.setGroupToRequest(userId, requestId, group);
+        return client.addGroupToRequest(userId, requestId, group);
     }
 
     @GetMapping("/{userId}/events/participant")
