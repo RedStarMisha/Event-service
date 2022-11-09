@@ -12,6 +12,7 @@ import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
@@ -79,19 +80,19 @@ public class PrivateController {
     }
 
     @GetMapping("/{userId}/requests")
-    public ResponseEntity<Object> getEventRequestsByUser(@PathVariable(name = "userId") @Positive Long userId) {
+    public ResponseEntity<Object> getEventRequestsByUser(@PathVariable(name = "userId") Long userId) {
         return client.getEventRequestsByUser(userId);
     }
 
     @PostMapping("/{userId}/requests")
-    public ResponseEntity<Object> addNewRequestByUser(@PathVariable(name = "userId") @Positive Long userId,
-                                                      @RequestParam(name = "eventId") @Positive Long eventId) {
+    public ResponseEntity<Object> addNewRequestByUser(@PathVariable(name = "userId") Long userId,
+                                                      @RequestParam(name = "eventId") @NotNull long eventId) {
         return client.addNewRequestByUser(userId, eventId);
     }
 
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
-    public ResponseEntity<Object> cancelUserRequest(@PathVariable(name = "userId") @Positive Long userId,
-                                                    @PathVariable(name = "requestId") @Positive Long requestId) {
+    public ResponseEntity<Object> cancelUserRequest(@PathVariable(name = "userId") Long userId,
+                                                    @PathVariable(name = "requestId") Long requestId) {
         return client.cancelUserRequest(userId, requestId);
     }
 

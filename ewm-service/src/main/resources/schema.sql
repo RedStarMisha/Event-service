@@ -70,7 +70,7 @@ create table if not exists subscription (
 
 create table if not exists groups (
     id bigint generated always as identity primary key ,
-    publisher bigint references users,
+    publisher bigint references users on delete CASCADE,
     title text
 );
 
