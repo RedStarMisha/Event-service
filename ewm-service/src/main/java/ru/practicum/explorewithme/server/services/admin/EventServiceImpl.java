@@ -87,7 +87,8 @@ public class EventServiceImpl implements EventService {
 
         log.info("Event с id={} опубликован {}", eventId, event.getPublished());
 
-        return toEventFull(statsHandler.statsHandle(event));
+        //return toEventFull(statsHandler.statsHandle(event));
+        return toEventFull(event);
     }
 
     @Override
