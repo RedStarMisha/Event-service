@@ -33,11 +33,6 @@ public class Request {
     @Enumerated(value = EnumType.ORDINAL)
     private RequestStatus status = RequestStatus.PENDING;
 
-    //    @ElementCollection(targetClass = FriendshipGroup.class, fetch = FetchType.LAZY)
-//    @CollectionTable(name = "request_group", joinColumns = @JoinColumn(name = "request"))
-//    @Column(name = "friendship_group")
-//    @Enumerated(EnumType.ORDINAL)
-//    private Set<FriendshipGroup> groups = new HashSet<>(Set.of(FriendshipGroup.ALL));
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "request_group",

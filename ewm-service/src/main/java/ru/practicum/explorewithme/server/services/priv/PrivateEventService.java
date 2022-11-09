@@ -24,7 +24,7 @@ public interface PrivateEventService {
 
     ParticipationRequestDto rejectRequestForEvent(long userId, long eventId, long reqId);
 
-    List<EventFullDto> getEventsWhereParticipant(long followerId, Long userId, SelectionConditionForPrivate selection);
+    List<EventFullDto> getEventsWhereParticipant(long userFollowerId, Long userId, SelectionConditionForPrivate selection);
 
-    List<EventFullDto> getEventsWhereCreator(long followerId, Long userId, SelectionConditionForPrivate selection);
+    List<EventFullDto> getEventsWhereCreator(long userFollowerId, Long userId, SelectionConditionForPrivate selection);
 }

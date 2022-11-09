@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateRequestService;
 
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -30,5 +31,12 @@ public class PrivateRequestController {
     public ParticipationRequestDto cancelUserRequest(@PathVariable(name = "userId") long userId,
                                                      @PathVariable(name = "requestId") long requestId) {
         return service.cancelUserRequest(userId, requestId);
+    }
+
+    @PatchMapping("/{userId}/requests/{requestId}")
+    public ParticipationRequestDto setGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
+                                                     @PathVariable(name = "requestId") @Positive Long requestId,
+                                                     @RequestParam(name = "group") Long group) {
+        return service.setGroupToRequest(userId, requestId, group);
     }
 }

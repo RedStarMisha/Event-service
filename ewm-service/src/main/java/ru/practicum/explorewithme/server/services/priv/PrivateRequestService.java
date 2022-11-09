@@ -10,4 +10,6 @@ public interface PrivateRequestService {
     ParticipationRequestDto addNewRequestByUser(long userId, long eventId);
 
     ParticipationRequestDto cancelUserRequest(long userId, long requestId);
+
+    ParticipationRequestDto setGroupToRequest(Long userId, Long requestId, Long group);
 }

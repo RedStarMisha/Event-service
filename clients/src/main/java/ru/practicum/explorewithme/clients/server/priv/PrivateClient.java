@@ -80,4 +80,9 @@ public class PrivateClient extends BaseClient {
 
         return get("/" + userId + "/events/creator" + queryUri, followerId, param);
     }
+
+    public ResponseEntity<Object> setGroupToRequest(Long userId, Long requestId, Long group) {
+        Map<String, Object> param = Map.of("group", group);
+        return patch("/" + userId + "/requests/" + requestId + "?group={group}", param);
+    }
 }

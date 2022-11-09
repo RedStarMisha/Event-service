@@ -34,7 +34,7 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionReques
     List<SubscriptionRequest> findAllByPublisher_IdAndStatusIs(long publisherId, SubscriptionStatus status, Pageable pageable);
 
     @Query("from SubscriptionRequest s where s.id=?1 and (s.publisher.id=?2 or  s.follower.id=?2)")
-    Optional<SubscriptionRequest> findSubscription(long subscriptionId, long userId);
+    Optional<SubscriptionRequest> findSubscriptionByIdAndUserId(long subscriptionId, long userId);
 
     Optional<SubscriptionRequest> findByFollower_IdAndPublisher_Id(long followerId, long publisherId);
     Optional<SubscriptionRequest> findByFollower_IdAndPublisher_IdAndStatusNot(long followerId, long publisherId,

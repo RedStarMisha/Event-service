@@ -7,6 +7,10 @@ public class GroupNotFoundException extends EntityNotFoundException {
         super("Group", title);
     }
 
+    public GroupNotFoundException(long id) {
+        super("Group", id);
+    }
+
     @Override
     public String getEntityType() {
         return "Group";

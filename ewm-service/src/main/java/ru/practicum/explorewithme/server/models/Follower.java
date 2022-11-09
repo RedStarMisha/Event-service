@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
@@ -42,12 +41,5 @@ public class Follower {
         this.publisher = publisher;
         this.follower = follower;
         this.request = request;
-    }
-
-    public Follower(User publisher, User follower, SubscriptionRequest request) {
-        this.publisher = publisher;
-        this.follower = follower;
-        this.request = request;
-        group = new Group(publisher, FriendshipGroup.FOLLOWER.name());
     }
 }

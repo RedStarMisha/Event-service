@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
-import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.*;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
@@ -41,6 +38,8 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final RequestRepository requestRepository;
 
     private final FollowersRepository followersRepository;
+
+    private final GroupRepository groupRepository;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
@@ -158,21 +157,22 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public List<EventFullDto> getEventsWhereParticipant(long followerId, Long userId, SelectionConditionForPrivate selection) {
+    public List<EventFullDto> getEventsWhereParticipant(long userFollowerId, Long userId, SelectionConditionForPrivate selection) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        if (userFollowerId == userId) {
+            throw new RequestConditionException("Нет доступа");
+        }
 
         QEvent qEvent = QEvent.event;
         List<Long> eventIds;
 
-        if (followerId == userId) {
-            eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmed(userId);
-        } else {
-            userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
-            Group group = followersRepository.checkFriendship(userId, followerId).map(Follower::getGroup)
-                    .orElseThrow(() -> new RequestConditionException("Нет доступа"));
+        Group group = followersRepository.findByPublisher_IdAndFollower_Id(userId, userFollowerId).filter(f ->
+                !f.getGroup().getTitle().equals("FOLLOWER")).map(Follower::getGroup).orElseThrow(() ->
+                new RequestConditionException("Доступно только для друзей пользователя"));
 
-            eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group);
-        }
+        eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group);
+
         SearchParam param = selection.getSearchParametersParticipant(qEvent, eventIds);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
@@ -180,14 +180,15 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     @Override
-    public List<EventFullDto> getEventsWhereCreator(long followerId, Long userId, SelectionConditionForPrivate selection) {
+    public List<EventFullDto> getEventsWhereCreator(long userFollowerId, Long userId, SelectionConditionForPrivate selection) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        if (followerId != userId) {
-            userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
-            followersRepository.findByPublisher_IdAndFollower_Id(userId, followerId)
-                    .orElseThrow(() -> new RequestConditionException("Нет доступа"));
+        if (userFollowerId == userId) {
+            throw new RequestConditionException("Нет доступа");
         }
+
+        followersRepository.findByPublisher_IdAndFollower_Id(userId, userFollowerId).orElseThrow(() ->
+                new RequestConditionException("Доступно только для подписчиков"));
 
         QEvent qEvent = QEvent.event;
         SearchParam param = selection.getSearchParametersCreator(qEvent);

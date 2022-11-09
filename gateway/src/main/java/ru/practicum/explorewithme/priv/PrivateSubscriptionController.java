@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
-import ru.practicum.explorewithme.models.subscription.NewGroupDto;
+import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 
@@ -31,12 +31,6 @@ public class PrivateSubscriptionController {
         return client.getSubscription(userId, subscriptionId);
     }
 
-    @PatchMapping("/subscriptions/{subscriptionId}/revoke")
-    public ResponseEntity<Object> revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                            @PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                            @RequestParam(name = "fully") Boolean fully) {
-        return client.revokeRequestBySubscriber(userId, subscriptionId, fully);
-    }
     @PatchMapping("/subscriptions/{subscriptionId}/cancel")
     public ResponseEntity<Object> cancelSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
@@ -78,5 +72,9 @@ public class PrivateSubscriptionController {
     public ResponseEntity<Object> addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
                             @RequestBody NewGroupDto groupDto) {
         return client.addNewGroup(userId, groupDto);
+    }
+    @GetMapping("/groups")
+    public ResponseEntity<Object> getGroups(@RequestHeader("X-EWM-User-Id") Long userId) {
+        return client.getGroups(userId);
     }
 }

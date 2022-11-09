@@ -2,15 +2,11 @@ package ru.practicum.explorewithme.server.models;
 
 import lombok.*;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Where;
 import ru.practicum.explorewithme.models.event.State;
-import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity

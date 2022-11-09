@@ -2,12 +2,14 @@ package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController

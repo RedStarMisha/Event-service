@@ -36,6 +36,7 @@ public class BaseClient {
     protected ResponseEntity<Object> get(String url) {
         return get(url, null, null);
     }
+
     protected ResponseEntity<Object> get(String url, long userId) {
         return get(url, userId, null);
     }
@@ -51,6 +52,7 @@ public class BaseClient {
     protected <T> ResponseEntity<Object> patch(String path, T body) {
         return patch(path, null, null, body);
     }
+
     protected ResponseEntity<Object> patch(String path, Long userId, Map<String, Object> parameters) {
         return patch(path, userId, parameters, null);
     }
@@ -61,6 +63,14 @@ public class BaseClient {
 
     protected ResponseEntity<Object> patch(String path) {
         return patch(path, null, null, null);
+    }
+
+    protected <T> ResponseEntity<Object> patch(String path, long userId, T body) {
+        return patch(path, userId, null, body);
+    }
+
+    protected ResponseEntity<Object> patch(String path, Map<String, Object> parameters) {
+        return patch(path, null, parameters, null);
     }
 
     protected <T> ResponseEntity<Object> patch(String path, @Nullable Long userId, @Nullable Map<String, Object> parameters,

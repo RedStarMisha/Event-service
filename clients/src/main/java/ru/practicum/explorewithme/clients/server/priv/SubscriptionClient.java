@@ -4,10 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
-import ru.practicum.explorewithme.models.subscription.FriendshipGroup;
-import ru.practicum.explorewithme.models.subscription.NewGroupDto;
-import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
-import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
+import ru.practicum.explorewithme.models.subscription.*;
+import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,16 +75,14 @@ public class SubscriptionClient extends BaseClient {
         return get("/" + userId + "/following" + queryPath, followerId, param);
     }
 
-    public ResponseEntity<Object> getFollowers(long followerId, long userId, Boolean friends,
-                                               @Nullable String group, int from, int size) {
+    public ResponseEntity<Object> getFollowers(long followerId, long userId, Boolean friends, int from, int size) {
         Map<String, Object> param = Map.of(
                 "friends", friends,
-                "group", group,
                 "from", from,
                 "size", size
         );
 
-        String queryPath = "?friends={friends}&group={group}&from={from}&size={size}";
+        String queryPath = "?friends={friends}&from={from}&size={size}";
 
         return get("/" + userId + "/followers" + queryPath, followerId, param);
     }
@@ -100,5 +97,35 @@ public class SubscriptionClient extends BaseClient {
 
     public ResponseEntity<Object> getSubscription(Long userId, Long subscriptionId) {
         return get("/subscriptions/" + subscriptionId, userId);
+    }
+
+    public ResponseEntity<Object> getGroups(Long userId) {
+        return get("/groups", userId);
+    }
+
+    public ResponseEntity<Object> updateFollower(long publisherId, long followerId, UpdateFollowerDto follower) {
+        return patch("/followers/" + followerId, publisherId, follower);
+    }
+
+    public ResponseEntity<Object> getOwnFollowing(long userId, boolean friends, int from, int size) {
+        Map<String, Object> param = Map.of(
+                "friends", friends,
+                "from", from,
+                "size", size
+        );
+
+        String queryPath = "?friends={friends}&from={from}&size={size}";
+        return get("/following" + queryPath, userId, param);
+    }
+
+    public ResponseEntity<Object> getOwnFollowers(long userId, boolean friends, Long groupId, int from, int size) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("friends", friends);
+        param.put("groupId", groupId);
+        param.put("from", from);
+        param.put("size", size);
+
+        String queryPath = "?friends={friends}&groupId={groupId}&from={from}&size={size}";
+        return get("/followers" + queryPath, userId, param);
     }
 }

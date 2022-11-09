@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.models.subscription;
+package ru.practicum.explorewithme.models.subscription.group;
 
 import java.util.Optional;
 

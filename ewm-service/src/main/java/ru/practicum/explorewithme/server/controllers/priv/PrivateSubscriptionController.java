@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.subscription.*;
+import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
+import ru.practicum.explorewithme.models.subscription.group.GroupDto;
+import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
 
 import java.util.List;
@@ -23,22 +26,15 @@ public class PrivateSubscriptionController {
     }
 
     @GetMapping("/subscriptions/{subscriptionId}")
-    public SubscriptionRequestDto getSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
+    public SubscriptionRequestDto getSubscriptionById(@RequestHeader("X-EWM-User-Id") Long userId,
                                                   @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        return service.getSubscription(userId, subscriptionId);
-    }
-
-    @PatchMapping("/subscriptions/{subscriptionId}/revoke")
-    public SubscriptionRequestDto revokeRequestBySubscriber(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                            @PathVariable(name = "subscriptionId") Long subscriptionId) {
-        return service.revokeRequestBySubscriber(userId, subscriptionId);
+        return service.getSubscriptionById(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/cancel")
     public SubscriptionRequestDto cancelSubscription(@RequestHeader("X-EWM-User-Id") Long userId,
-                                                     @PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                     @RequestParam(name = "fully") Boolean fully) {
-        return service.cancelSubscription(userId, subscriptionId, fully);
+                                                     @PathVariable(name = "subscriptionId") Long subscriptionId) {
+        return service.cancelSubscription(userId, subscriptionId);
     }
 
     @PatchMapping("/subscriptions/{subscriptionId}/accept")
@@ -68,5 +64,9 @@ public class PrivateSubscriptionController {
     public void addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
                             @RequestBody NewGroupDto groupDto) {
         service.addNewGroup(userId, groupDto);
+    }
+    @GetMapping("/groups")
+    public List<GroupDto> getGroups(@RequestHeader("X-EWM-User-Id") Long userId) {
+        return service.getGroups(userId);
     }
 }

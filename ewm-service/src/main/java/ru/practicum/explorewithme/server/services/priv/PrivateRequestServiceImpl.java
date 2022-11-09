@@ -9,13 +9,16 @@ import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.GroupNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.Event;
+import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.Request;
 import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
+import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.RequestRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
@@ -35,6 +38,8 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
+
+    private final GroupRepository groupRepository;
 
     @Override
     public List<ParticipationRequestDto> getEventRequestsByUser(long userId) {
@@ -85,6 +90,19 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Request request = requestRepository.findById(requestId).orElseThrow(() -> new RequestNotFoundException(requestId));
         request.setStatus(RequestStatus.CANCELED);
+        return toRequestDto(requestRepository.save(request));
+    }
+
+    @Override
+    public ParticipationRequestDto setGroupToRequest(Long userId, Long requestId, Long groupId) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Group group = groupRepository.findByIdAndUser_Id(groupId, userId).orElseThrow(() ->
+                new GroupNotFoundException(groupId));
+        Request request = requestRepository.findByIdAndRequestorIdAndStateConfirmed(requestId, userId).orElseThrow(() ->
+                new RequestNotFoundException(requestId));
+
+        request.addGroup(group);
+
         return toRequestDto(requestRepository.save(request));
     }
 }
