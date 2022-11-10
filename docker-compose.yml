@@ -45,12 +45,14 @@ services:
     container_name: stats-server
     ports:
         - "9090:9090"
+        - "9092:9092"
     depends_on:
       - stats-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statist
       - SPRING_DATASOURCE_USER=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9092
 
   stats-db:
     image: postgres:14-alpine
