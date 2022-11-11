@@ -2,7 +2,7 @@ create table if not exists users (
     id bigint generated always as identity primary key ,
     name varchar(100),
     email varchar(100) unique ,
-    created timestamp
+    created timestamp without time zone
 );
 
 create table if not exists locations (
@@ -27,8 +27,8 @@ create table if not exists events (
     initiator bigint references users,
     category bigint references categories,
     created timestamp,
-    event_date timestamp,
-    published timestamp,
+    event_date timestamp without time zone,
+    published timestamp without time zone,
     location bigint references locations,
     paid boolean,
     partition_limit int,
@@ -39,7 +39,7 @@ create table if not exists events (
 
 create table if not exists participation_requests (
     id bigint generated always as identity primary key ,
-    created timestamp,
+    created timestamp without time zone,
     requestor bigint references users,
     event bigint references events,
     status int
@@ -62,8 +62,8 @@ create table if not exists subscription (
     friendship_request boolean,
     publisher bigint references users,
     follower bigint references users,
-    created timestamp,
-    updated timestamp,
+    created timestamp without time zone,
+    updated timestamp without time zone,
     status int,
     unique (publisher, follower)
 );

@@ -6,6 +6,10 @@ public class FollowerNotFoundException extends EntityNotFoundException {
         super("Follower", id);
     }
 
+    public FollowerNotFoundException(String title) {
+        super("Follower", title);
+    }
+
     @Override
     public String getEntityType() {
         return "Follower";

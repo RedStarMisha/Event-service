@@ -13,11 +13,6 @@ import java.util.Optional;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<SubscriptionRequest, Long> {
 
-
-    @Query("from SubscriptionRequest s where s.id=?1 and s.status<>?2 and (s.follower.id=?3 or s.publisher.id=?3)")
-    Optional<SubscriptionRequest> findByIdAndUserIdAndStatusIsNot(long subscriptionId, SubscriptionStatus status,
-                                                                  long userId);
-
     Optional<SubscriptionRequest> findByIdAndPublisher_IdAndStatusIs(long subscriptionId, long publisherId,
                                                                      SubscriptionStatus status);
 
@@ -33,9 +28,6 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionReques
     @Query("from SubscriptionRequest s where s.id=?1 and (s.publisher.id=?2 or  s.follower.id=?2)")
     Optional<SubscriptionRequest> findSubscriptionByIdAndUserId(long subscriptionId, long userId);
 
-
-    Optional<SubscriptionRequest> findByFollower_IdAndPublisher_IdAndStatusNot(long followerId, long publisherId,
-                                                                               SubscriptionStatus status);
-
-
+    @Query("from SubscriptionRequest s where s.follower.id=?1 and s.publisher.id=?2 and s.status=0")
+    Optional<SubscriptionRequest> findByFollowerIdAndPublisherIdForAccept(long followerId, long publisherId);
 }

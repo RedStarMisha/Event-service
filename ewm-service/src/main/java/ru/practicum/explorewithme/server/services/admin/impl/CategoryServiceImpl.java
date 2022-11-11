@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundExc
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
+import ru.practicum.explorewithme.server.services.admin.CategoryService;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toCategory;
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;

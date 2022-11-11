@@ -14,10 +14,10 @@ public class ValidUtil {
             LocalDateTime rangeStart = start != null ? LocalDateTime.parse(start, formatter) : null;
             LocalDateTime rangeEnd = end != null ? LocalDateTime.parse(end, formatter) : null;
             if (start != null && end != null && rangeStart.isAfter(rangeEnd)) {
-                throw new IncorrectDateException("Введенные даны некорректны");
+                throw new IncorrectDateException("Введенные даты некорректны");
             }
         } catch (DateTimeParseException e) {
-            throw new IncorrectDateException("Введенные даны некорректны");
+            throw new IncorrectDateException("Введенные даты некорректны");
         }
     }
 }

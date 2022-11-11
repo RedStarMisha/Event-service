@@ -6,6 +6,10 @@ public class SubscriptionNotFoundException extends EntityNotFoundException {
         super("Subscription", subscriptionId);
     }
 
+    public SubscriptionNotFoundException(String title) {
+        super("Subscription", title);
+    }
+
     @Override
     public String getEntityType() {
         return "Subscription";

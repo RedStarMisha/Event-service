@@ -20,7 +20,7 @@ public class PrivateSubscriptionController {
 
     private final PrivateSubscriptionService service;
 
-    @PostMapping("/{publisherId}/subscribe")
+    @PostMapping("/subscriptions/{publisherId}/subscribe")
     public SubscriptionRequestDto addSubscribe(@RequestHeader("X-EWM-User-Id") long userId,
                                                @PathVariable(name = "publisherId") Long publisherId,
                                                @RequestBody NewSubscriptionRequest request) {
@@ -42,10 +42,9 @@ public class PrivateSubscriptionController {
     @PatchMapping("/subscriptions/{subscriptionId}/accept")
     public SubscriptionRequestDto acceptSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
                                                   @PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                  @RequestParam(name = "friendship") Boolean friendship,
-                                                  @RequestParam(name = "group", required = false) FriendshipGroup group) {
+                                                  @RequestParam(name = "friendship") Boolean friendship) {
 
-        return service.acceptSubscribe(userId, subscriptionId, friendship, group);
+        return service.acceptSubscribe(userId, subscriptionId, friendship);
     }
 
     @GetMapping("/subscriptions/incoming")
@@ -63,9 +62,9 @@ public class PrivateSubscriptionController {
     }
 
     @PostMapping("/groups")
-    public void addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
+    public GroupDto addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
                             @RequestBody NewGroupDto groupDto) {
-        service.addNewGroup(userId, groupDto);
+        return service.addNewGroup(userId, groupDto);
     }
 
     @GetMapping("/groups")

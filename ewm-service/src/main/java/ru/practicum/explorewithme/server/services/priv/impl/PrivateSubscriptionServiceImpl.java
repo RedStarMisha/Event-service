@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.priv;
+package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.GroupDto;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
+import ru.practicum.explorewithme.server.exceptions.notfound.FollowerNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.SubscriptionNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
@@ -23,6 +23,7 @@ import ru.practicum.explorewithme.server.repositories.FollowersRepository;
 import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.SubscriptionRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
+import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
 import ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper;
 
 import java.time.LocalDateTime;
@@ -31,8 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
-import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.toSubscriptionDto;
-import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.toSubscriptionRequest;
+import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -48,15 +48,15 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
     @Override
     public SubscriptionRequestDto addSubscribe(Long followerId, Long publisherId, NewSubscriptionRequest newRequest) {
+        log.info("Заявка на подписку к publisherId={} от followerId={} с параметрами {}", publisherId,
+                followerId, newRequest);
+
         User follower = userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         User publisher = userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        Optional<SubscriptionRequest> oldRequest =
-                subscriptionRepository.findByFollower_IdAndPublisher_IdAndStatusNot(followerId, publisherId, SubscriptionStatus.REVOKE);
-
-        if (oldRequest.isPresent()) {
-            throw new RequestConditionException("Запрос на подписку уже отправлялся");
-        }
+        subscriptionRepository.findByFollowerIdAndPublisherIdForAccept(followerId, publisherId).orElseThrow(() ->
+                new SubscriptionNotFoundException("Запрос на подписку от followerId=" + followerId + " к publisherId=" +
+                        publisherId + " не найден"));
 
         SubscriptionRequest request = toSubscriptionRequest(newRequest, publisher, follower);
 
@@ -72,6 +72,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
     @Override
     public SubscriptionRequestDto getSubscriptionById(Long userId, Long subscriptionId) {
+        log.info("Получим SubscriptionRequest по subscriptionId={} и userId={}", subscriptionId, userId);
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         return subscriptionRepository.findSubscriptionByIdAndUserId(subscriptionId, userId).map(SubscriptionMapper::toSubscriptionDto)
                 .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
@@ -79,13 +80,16 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
     @Override
     public SubscriptionRequestDto cancelSubscription(Long userId, Long subscriptionId) {
+        log.info("Отменим подписку по subscriptionId={} и userId={}", subscriptionId, userId);
+
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        SubscriptionRequest request =
-                subscriptionRepository.findByIdAndUserIdAndStatusIsNot(subscriptionId, SubscriptionStatus.REVOKE, userId)
-                        .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
+        Follower follower = followersRepository.findBySubscriptionIdAndUserId(subscriptionId, userId).orElseThrow(() ->
+                new FollowerNotFoundException("Подписка по заявке c subscriptionId=" + subscriptionId + " не найдена"));
 
-        if (request.getPublisher().getId() == userId) {
+        SubscriptionRequest request = follower.getRequest();
+
+        if (follower.getPublisher().getId() == userId) {
             request.setStatus(SubscriptionStatus.CANCELED_BY_PUBLISHER);
             log.info("SubscriptionRequest {} отклонен publisherом", request);
         } else {
@@ -96,29 +100,29 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         request.setUpdated(LocalDateTime.now());
         request = subscriptionRepository.save(request);
 
-        Follower follower = followersRepository.findByRequest_Id(subscriptionId).get();
         followersRepository.delete(follower);
 
         return toSubscriptionDto(request);
     }
 
     @Override
-    public SubscriptionRequestDto acceptSubscribe(long publisherId, long subscriptionId, boolean friendship,
-                                                  FriendshipGroup group1) {
+    public SubscriptionRequestDto acceptSubscribe(long publisherId, long subscriptionId, boolean friendship) {
+        log.info("Обработаем заявку на подписку с id={} к publisherId={} и подтверждением дружбы {}", subscriptionId,
+                publisherId, friendship);
         userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
         SubscriptionRequest request = subscriptionRepository.findByIdAndPublisher_IdAndStatusIs(subscriptionId,
                 publisherId, SubscriptionStatus.WAITING).orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
 
+        request.setUpdated(LocalDateTime.now());
+
         if (!friendship) {
             request.setStatus(SubscriptionStatus.FOLLOWER);
-            request.setUpdated(LocalDateTime.now());
             log.info("Заявка на дружбу по заявке {} отклонена", request);
             return toSubscriptionDto(subscriptionRepository.save(request));
         }
 
         request.setStatus(SubscriptionStatus.CONSIDER);
-        request.setUpdated(LocalDateTime.now());
 
         Follower follower = followersRepository.findByRequest_Id(subscriptionId).get();
         Group group = groupRepository.findByUser_IdAndTitleIgnoreCase(publisherId, "FRIENDS_ALL").get();
@@ -134,6 +138,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     @Override
     public List<SubscriptionRequestDto> getIncomingSubscriptions(long followerId, @Nullable SubscriptionStatus status,
                                                                  int from, int size) {
+        log.info("Запрос исходящих заявок на подписку пользователя с id={} и статусом {}", followerId, status);
+
         userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         List<SubscriptionRequest> list;
 
@@ -148,6 +154,8 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
     @Override
     public List<SubscriptionRequestDto> getOutgoingSubscriptions(long userId, SubscriptionStatus status, int from, int size) {
+        log.info("Запрос входящих заявок на подписку пользователя с id={} и статусом {}", userId, status);
+
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         List<SubscriptionRequest> list;
 
@@ -161,18 +169,23 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     }
 
     @Override
-    public void addNewGroup(Long userId, NewGroupDto groupDto) {
+    public GroupDto addNewGroup(Long userId, NewGroupDto groupDto) {
+        log.info("Пользователь с id={} добавляет новую группу {}", userId, groupDto);
+
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Optional<Group> group = groupRepository.findByUser_IdAndTitleIgnoreCase(userId, groupDto.getTitle());
-        if (group.isPresent()) {
+        Optional<Group> groupOpt = groupRepository.findByUser_IdAndTitleIgnoreCase(userId, groupDto.getTitle());
+        if (groupOpt.isPresent()) {
             throw new RequestConditionException("Такая группа уже существует");
         }
-        groupRepository.save(new Group(user, groupDto.getTitle().toUpperCase()));
+        Group group = groupRepository.save(new Group(user, groupDto.getTitle().toUpperCase()));
+        return toGroupDto(group);
     }
 
     @Override
     public List<GroupDto> getGroups(Long userId) {
+        log.info("Запрос групп пользователя с id={}", userId);
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
         return groupRepository.findAllByUser_Id(userId).stream().map(SubscriptionMapper::toGroupDto)
                 .collect(Collectors.toList());
     }

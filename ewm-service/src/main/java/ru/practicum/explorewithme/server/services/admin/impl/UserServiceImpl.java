@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +12,7 @@ import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
+import ru.practicum.explorewithme.server.services.admin.UserService;
 import ru.practicum.explorewithme.server.utils.mappers.UserMapper;
 
 import javax.transaction.Transactional;

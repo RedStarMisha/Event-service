@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import ru.practicum.explorewithme.server.models.Compilation;
 import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
+import ru.practicum.explorewithme.server.services.admin.CompilationService;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;

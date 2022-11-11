@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import ru.practicum.explorewithme.server.models.QEvent;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.services.StatsHandler;
+import ru.practicum.explorewithme.server.services.admin.EventService;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForAdmin;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;

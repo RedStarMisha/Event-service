@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.priv;
+package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,7 @@ import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.RequestRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
+import ru.practicum.explorewithme.server.services.priv.PrivateRequestService;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 
 import java.time.LocalDateTime;

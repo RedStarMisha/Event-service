@@ -3,7 +3,6 @@ package ru.practicum.explorewithme.server.services.priv;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.GroupDto;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
@@ -14,13 +13,13 @@ public interface PrivateSubscriptionService {
 
     SubscriptionRequestDto cancelSubscription(Long userId, Long subscriptionId);
 
-    SubscriptionRequestDto acceptSubscribe(long publisherId, long friendshipId, boolean friendship, FriendshipGroup group);
+    SubscriptionRequestDto acceptSubscribe(long publisherId, long friendshipId, boolean friendship);
 
     List<SubscriptionRequestDto> getIncomingSubscriptions(long followerId, SubscriptionStatus status, int from, int size);
 
     List<SubscriptionRequestDto> getOutgoingSubscriptions(long userId, SubscriptionStatus status, int from, int size);
 
-    void addNewGroup(Long userId, NewGroupDto groupDto);
+    GroupDto addNewGroup(Long userId, NewGroupDto groupDto);
 
     SubscriptionRequestDto getSubscriptionById(Long userId, Long subscriptionId);
 

@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.server.services.priv;
+package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundExcepti
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
+import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
@@ -56,11 +57,16 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Event event = eventRepository.findByInitiator_IdAndId(userId, request.getEventId())
                 .orElseThrow(() -> new EventNotFoundException(request.getEventId()));
 
-        Category category = request.getCategory() != null ? categoryRepository.findById(request.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(request.getCategory())) : null;
+        Category category;
+        if (request.getCategory() != null) {
+            category = categoryRepository.findById(request.getCategory()).orElseThrow(() ->
+                    new CategoryNotFoundException(request.getCategory()));
+        } else {
+            category = null;
+        }
 
         if (!List.of(State.PENDING, State.CANCELED).contains(event.getState())) {
-            throw new RequestConditionException("Нельзя менять опубликованные события");
+            throw new RequestConditionException("Нельзя менять опубликованные и отмененные события");
         }
 
         makeUpdatableModelPrivate(event, request, category);

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.models.subscription.UpdateFollowerDto;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/users")
@@ -23,7 +25,7 @@ public class PrivateFollowerController {
     @GetMapping("/{userId}/following")
     public ResponseEntity<Object> getFollowing(@RequestHeader("X-EWM-User-Id") long userFollowerId,
                                                @PathVariable(name = "userId") long userId,
-                                               @RequestParam(name = "friends") boolean friends,
+                                               @RequestParam(name = "friends", defaultValue = "false") boolean friends,
                                                @RequestParam(name = "from", defaultValue = "0") int from,
                                                @RequestParam(name = "size", defaultValue = "10") int size) {
 
@@ -62,7 +64,7 @@ public class PrivateFollowerController {
     @PatchMapping("/followers/{followerId}")
     public ResponseEntity<Object> updateFollower(@RequestHeader("X-EWM-User-Id") long publisherId,
                                                  @PathVariable(name = "followerId") long followerId,
-                                                 @RequestBody UpdateFollowerDto follower) {
+                                                 @RequestBody @Valid UpdateFollowerDto follower) {
 
         return client.updateFollower(publisherId, followerId, follower);
     }

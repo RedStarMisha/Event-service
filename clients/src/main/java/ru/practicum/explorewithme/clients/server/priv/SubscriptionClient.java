@@ -19,20 +19,17 @@ public class SubscriptionClient extends BaseClient {
     }
 
     public ResponseEntity<Object> addSubscribe(Long userId, Long publisherId, NewSubscriptionRequest request) {
-        return post("/" + publisherId + "/subscribe", userId, request);
+        return post("/subscriptions/" + publisherId + "/subscribe", userId, request);
     }
 
     public ResponseEntity<Object> cancelSubscription(Long userId, Long subscriptionId) {
         return patch("/subscriptions/" + subscriptionId + "/cancel", userId);
     }
 
-    public ResponseEntity<Object> acceptSubscribe(Long userId, Long subscriptionId, Boolean friendship,
-                                                  FriendshipGroup group) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("friendship", friendship);
-        param.put("group", group);
+    public ResponseEntity<Object> acceptSubscribe(Long userId, Long subscriptionId, Boolean friendship) {
+        Map<String, Object> param = Map.of("friendship", friendship);
 
-        String queryPath = "?friendship={friendship}&group={group}";
+        String queryPath = "?friendship={friendship}";
 
         return patch("/subscriptions/" + subscriptionId + "/accept" + queryPath, userId, param);
     }

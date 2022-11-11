@@ -11,6 +11,8 @@ import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -18,10 +20,10 @@ public class PrivateSubscriptionController {
 
     private final SubscriptionClient client;
 
-    @PostMapping("/{publisherId}/subscribe")
+    @PostMapping("/subscriptions/{publisherId}/subscribe")
     public ResponseEntity<Object> addSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
                                                @PathVariable(name = "publisherId") Long publisherId,
-                                               @RequestBody NewSubscriptionRequest request) {
+                                               @RequestBody @Valid NewSubscriptionRequest request) {
         return client.addSubscribe(userId, publisherId, request);
     }
 
@@ -40,9 +42,8 @@ public class PrivateSubscriptionController {
     @PatchMapping("/subscriptions/{subscriptionId}/accept")
     public ResponseEntity<Object> acceptSubscribe(@RequestHeader("X-EWM-User-Id") Long userId,
                                                   @PathVariable(name = "subscriptionId") Long subscriptionId,
-                                                  @RequestParam(name = "friendship") Boolean friendship,
-                                                  @RequestParam(name = "group", required = false) FriendshipGroup group) {
-        return client.acceptSubscribe(userId, subscriptionId, friendship, group);
+                                                  @RequestParam(name = "friendship") Boolean friendship) {
+        return client.acceptSubscribe(userId, subscriptionId, friendship);
     }
 
     @GetMapping("/subscriptions/incoming")
@@ -50,8 +51,12 @@ public class PrivateSubscriptionController {
                                                            @RequestParam(name = "status", required = false) String stringStatus,
                                                            @RequestParam(name = "from", defaultValue = "0") int from,
                                                            @RequestParam(name = "size", defaultValue = "10") int size) {
-        SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
-                .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
+        SubscriptionStatus status;
+        if (stringStatus == null) {
+            status = null;
+        } else {
+            status = SubscriptionStatus.from(stringStatus).orElseThrow(() -> new UnknownEnumElementException(stringStatus));
+        }
 
         return client.getIncomingSubscriptions(userId, status, from, size);
     }
@@ -61,10 +66,16 @@ public class PrivateSubscriptionController {
                                                            @RequestParam(name = "status", required = false) String stringStatus,
                                                            @RequestParam(name = "from", defaultValue = "0") int from,
                                                            @RequestParam(name = "size", defaultValue = "10") int size) {
-        SubscriptionStatus status = stringStatus == null ? null : SubscriptionStatus.from(stringStatus)
-                .orElseThrow(() -> new UnknownEnumElementException(stringStatus));
+        SubscriptionStatus status;
+        if (stringStatus == null) {
+            status = null;
+        } else {
+            status = SubscriptionStatus.from(stringStatus).orElseThrow(() -> new UnknownEnumElementException(stringStatus));
+        }
 
-        if (status == SubscriptionStatus.REVOKE) throw new UnknownEnumElementException(stringStatus);
+        if (status == SubscriptionStatus.REVOKE) {
+            throw new UnknownEnumElementException(stringStatus);
+        }
 
         return client.getOutgoingSubscriptions(userId, status, from, size);
     }
