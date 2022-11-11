@@ -39,7 +39,7 @@ public class CompilationServiceImpl implements CompilationService {
                 .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toList());
 
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
-        log.info("Compilation {} добавлена", compilation);
+        log.info("Compilation {} c id={} добавлена", compilation.getTitle(), compilation.getId());
 
         return toCompilationDto(compilation);
     }

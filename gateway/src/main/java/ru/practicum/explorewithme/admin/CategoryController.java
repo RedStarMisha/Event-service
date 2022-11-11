@@ -30,9 +30,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{catId}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable(name = "catId")
-                                                     //@Positive(message = "Id категории должно быть положительное")
-                                                     Long catId) {
+    public ResponseEntity<Object> deleteCategory(@PathVariable(name = "catId") Long catId) {
         return client.deleteCategory(catId);
     }
 }
