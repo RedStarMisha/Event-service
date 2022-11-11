@@ -8,7 +8,6 @@ import ru.practicum.explorewithme.clients.server.priv.SubscriptionClient;
 import ru.practicum.explorewithme.exceptions.UnknownEnumElementException;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
 import javax.validation.Valid;

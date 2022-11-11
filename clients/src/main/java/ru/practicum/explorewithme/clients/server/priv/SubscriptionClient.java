@@ -6,7 +6,6 @@ import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
 import ru.practicum.explorewithme.models.subscription.UpdateFollowerDto;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 
 import java.util.HashMap;

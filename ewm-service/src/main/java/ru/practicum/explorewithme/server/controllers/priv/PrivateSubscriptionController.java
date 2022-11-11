@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.subscription.NewSubscriptionRequest;
 import ru.practicum.explorewithme.models.subscription.SubscriptionRequestDto;
 import ru.practicum.explorewithme.models.subscription.SubscriptionStatus;
-import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.subscription.group.GroupDto;
 import ru.practicum.explorewithme.models.subscription.group.NewGroupDto;
 import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
@@ -63,7 +62,7 @@ public class PrivateSubscriptionController {
 
     @PostMapping("/groups")
     public GroupDto addNewGroup(@RequestHeader("X-EWM-User-Id") Long userId,
-                            @RequestBody NewGroupDto groupDto) {
+                                @RequestBody NewGroupDto groupDto) {
         return service.addNewGroup(userId, groupDto);
     }
 
