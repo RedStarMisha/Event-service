@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.category.CategoryDto;
@@ -17,7 +16,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toC
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class CategoryServiceImpl implements CategoryService {

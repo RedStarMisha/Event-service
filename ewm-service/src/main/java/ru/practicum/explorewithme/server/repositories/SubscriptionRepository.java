@@ -28,6 +28,5 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionReques
     @Query("from SubscriptionRequest s where s.id=?1 and (s.publisher.id=?2 or  s.follower.id=?2)")
     Optional<SubscriptionRequest> findSubscriptionByIdAndUserId(long subscriptionId, long userId);
 
-    @Query("from SubscriptionRequest s where s.follower.id=?1 and s.publisher.id=?2 and s.status=0")
-    Optional<SubscriptionRequest> findByFollowerIdAndPublisherIdForAccept(long followerId, long publisherId);
+    boolean existsByFollower_IdAndPublisher_IdAndStatusNot(long followerId, long publisherId, SubscriptionStatus status);
 }

@@ -2,11 +2,11 @@ package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.ParticipationRequestForSubscription;
 import ru.practicum.explorewithme.models.request.RequestStatus;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.GroupNotFoundException;
@@ -29,9 +29,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
+import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestForSubscription;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class PrivateRequestServiceImpl implements PrivateRequestService {
@@ -95,7 +96,7 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     }
 
     @Override
-    public ParticipationRequestDto addGroupToRequest(Long userId, Long requestId, Long groupId) {
+    public ParticipationRequestForSubscription addGroupToRequest(Long userId, Long requestId, Long groupId) {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Group group = groupRepository.findByIdAndUser_Id(groupId, userId).orElseThrow(() ->
                 new GroupNotFoundException(groupId));
@@ -104,6 +105,19 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
 
         request.addGroup(group);
 
-        return toRequestDto(requestRepository.save(request));
+        return toRequestForSubscription(requestRepository.save(request));
+    }
+
+    @Override
+    public ParticipationRequestForSubscription deleteGroupFromRequest(Long userId, Long requestId, Long groupId) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Group group = groupRepository.findByIdAndUser_Id(groupId, userId).orElseThrow(() ->
+                new GroupNotFoundException(groupId));
+        Request request = requestRepository.findByIdAndRequestorIdAndStateConfirmed(requestId, userId).orElseThrow(() ->
+                new RequestNotFoundException(requestId));
+
+        request.deleteGroup(group);
+
+        return toRequestForSubscription(requestRepository.save(request));
     }
 }

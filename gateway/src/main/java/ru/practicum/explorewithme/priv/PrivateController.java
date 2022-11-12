@@ -102,6 +102,12 @@ public class PrivateController {
                                                     @RequestParam(name = "group") Long group) {
         return client.addGroupToRequest(userId, requestId, group);
     }
+    @DeleteMapping("/{userId}/requests/{requestId}")
+    public ResponseEntity<Object> deleteGroupFromRequest(@PathVariable(name = "userId") @Positive Long userId,
+                                                         @PathVariable(name = "requestId") @Positive Long requestId,
+                                                         @RequestParam(name = "group") Long group) {
+        return client.deleteGroupFromRequest(userId, requestId, group);
+    }
 
     @GetMapping("/{userId}/events/participant")
     public ResponseEntity<Object> getEventsWhereParticipant(@RequestHeader("X-EWM-User-Id") long followerId,

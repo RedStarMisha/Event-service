@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
 import ru.practicum.explorewithme.models.event.EventFullDto;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/events")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class EventController {
 
     private final EventService service;
@@ -36,7 +35,7 @@ public class EventController {
 
     @PutMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable(name = "eventId") long eventId,
-                                              @RequestBody AdminUpdateEventRequest updateEventRequest) {
+                                    @RequestBody AdminUpdateEventRequest updateEventRequest) {
         return service.updateEvent(eventId, updateEventRequest);
     }
 

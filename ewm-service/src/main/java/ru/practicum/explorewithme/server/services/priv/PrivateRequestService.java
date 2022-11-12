@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.server.services.priv;
 
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.ParticipationRequestForSubscription;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ public interface PrivateRequestService {
 
     ParticipationRequestDto cancelUserRequest(long userId, long requestId);
 
-    ParticipationRequestDto addGroupToRequest(Long userId, Long requestId, Long group);
+    ParticipationRequestForSubscription addGroupToRequest(Long userId, Long requestId, Long group);
+
+    ParticipationRequestForSubscription deleteGroupFromRequest(Long userId, Long requestId, Long groupId);
 }

@@ -1,6 +1,6 @@
 package ru.practicum.explorewithme.server.services.priv.impl;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AllArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 @Transactional
 public class PrivateEventServiceImpl implements PrivateEventService {
@@ -40,8 +40,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
-
     private final FollowersRepository followersRepository;
+
+    private final GroupRepository groupRepository;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
@@ -178,7 +179,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 !f.getGroup().getTitle().equals("FOLLOWER")).map(Follower::getGroup).orElseThrow(() ->
                 new RequestConditionException("Доступно только для друзей пользователя"));
 
-        eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group);
+        Group groupAll = groupRepository.findByUser_IdAndTitleIgnoreCase(userId, "Friends_all").get();
+
+        eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group, groupAll);
 
         SearchParam param = selection.getSearchParametersParticipant(qEvent, eventIds);
 

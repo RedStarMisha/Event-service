@@ -15,8 +15,9 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findAllByEvent_Id(long eventId);
 
-    @Query("select r.event.id from Request r where r.requestor.id = ?1 and r.status = 1 and ?2 member of r.groups ")
-    List<Long> findEventIdsWhereRequestStatusConfirmedAndGroup(long requestorId, Group group);
+    @Query("select r.event.id from Request r " +
+            "where r.requestor.id = ?1 and r.status = 1 and (?2 member of r.groups or ?3 member of r.groups) ")
+    List<Long> findEventIdsWhereRequestStatusConfirmedAndGroup(long requestorId, Group group, Group groupAll);
 
     @Query("update Request r set r.status=2 where r.event.id=?1 and r.status=0")
     void rejectedAllRequestsByEventId(long eventId);

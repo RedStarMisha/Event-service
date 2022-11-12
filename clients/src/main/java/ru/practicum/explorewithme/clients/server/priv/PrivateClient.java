@@ -83,4 +83,9 @@ public class PrivateClient extends BaseClient {
         Map<String, Object> param = Map.of("group", group);
         return patch("/" + userId + "/requests/" + requestId + "?group={group}", param);
     }
+
+    public ResponseEntity<Object> deleteGroupFromRequest(Long userId, Long requestId, Long group) {
+        Map<String, Object> param = Map.of("group", group);
+        return delete("/" + userId + "/requests/" + requestId + "?group={group}", param);
+    }
 }

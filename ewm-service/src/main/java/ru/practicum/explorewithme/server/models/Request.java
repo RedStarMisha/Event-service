@@ -45,6 +45,10 @@ public class Request {
         groups.add(group);
     }
 
+    public void deleteGroup(Group group){
+        groups.remove(group);
+    }
+
     private Request(User requestor, Event event, RequestStatus status) {
         this.requestor = requestor;
         this.event = event;

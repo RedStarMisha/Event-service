@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
 import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.*;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionService {
@@ -54,9 +53,13 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         User follower = userRepository.findById(followerId).orElseThrow(() -> new UserNotFoundException(followerId));
         User publisher = userRepository.findById(publisherId).orElseThrow(() -> new UserNotFoundException(publisherId));
 
-        subscriptionRepository.findByFollowerIdAndPublisherIdForAccept(followerId, publisherId).orElseThrow(() ->
-                new SubscriptionNotFoundException("Запрос на подписку от followerId=" + followerId + " к publisherId=" +
-                        publisherId + " не найден"));
+        boolean exist = subscriptionRepository.existsByFollower_IdAndPublisher_IdAndStatusNot(followerId, publisherId,
+                SubscriptionStatus.CANCELED_BY_FOLLOWER);
+
+        if (exist) {
+            throw new RequestConditionException("Запрос на подписку от followerId=" + followerId + " к publisherId=" +
+                    publisherId + "не может быть создан повторно");
+        }
 
         SubscriptionRequest request = toSubscriptionRequest(newRequest, publisher, follower);
 

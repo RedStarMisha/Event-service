@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.services.priv.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.subscription.FollowerDto;
@@ -29,7 +28,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper
 import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserWithSubscriptionDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 public class PrivateFollowerServiceImpl implements PrivateFollowerService {
 

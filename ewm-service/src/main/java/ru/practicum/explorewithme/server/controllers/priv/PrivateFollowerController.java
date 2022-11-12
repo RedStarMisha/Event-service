@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.subscription.FollowerDto;
 import ru.practicum.explorewithme.models.subscription.UpdateFollowerDto;
@@ -11,7 +10,7 @@ import ru.practicum.explorewithme.server.services.priv.PrivateFollowerService;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class PrivateFollowerController {
 

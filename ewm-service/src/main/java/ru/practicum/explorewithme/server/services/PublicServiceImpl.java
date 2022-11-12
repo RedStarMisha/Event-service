@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
@@ -38,7 +37,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEven
 @Service
 @Slf4j
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class PublicServiceImpl implements PublicService {
     private final EventRepository eventRepository;
     private final CompilationRepository compilationRepository;
