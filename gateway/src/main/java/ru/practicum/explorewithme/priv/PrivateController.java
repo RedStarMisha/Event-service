@@ -102,6 +102,7 @@ public class PrivateController {
                                                     @RequestParam(name = "group") Long group) {
         return client.addGroupToRequest(userId, requestId, group);
     }
+
     @DeleteMapping("/{userId}/requests/{requestId}")
     public ResponseEntity<Object> deleteGroupFromRequest(@PathVariable(name = "userId") @Positive Long userId,
                                                          @PathVariable(name = "requestId") @Positive Long requestId,
