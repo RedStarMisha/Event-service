@@ -45,7 +45,7 @@ public class Request {
         groups.add(group);
     }
 
-    public void deleteGroup(Group group){
+    public void deleteGroup(Group group) {
         groups.remove(group);
     }
 
