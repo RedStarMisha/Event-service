@@ -1,14 +1,17 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.explorewithme.models.subscription.group.FriendshipGroup;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
+import ru.practicum.explorewithme.server.models.Group;
 import ru.practicum.explorewithme.server.models.User;
+import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
+import ru.practicum.explorewithme.server.services.admin.UserService;
 import ru.practicum.explorewithme.server.utils.mappers.UserMapper;
 
 import javax.transaction.Transactional;
@@ -19,12 +22,14 @@ import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUser;
 import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+
+    private final GroupRepository groupRepository;
 
     @Override
     public List<UserDto> getUsers(long[] ids, int from, int size) {
@@ -40,8 +45,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
         log.info("Add new user {}", newUserRequest);
-        User user = toUser(newUserRequest);
-        return toUserDto(repository.save(user));
+        User user = repository.save(toUser(newUserRequest));
+
+        groupRepository.save(new Group(user, FriendshipGroup.FRIENDS_ALL.name()));
+        groupRepository.save(new Group(user, FriendshipGroup.FOLLOWER.name()));
+
+        return toUserDto(user);
     }
 
     @Override

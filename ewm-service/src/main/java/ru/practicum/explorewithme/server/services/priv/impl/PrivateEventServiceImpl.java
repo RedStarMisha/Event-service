@@ -1,34 +1,36 @@
-package ru.practicum.explorewithme.server.services.priv;
+package ru.practicum.explorewithme.server.services.priv.impl;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explorewithme.models.event.State;
 import ru.practicum.explorewithme.models.event.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.models.request.RequestStatus;
-import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
-import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.EventNotFoundException;
+import ru.practicum.explorewithme.server.exceptions.notfound.RequestNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.notfound.UserNotFoundException;
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
+import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
+import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
+import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AllArgsConstructor(onConstructor_ = @Autowired)
 @Slf4j
 @Transactional
 public class PrivateEventServiceImpl implements PrivateEventService {
@@ -38,6 +40,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final CategoryRepository categoryRepository;
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
+    private final FollowersRepository followersRepository;
+
+    private final GroupRepository groupRepository;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
@@ -53,11 +58,16 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Event event = eventRepository.findByInitiator_IdAndId(userId, request.getEventId())
                 .orElseThrow(() -> new EventNotFoundException(request.getEventId()));
 
-        Category category = request.getCategory() != null ? categoryRepository.findById(request.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(request.getCategory())) : null;
+        Category category;
+        if (request.getCategory() != null) {
+            category = categoryRepository.findById(request.getCategory()).orElseThrow(() ->
+                    new CategoryNotFoundException(request.getCategory()));
+        } else {
+            category = null;
+        }
 
         if (!List.of(State.PENDING, State.CANCELED).contains(event.getState())) {
-            throw new RequestConditionException("Нельзя менять опубликованные события");
+            throw new RequestConditionException("Нельзя менять опубликованные и отмененные события");
         }
 
         makeUpdatableModelPrivate(event, request, category);
@@ -154,4 +164,46 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return toRequestDto(request);
     }
 
+    @Override
+    public List<EventFullDto> getEventsWhereParticipant(long userFollowerId, Long userId, SelectionConditionForPrivate selection) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        if (userFollowerId == userId) {
+            throw new RequestConditionException("Нет доступа");
+        }
+
+        QEvent qEvent = QEvent.event;
+        List<Long> eventIds;
+
+        Group group = followersRepository.findByPublisher_IdAndFollower_Id(userId, userFollowerId).filter(f ->
+                !f.getGroup().getTitle().equals("FOLLOWER")).map(Follower::getGroup).orElseThrow(() ->
+                new RequestConditionException("Доступно только для друзей пользователя"));
+
+        Group groupAll = groupRepository.findByUser_IdAndTitleIgnoreCase(userId, "Friends_all").get();
+
+        eventIds = requestRepository.findEventIdsWhereRequestStatusConfirmedAndGroup(userId, group, groupAll);
+
+        SearchParam param = selection.getSearchParametersParticipant(qEvent, eventIds);
+
+        return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
+                .map(EventMapper::toEventFull).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventFullDto> getEventsWhereCreator(long userFollowerId, Long userId, SelectionConditionForPrivate selection) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        if (userFollowerId == userId) {
+            throw new RequestConditionException("Нет доступа");
+        }
+
+        followersRepository.findByPublisher_IdAndFollower_Id(userId, userFollowerId).orElseThrow(() ->
+                new RequestConditionException("Доступно только для подписчиков"));
+
+        QEvent qEvent = QEvent.event;
+        SearchParam param = selection.getSearchParametersCreator(qEvent);
+
+        return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
+                .map(EventMapper::toEventFull).collect(Collectors.toList());
+    }
 }

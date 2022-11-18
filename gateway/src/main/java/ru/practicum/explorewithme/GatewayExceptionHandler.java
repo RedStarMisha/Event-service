@@ -2,6 +2,7 @@ package ru.practicum.explorewithme;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,6 +16,15 @@ public class GatewayExceptionHandler {
     public ApiError validationException(MethodArgumentNotValidException e) {
         return new ApiError(e.getStackTrace(), e.getMessage(), "The request was formed incorrectly",
                 HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler({MissingServletRequestParameterException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError validationException(MissingServletRequestParameterException e) {
+        return new ApiError(e.getStackTrace(), e.getMessage(), "The request was formed incorrectly",
+                HttpStatus.BAD_REQUEST);
+
     }
 
     @ExceptionHandler({Throwable.class})

@@ -2,7 +2,6 @@ package ru.practicum.explorewithme.server.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
@@ -20,8 +19,8 @@ import ru.practicum.explorewithme.server.models.QEvent;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
-import ru.practicum.explorewithme.server.utils.SearchParam;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPublic;
 import ru.practicum.explorewithme.server.utils.mappers.CategoryMapper;
 import ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
@@ -38,7 +37,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEven
 @Service
 @Slf4j
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class PublicServiceImpl implements PublicService {
     private final EventRepository eventRepository;
     private final CompilationRepository compilationRepository;
@@ -78,10 +77,15 @@ public class PublicServiceImpl implements PublicService {
 
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
-        List<Compilation> compilations = pinned == null ?
-                compilationRepository.findAll(makePageable(from, size)).getContent() :
-                compilationRepository.findAllByPinned(pinned, makePageable(from, size));
-        log.info("Запрошены Compilations с оплатой - {}", pinned);
+        List<Compilation> compilations;
+        if (pinned == null) {
+            compilations = compilationRepository.findAll(makePageable(from, size)).getContent();
+            log.info("Запрошены Compilations с оплатой - null");
+
+        } else {
+            compilations = compilationRepository.findAllByPinned(pinned, makePageable(from, size));
+            log.info("Запрошены Compilations с оплатой - {}", pinned);
+        }
 
         return compilations.stream().map(CompilationsMapper::toCompilationDto).collect(Collectors.toList());
     }

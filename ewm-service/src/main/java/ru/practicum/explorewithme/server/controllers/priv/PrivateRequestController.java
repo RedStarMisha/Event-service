@@ -1,16 +1,17 @@
 package ru.practicum.explorewithme.server.controllers.priv;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.request.ParticipationRequestDto;
+import ru.practicum.explorewithme.models.request.ParticipationRequestForSubscription;
 import ru.practicum.explorewithme.server.services.priv.PrivateRequestService;
 
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class PrivateRequestController {
 
     private final PrivateRequestService service;
@@ -30,5 +31,19 @@ public class PrivateRequestController {
     public ParticipationRequestDto cancelUserRequest(@PathVariable(name = "userId") long userId,
                                                      @PathVariable(name = "requestId") long requestId) {
         return service.cancelUserRequest(userId, requestId);
+    }
+
+    @PatchMapping("/{userId}/requests/{requestId}")
+    public ParticipationRequestForSubscription addGroupToRequest(@PathVariable(name = "userId") @Positive Long userId,
+                                                                 @PathVariable(name = "requestId") @Positive Long requestId,
+                                                                 @RequestParam(name = "group") Long group) {
+        return service.addGroupToRequest(userId, requestId, group);
+    }
+
+    @DeleteMapping("/{userId}/requests/{requestId}")
+    public ParticipationRequestForSubscription deleteGroupFromRequest(@PathVariable(name = "userId") @Positive Long userId,
+                                                                      @PathVariable(name = "requestId") @Positive Long requestId,
+                                                                      @RequestParam(name = "group") Long group) {
+        return service.deleteGroupFromRequest(userId, requestId, group);
     }
 }

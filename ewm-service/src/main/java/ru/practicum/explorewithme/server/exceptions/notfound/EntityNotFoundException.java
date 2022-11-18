@@ -5,5 +5,9 @@ public abstract class EntityNotFoundException extends RuntimeException {
         super(message + " with id=" + id + " was not found");
     }
 
+    public EntityNotFoundException(String message, String title) {
+        super(message + " by parameters " + title + " was not found");
+    }
+
     public abstract String getEntityType();
 }

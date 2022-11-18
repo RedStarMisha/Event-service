@@ -7,6 +7,7 @@ import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "participation_requests")
@@ -32,6 +33,21 @@ public class Request {
     @Enumerated(value = EnumType.ORDINAL)
     private RequestStatus status = RequestStatus.PENDING;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "request_group",
+            joinColumns = @JoinColumn(name = "request"),
+            inverseJoinColumns = @JoinColumn(name = "group_level"))
+    private Set<Group> groups;
+
+
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    public void deleteGroup(Group group) {
+        groups.remove(group);
+    }
 
     private Request(User requestor, Event event, RequestStatus status) {
         this.requestor = requestor;

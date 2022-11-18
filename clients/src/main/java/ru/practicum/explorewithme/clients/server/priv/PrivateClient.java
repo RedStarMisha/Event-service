@@ -1,11 +1,10 @@
-package ru.practicum.explorewithme.clients.server;
+package ru.practicum.explorewithme.clients.server.priv;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.explorewithme.clients.BaseClient;
 import ru.practicum.explorewithme.models.event.NewEventDto;
 import ru.practicum.explorewithme.models.event.UpdateEventRequest;
-
 
 import java.util.Map;
 
@@ -60,11 +59,33 @@ public class PrivateClient extends BaseClient {
 
     public ResponseEntity<Object> addNewRequestByUser(long userId, long eventId) {
         Map<String, Object> param = Map.of("eventId", eventId);
-        String queryParam = "?eventId={eventId}";
-        return post("/" + userId + REQUESTS + queryParam, param);
+        String queryUri = "?eventId={eventId}";
+        return post("/" + userId + REQUESTS + queryUri, param);
     }
 
     public ResponseEntity<Object> cancelUserRequest(long userId, long requestId) {
         return patch("/" + userId + REQUESTS + "/" + requestId + "/cancel");
+    }
+
+    public ResponseEntity<Object> getEventsWhereParticipant(long followerId, Long userId, Map<String, Object> param) {
+        String queryUri = "?state={state}&start={start}&end={end}&available={available}&from={from}&size={size}";
+
+        return get("/" + userId + "/events/participant" + queryUri, followerId, param);
+    }
+
+    public ResponseEntity<Object> getEventsWhereCreator(long followerId, Long userId, Map<String, Object> param) {
+        String queryUri = "?state={state}&start={start}&end={end}&available={available}&from={from}&size={size}";
+
+        return get("/" + userId + "/events/creator" + queryUri, followerId, param);
+    }
+
+    public ResponseEntity<Object> addGroupToRequest(Long userId, Long requestId, Long group) {
+        Map<String, Object> param = Map.of("group", group);
+        return patch("/" + userId + "/requests/" + requestId + "?group={group}", param);
+    }
+
+    public ResponseEntity<Object> deleteGroupFromRequest(Long userId, Long requestId, Long group) {
+        Map<String, Object> param = Map.of("group", group);
+        return delete("/" + userId + "/requests/" + requestId + "?group={group}", param);
     }
 }

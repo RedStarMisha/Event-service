@@ -26,7 +26,7 @@ public class StatController {
 
     @GetMapping("/stats")
     public List<ViewStats> getStats(@RequestParam(name = "uris", required = false) String[] uris,
-                                    @RequestParam(name = "unique", defaultValue = "false") boolean unique,
+                                    @RequestParam(name = "unique", defaultValue = "false") Boolean unique,
                                     HttpServletRequest request) throws UnsupportedEncodingException {
         return service.getStats(request.getQueryString(), uris, unique);
     }

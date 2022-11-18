@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.server.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.explorewithme.server.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
@@ -9,7 +8,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
+@ToString()
 @NoArgsConstructor
 public class User {
     @Id
@@ -28,4 +30,10 @@ public class User {
         this.email = email;
         created = LocalDateTime.now();
     }
+
+    @Transient
+    private long friends;
+
+    @Transient
+    private long followers;
 }

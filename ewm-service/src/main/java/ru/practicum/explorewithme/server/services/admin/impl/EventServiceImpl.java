@@ -1,8 +1,7 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.AdminUpdateEventRequest;
@@ -17,8 +16,9 @@ import ru.practicum.explorewithme.server.models.QEvent;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.services.StatsHandler;
-import ru.practicum.explorewithme.server.utils.SearchParam;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForAdmin;
+import ru.practicum.explorewithme.server.services.admin.EventService;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForAdmin;
 import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUp
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventFull;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class EventServiceImpl implements EventService {
@@ -87,7 +87,8 @@ public class EventServiceImpl implements EventService {
 
         log.info("Event с id={} опубликован {}", eventId, event.getPublished());
 
-        return toEventFull(statsHandler.statsHandle(event));
+        //return toEventFull(statsHandler.statsHandle(event));
+        return toEventFull(event);
     }
 
     @Override

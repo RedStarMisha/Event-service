@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.user.NewUserRequest;
 import ru.practicum.explorewithme.models.user.UserDto;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService service;
@@ -19,7 +18,7 @@ public class UserController {
     @GetMapping("/users")
     public List<UserDto> getUsers(@RequestParam(name = "ids") long[] ids,
                                   @RequestParam(name = "from") int from,
-                                  @RequestParam(name = "size")  int size) {
+                                  @RequestParam(name = "size") int size) {
         return service.getUsers(ids, from, size);
     }
 

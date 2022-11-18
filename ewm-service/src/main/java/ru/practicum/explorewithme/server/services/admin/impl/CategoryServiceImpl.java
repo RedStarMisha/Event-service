@@ -1,8 +1,7 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.category.CategoryDto;
@@ -11,12 +10,13 @@ import ru.practicum.explorewithme.server.exceptions.notfound.CategoryNotFoundExc
 import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestConditionException;
 import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
+import ru.practicum.explorewithme.server.services.admin.CategoryService;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toCategory;
 import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class CategoryServiceImpl implements CategoryService {

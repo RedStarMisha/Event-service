@@ -1,8 +1,7 @@
-package ru.practicum.explorewithme.server.services.admin;
+package ru.practicum.explorewithme.server.services.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
 import ru.practicum.explorewithme.models.compilation.NewCompilationDto;
@@ -13,6 +12,7 @@ import ru.practicum.explorewithme.server.models.Compilation;
 import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
+import ru.practicum.explorewithme.server.services.admin.CompilationService;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper
 
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Transactional
 public class CompilationServiceImpl implements CompilationService {
 
@@ -38,7 +38,7 @@ public class CompilationServiceImpl implements CompilationService {
                 .orElseThrow(() -> new EventNotFoundException(id))).collect(Collectors.toList());
 
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
-        log.info("Compilation {} добавлена", compilation);
+        log.info("Compilation {} c id={} добавлена", compilation.getTitle(), compilation.getId());
 
         return toCompilationDto(compilation);
     }

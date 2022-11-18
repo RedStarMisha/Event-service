@@ -45,7 +45,9 @@ public class StatClient {
             }
         }).reduce((a, b) -> b + "&" + a).get();
 
-        return get("/stats?" + encodeDate + "&uris={uris}&unique={unique}", otherParam);
+        String path = "/stats?" + encodeDate + "&uris={uris}&unique={unique}";
+
+        return get(path, otherParam);
     }
 
     private static String encodeValue(String value) throws UnsupportedEncodingException {

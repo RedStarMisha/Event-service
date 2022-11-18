@@ -41,7 +41,6 @@ public class PublicController {
         dateValidation(rangeStart, rangeEnd);
 
         Map<String, Object> parameters = new HashMap<>();
-
         parameters.put("text", text);
         parameters.put("categories", categories);
         parameters.put("paid", paid);

@@ -1,7 +1,7 @@
 package ru.practicum.explorewithme.server.controllers.admin;
 
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.compilation.CompilationDto;
 import ru.practicum.explorewithme.models.compilation.NewCompilationDto;
@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.server.services.admin.CompilationService;
 
 @RestController
 @RequestMapping("/admin/compilations")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class CompilationsController {
     private final CompilationService service;
 

@@ -1,7 +1,6 @@
 package ru.practicum.explorewithme.server.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,13 +11,13 @@ import ru.practicum.explorewithme.models.event.EventFullDto;
 import ru.practicum.explorewithme.models.event.EventShortDto;
 import ru.practicum.explorewithme.models.event.EventSort;
 import ru.practicum.explorewithme.server.services.PublicService;
-import ru.practicum.explorewithme.server.utils.SelectionConditionForPublic;
+import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPublic;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class PublicController {
 
     private final PublicService service;
