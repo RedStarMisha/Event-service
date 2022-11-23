@@ -11,9 +11,7 @@ import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestCond
 import ru.practicum.explorewithme.server.models.Category;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.services.admin.CategoryService;
-
-import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toCategory;
-import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -23,20 +21,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
 
+    private final MyMapper mapper;
+
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         Category category = repository.findById(categoryDto.getId())
                 .orElseThrow(() -> new CategoryNotFoundException(categoryDto.getId()));
         category.setName(categoryDto.getName());
         log.info("Update name category - {} on {}", category.getName(), categoryDto.getName());
-        return toDto(repository.save(category));
+        return mapper.toCategoryDto(repository.save(category));
     }
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
         log.info("Add new category - {}", newCategoryDto.getName());
-        Category category = toCategory(newCategoryDto);
-        return toDto(repository.save(category));
+        Category category = mapper.toCategory(newCategoryDto);
+        return mapper.toCategoryDto(repository.save(category));
     }
 
     @Override

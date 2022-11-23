@@ -69,7 +69,6 @@ public class Event {
     private State state;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-//    @Where(clause = "status = 'CONFIRMED'")
     private Set<Request> confirmedRequests;
 
     @ManyToMany(mappedBy = "events")

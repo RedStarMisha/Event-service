@@ -13,6 +13,7 @@ import ru.practicum.explorewithme.server.models.Event;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.services.admin.CompilationService;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilation;
-import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilationDto;
 
 @Service
 @Slf4j
@@ -31,6 +31,8 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
 
+    private final MyMapper mapper;
+
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
@@ -40,7 +42,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
         log.info("Compilation {} c id={} добавлена", compilation.getTitle(), compilation.getId());
 
-        return toCompilationDto(compilation);
+        return mapper.toCompilationDto(compilation);
     }
 
     @Override

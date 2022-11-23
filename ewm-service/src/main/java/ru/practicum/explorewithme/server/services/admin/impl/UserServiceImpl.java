@@ -12,14 +12,12 @@ import ru.practicum.explorewithme.server.models.User;
 import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.services.admin.UserService;
-import ru.practicum.explorewithme.server.utils.mappers.UserMapper;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
-import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUser;
-import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserDto;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +29,13 @@ public class UserServiceImpl implements UserService {
 
     private final GroupRepository groupRepository;
 
+    private final MyMapper mapper;
+
     @Override
     public List<UserDto> getUsers(long[] ids, int from, int size) {
         if (ids.length == 0) {
             log.info("Get all users");
-            return repository.findAll(makePageable(from, size)).map(UserMapper::toUserDto).toList();
+            return repository.findAll(makePageable(from, size)).map(mapper::toUserDto).toList();
         }
 
         log.info("Get users with id {}", ids);
@@ -45,12 +45,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
         log.info("Add new user {}", newUserRequest);
-        User user = repository.save(toUser(newUserRequest));
+        User user = repository.save(mapper.toUser(newUserRequest));
 
         groupRepository.save(new Group(user, FriendshipGroup.FRIENDS_ALL.name()));
         groupRepository.save(new Group(user, FriendshipGroup.FOLLOWER.name()));
 
-        return toUserDto(user);
+        return mapper.toUserDto(user);
     }
 
     @Override

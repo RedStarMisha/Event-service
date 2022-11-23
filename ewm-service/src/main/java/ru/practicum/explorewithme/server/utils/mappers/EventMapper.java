@@ -11,9 +11,6 @@ import ru.practicum.explorewithme.server.models.User;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static ru.practicum.explorewithme.server.utils.mappers.CategoryMapper.toDto;
-import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserShort;
-
 @Component
 public class EventMapper {
     public static Event toEvent(NewEventDto newEventDto, Category category, User initializer, Optional<Loc> location) {
@@ -37,26 +34,26 @@ public class EventMapper {
         return event;
     }
 
-    public static EventFullDto toEventFull(Event event) {
-        Location location = new Location(event.getLocation().getLatitude(), event.getLocation().getLongitude());
-        return new EventFullDto(
-                event.getAnnotation(),
-                toDto(event.getCategory()),
-                event.getNumberConfirmed(),
-                event.getCreated(),
-                event.getDescription(),
-                event.getEventDate(),
-                event.getId(),
-                toUserShort(event.getInitiator()),
-                location,
-                event.isPaid(),
-                event.getParticipantLimit(),
-                event.getPublished(),
-                event.isModeration(),
-                event.getState(),
-                event.getTitle(),
-                event.getViews());
-    }
+//    public static EventFullDto toEventFull(Event event) {
+//        Location location = new Location(event.getLocation().getLatitude(), event.getLocation().getLongitude());
+//        return new EventFullDto(
+//                event.getAnnotation(),
+//                toCategoryDto(event.getCategory()),
+//                event.getNumberConfirmed(),
+//                event.getCreated(),
+//                event.getDescription(),
+//                event.getEventDate(),
+//                event.getId(),
+//                toUserShort(event.getInitiator()),
+//                location,
+//                event.isPaid(),
+//                event.getParticipantLimit(),
+//                event.getPublished(),
+//                event.isModeration(),
+//                event.getState(),
+//                event.getTitle(),
+//                event.getViews());
+//    }
 
     public static Event makeUpdatableModelPrivate(Event event, UpdateEventRequest request, Category category) {
         Optional.ofNullable(request.getAnnotation()).ifPresent(event::setAnnotation);
@@ -87,17 +84,17 @@ public class EventMapper {
         return event;
     }
 
-    public static EventShortDto toEventShort(Event event) {
-        EventShortDto eventShort = new EventShortDto();
-        eventShort.setId(event.getId());
-        eventShort.setAnnotation(event.getAnnotation());
-        eventShort.setCategory(toDto(event.getCategory()));
-        eventShort.setConfirmedRequests(event.getNumberConfirmed());
-        eventShort.setEventDate(event.getEventDate());
-        eventShort.setInitiator(toUserShort(event.getInitiator()));
-        eventShort.setPaid(event.isPaid());
-        eventShort.setTitle(event.getTitle());
-        eventShort.setViews(event.getViews());
-        return eventShort;
-    }
+//    public static EventShortDto toEventShort(Event event) {
+//        EventShortDto eventShort = new EventShortDto();
+//        eventShort.setId(event.getId());
+//        eventShort.setAnnotation(event.getAnnotation());
+//        eventShort.setCategory(toCategoryDto(event.getCategory()));
+//        eventShort.setConfirmedRequests(event.getNumberConfirmed());
+//        eventShort.setEventDate(event.getEventDate());
+//        eventShort.setInitiator(toUserShort(event.getInitiator()));
+//        eventShort.setPaid(event.isPaid());
+//        eventShort.setTitle(event.getTitle());
+//        eventShort.setViews(event.getViews());
+//        return eventShort;
+//    }
 }

@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.statistics;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 public class StatController {
 

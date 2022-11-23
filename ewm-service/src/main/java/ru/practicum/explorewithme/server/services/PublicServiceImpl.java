@@ -19,11 +19,9 @@ import ru.practicum.explorewithme.server.models.QEvent;
 import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.CompilationRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPublic;
-import ru.practicum.explorewithme.server.utils.mappers.CategoryMapper;
-import ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper;
-import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -31,8 +29,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
-import static ru.practicum.explorewithme.server.utils.mappers.CompilationsMapper.toCompilationDto;
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventFull;
 
 @Service
 @Slf4j
@@ -43,6 +39,8 @@ public class PublicServiceImpl implements PublicService {
     private final CompilationRepository compilationRepository;
     private final CategoryRepository categoryRepository;
     private final StatsHandler statsHandler;
+
+    private final MyMapper mapper;
 
     @Override
     public List<EventShortDto> getEvents(SelectionConditionForPublic condition, HttpServletRequest request) {
@@ -57,7 +55,7 @@ public class PublicServiceImpl implements PublicService {
         }
 
         return list.stream().peek(event -> statsHandler.statsHandle(event, request.getRemoteAddr()))
-                .map(EventMapper::toEventShort).collect(Collectors.toList());
+                .map(mapper::toEventShort).collect(Collectors.toList());
     }
 
     @Override
@@ -72,7 +70,7 @@ public class PublicServiceImpl implements PublicService {
 
         log.info("Запрошен Event c id = {}", eventId);
 
-        return toEventFull(event);
+        return mapper.toEventFull(event);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class PublicServiceImpl implements PublicService {
             log.info("Запрошены Compilations с оплатой - {}", pinned);
         }
 
-        return compilations.stream().map(CompilationsMapper::toCompilationDto).collect(Collectors.toList());
+        return compilations.stream().map(mapper::toCompilationDto).collect(Collectors.toList());
     }
 
     @Override
@@ -97,20 +95,20 @@ public class PublicServiceImpl implements PublicService {
                 .orElseThrow(() -> new CompilationNotFoundException(compilationId));
 
         log.info("Запрошенный {}", compilation);
-        return toCompilationDto(compilation);
+        return mapper.toCompilationDto(compilation);
     }
 
     @Override
     public List<CategoryDto> getCategories(int from, int size) {
         log.info("Запрошен список Categories");
-        return categoryRepository.findAll(makePageable(from, size)).map(CategoryMapper::toDto).toList();
+        return categoryRepository.findAll(makePageable(from, size)).map(mapper::toCategoryDto).toList();
     }
 
     @Override
     public CategoryDto getCategoryById(long categoryId) {
         log.info("Запрошена Category с id = {}", categoryId);
 
-        return categoryRepository.findById(categoryId).map(CategoryMapper::toDto)
+        return categoryRepository.findById(categoryId).map(mapper::toCategoryDto)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 }

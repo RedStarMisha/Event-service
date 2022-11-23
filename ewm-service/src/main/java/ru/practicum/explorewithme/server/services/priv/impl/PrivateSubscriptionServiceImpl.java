@@ -23,6 +23,7 @@ import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.SubscriptionRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.services.priv.PrivateSubscriptionService;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 import ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
-import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.*;
+import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.toGroupDto;
+import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.toSubscriptionRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +46,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
     private final FollowersRepository followersRepository;
     private final GroupRepository groupRepository;
 
+    private final MyMapper mapper;
 
     @Override
     public SubscriptionRequestDto addSubscribe(Long followerId, Long publisherId, NewSubscriptionRequest newRequest) {
@@ -70,14 +73,14 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         followersRepository.save(newFollower);
 
         log.info("SubscriptionRequest {} добавлен", request);
-        return toSubscriptionDto(request);
+        return mapper.toSubscriptionDto(request);
     }
 
     @Override
     public SubscriptionRequestDto getSubscriptionById(Long userId, Long subscriptionId) {
         log.info("Получим SubscriptionRequest по subscriptionId={} и userId={}", subscriptionId, userId);
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        return subscriptionRepository.findSubscriptionByIdAndUserId(subscriptionId, userId).map(SubscriptionMapper::toSubscriptionDto)
+        return subscriptionRepository.findSubscriptionByIdAndUserId(subscriptionId, userId).map(mapper::toSubscriptionDto)
                 .orElseThrow(() -> new SubscriptionNotFoundException(subscriptionId));
     }
 
@@ -105,7 +108,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
 
         followersRepository.delete(follower);
 
-        return toSubscriptionDto(request);
+        return mapper.toSubscriptionDto(request);
     }
 
     @Override
@@ -122,7 +125,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         if (!friendship) {
             request.setStatus(SubscriptionStatus.FOLLOWER);
             log.info("Заявка на дружбу по заявке {} отклонена", request);
-            return toSubscriptionDto(subscriptionRepository.save(request));
+            return mapper.toSubscriptionDto(subscriptionRepository.save(request));
         }
 
         request.setStatus(SubscriptionStatus.CONSIDER);
@@ -135,7 +138,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
         log.info("Заявка на дружбу по заявке {} подтверждена", request);
 
         followersRepository.save(follower);
-        return toSubscriptionDto(request);
+        return mapper.toSubscriptionDto(request);
     }
 
     @Override
@@ -152,7 +155,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
             list = subscriptionRepository.findAllByFollower_IdAndStatus(followerId, status, makePageable(from, size));
         }
 
-        return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
+        return list.stream().map(mapper::toSubscriptionDto).collect(Collectors.toList());
     }
 
     @Override
@@ -168,7 +171,7 @@ public class PrivateSubscriptionServiceImpl implements PrivateSubscriptionServic
             list = subscriptionRepository.findAllByPublisher_IdAndStatusIs(userId, status, makePageable(from, size));
         }
 
-        return list.stream().map(SubscriptionMapper::toSubscriptionDto).collect(Collectors.toList());
+        return list.stream().map(mapper::toSubscriptionDto).collect(Collectors.toList());
     }
 
     @Override

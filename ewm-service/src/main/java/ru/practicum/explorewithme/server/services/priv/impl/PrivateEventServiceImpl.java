@@ -1,8 +1,7 @@
 package ru.practicum.explorewithme.server.services.priv.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.models.event.*;
@@ -16,7 +15,7 @@ import ru.practicum.explorewithme.server.exceptions.requestcondition.RequestCond
 import ru.practicum.explorewithme.server.models.*;
 import ru.practicum.explorewithme.server.repositories.*;
 import ru.practicum.explorewithme.server.services.priv.PrivateEventService;
-import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 import ru.practicum.explorewithme.server.utils.mappers.RequestMapper;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForPrivate;
@@ -26,11 +25,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.*;
+import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUpdatableModelPrivate;
+import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEvent;
 import static ru.practicum.explorewithme.server.utils.mappers.RequestMapper.toRequestDto;
 
 @Service
-@AllArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class PrivateEventServiceImpl implements PrivateEventService {
@@ -41,8 +41,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     private final LocRepository locRepository;
     private final RequestRepository requestRepository;
     private final FollowersRepository followersRepository;
-
     private final GroupRepository groupRepository;
+
+    private final MyMapper mapper;
 
     @Override
     public List<EventShortDto> getEventsByOwnerId(long userId, int from, int size) {
@@ -50,7 +51,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         List<Event> events = eventRepository.findAllByInitiator_Id(userId, makePageable(from, size));
 
         log.info("Запрошены Events пользователя с id = {}", userId);
-        return events.stream().map(EventMapper::toEventShort).collect(Collectors.toList());
+        return events.stream().map(mapper::toEventShort).collect(Collectors.toList());
     }
 
     @Override
@@ -73,7 +74,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         makeUpdatableModelPrivate(event, request, category);
 
         log.info("Event с id = {} обновлен. Новые параметры {}", request.getEventId(), request);
-        return toEventFull(eventRepository.save(event));
+        return mapper.toEventFull(eventRepository.save(event));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
         log.info("Event {} с id = {} добавлен", event.getTitle(), event.getId());
 
-        return toEventFull(event);
+        return mapper.toEventFull(event);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
 
         log.info("Event {} с id = {} запрошен владельцем с id = {}", event.getTitle(), eventId, userId);
 
-        return toEventFull(event);
+        return mapper.toEventFull(event);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             default:
                 log.info("Event с id = {} отменен владельцем", eventId);
                 event.setState(State.CANCELED);
-                return toEventFull(event);
+                return mapper.toEventFull(event);
         }
     }
 
@@ -186,7 +187,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         SearchParam param = selection.getSearchParametersParticipant(qEvent, eventIds);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .map(EventMapper::toEventFull).collect(Collectors.toList());
+                .map(mapper::toEventFull).collect(Collectors.toList());
     }
 
     @Override
@@ -204,6 +205,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         SearchParam param = selection.getSearchParametersCreator(qEvent);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .map(EventMapper::toEventFull).collect(Collectors.toList());
+                .map(mapper::toEventFull).collect(Collectors.toList());
     }
 }

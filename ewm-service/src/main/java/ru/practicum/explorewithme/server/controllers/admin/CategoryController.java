@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.server.controllers.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.models.category.CategoryDto;
 import ru.practicum.explorewithme.models.category.NewCategoryDto;

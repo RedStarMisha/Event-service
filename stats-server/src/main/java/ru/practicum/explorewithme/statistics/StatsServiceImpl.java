@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.statistics;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import static ru.practicum.explorewithme.statistics.StatisticMapper.toStatistic;
 
 @Service
 @Slf4j
-@AllArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 @Transactional
 public class StatsServiceImpl implements StatsService {
 

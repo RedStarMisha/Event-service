@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class SubscriptionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "friendship_request")
     private boolean friendshipRequest;

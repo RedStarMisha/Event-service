@@ -17,9 +17,9 @@ import ru.practicum.explorewithme.server.repositories.CategoryRepository;
 import ru.practicum.explorewithme.server.repositories.EventRepository;
 import ru.practicum.explorewithme.server.services.StatsHandler;
 import ru.practicum.explorewithme.server.services.admin.EventService;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SearchParam;
 import ru.practicum.explorewithme.server.utils.selectioncondition.SelectionConditionForAdmin;
-import ru.practicum.explorewithme.server.utils.mappers.EventMapper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.makeUpdatableModelAdmin;
-import static ru.practicum.explorewithme.server.utils.mappers.EventMapper.toEventFull;
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +40,8 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
 
+    private final MyMapper mapper;
+
     @Override
     public List<EventFullDto> getEvents(SelectionConditionForAdmin condition, HttpServletRequest request) {
         log.info("Запрошены Events с параметрами поиска {}", condition);
@@ -47,7 +49,7 @@ public class EventServiceImpl implements EventService {
         SearchParam param = condition.getSearchParameters(qEvent);
 
         return eventRepository.findAll(param.getBooleanExpression(), param.getPageable()).stream()
-                .peek(statsHandler::statsHandle).map(EventMapper::toEventFull)
+                .peek(statsHandler::statsHandle).map(mapper::toEventFull)
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +68,7 @@ public class EventServiceImpl implements EventService {
         event = eventRepository.save(event);
         log.info("Event с id={} обновлен. Новые параметры {}", eventId, updateEventRequest);
 
-        return toEventFull(statsHandler.statsHandle(event));
+        return mapper.toEventFull(statsHandler.statsHandle(event));
     }
 
     @Override
@@ -87,8 +89,7 @@ public class EventServiceImpl implements EventService {
 
         log.info("Event с id={} опубликован {}", eventId, event.getPublished());
 
-        //return toEventFull(statsHandler.statsHandle(event));
-        return toEventFull(event);
+        return mapper.toEventFull(event);
     }
 
     @Override
@@ -105,6 +106,6 @@ public class EventServiceImpl implements EventService {
 
         log.info("Event с id={} отменен", eventId);
 
-        return toEventFull(statsHandler.statsHandle(event));
+        return mapper.toEventFull(statsHandler.statsHandle(event));
     }
 }

@@ -18,6 +18,7 @@ import ru.practicum.explorewithme.server.repositories.FollowersRepository;
 import ru.practicum.explorewithme.server.repositories.GroupRepository;
 import ru.practicum.explorewithme.server.repositories.UserRepository;
 import ru.practicum.explorewithme.server.services.priv.PrivateFollowerService;
+import ru.practicum.explorewithme.server.utils.mappers.MyMapper;
 import ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper;
 
 import java.util.List;
@@ -25,7 +26,6 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.explorewithme.server.utils.ServerUtil.makePageable;
 import static ru.practicum.explorewithme.server.utils.mappers.SubscriptionMapper.toFollowerDto;
-import static ru.practicum.explorewithme.server.utils.mappers.UserMapper.toUserWithSubscriptionDto;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +35,7 @@ public class PrivateFollowerServiceImpl implements PrivateFollowerService {
     private final UserRepository userRepository;
     private final FollowersRepository followersRepository;
     private final GroupRepository groupRepository;
+    private final MyMapper mapper;
 
     @Override
     public UserWithSubscriptionDto getUser(long followerId, long userId) {
@@ -47,7 +48,7 @@ public class PrivateFollowerServiceImpl implements PrivateFollowerService {
         user.setFriends(followersRepository.getFriendsAmount(userId));
         user.setFollowers(followersRepository.getFollowersAmount(userId));
 
-        UserWithSubscriptionDto user1 = toUserWithSubscriptionDto(user);
+        UserWithSubscriptionDto user1 = mapper.toUserWithSubscriptionDto(user);
         log.info("Пользователь {} запрошен", user1);
 
         return user1;
